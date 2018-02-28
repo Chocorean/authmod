@@ -47,7 +47,7 @@ public class Handler {
         }
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority= EventPriority.HIGHEST)
     public static void onCommand(CommandEvent event){
         if (!(event.getSender() instanceof EntityPlayer))
             return;
