@@ -79,6 +79,7 @@ public class RegisterCommand implements ICommand {
                 if (dc.getPlayer().getName().equals(sender.getName())){
                     Handler.desc.remove(dc);
                     sender.addChatMessage(new TextComponentString("Logged in successfully."));
+                    return;
                 }
             }
         } else {

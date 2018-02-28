@@ -1,13 +1,20 @@
 package com.chocorean.authmod.command;
 
+import com.chocorean.authmod.Handler;
+import com.chocorean.authmod.PlayerDescriptor;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,10 +44,38 @@ public class LoginCommand implements ICommand {
 
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-        World world = sender.getEntityWorld();
-        if (!world.isRemote) { // Server side
-            // coming
+        // checking syntax
+        if (args.length!=1) {
+            sender.addChatMessage(new TextComponentString("Invalid number of arguments."));
+            return;
         }
+        int hash = sender.getName().hashCode();
+        int pwd = args[0].hashCode();
+        try {
+            BufferedReader br = new BufferedReader(new FileReader("mods/AuthMod/data"));
+            String line=br.readLine();
+
+            while (line != null) {
+                if (line.contains(""+hash)) {
+                    if (line.contains(""+pwd)){
+                        // Free player here
+                        for (PlayerDescriptor dc : Handler.desc) {
+                            if (dc.getPlayer().getName().equals(sender.getName())){
+                                Handler.desc.remove(dc);
+                                sender.addChatMessage(new TextComponentString("Logged in successfully."));
+                                return;
+                            }
+                        }
+                    }
+                }
+                line = br.readLine();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        sender.addChatMessage(new TextComponentString("Wrong password. try again."));
     }
 
     @Override
