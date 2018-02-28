@@ -6,12 +6,10 @@ import net.minecraft.util.text.TextComponentString;
 
 public class PlayerDescriptor {
     private EntityPlayer player;
-    private BlockPos pos;
 
     PlayerDescriptor(EntityPlayer entity, BlockPos position){
         player=entity;
-        pos = position;
-        player.addChatComponentMessage(new TextComponentString("Use /register <password> <password>"));
+        player.addChatComponentMessage(new TextComponentString("Use /register <password> <password> or /login <password> to play."));
     }
 
     // Getters

@@ -22,7 +22,6 @@ public class Handler {
     public static void onJoin(EntityJoinWorldEvent event){
         Entity entity = event.getEntity();
         if (entity instanceof EntityPlayer && !entity.isDead) {
-            ((EntityPlayer) entity).addChatComponentMessage(new TextComponentString("hello"));
             World world = entity.getEntityWorld();
             BlockPos pos = entity.getPosition();
             if (!world.isRemote){

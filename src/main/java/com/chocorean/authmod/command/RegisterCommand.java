@@ -55,7 +55,7 @@ public class RegisterCommand implements ICommand {
 
                 while (line != null) {
                     if (line.contains(""+hash)) {
-                        sender.addChatMessage(new TextComponentString("You have already registered. Please use login."));
+                        sender.addChatMessage(new TextComponentString("You have already registered."));
                         return;
                     }
                     line = br.readLine();
