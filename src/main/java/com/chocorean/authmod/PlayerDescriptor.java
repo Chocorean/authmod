@@ -8,8 +8,6 @@ public class PlayerDescriptor {
     private EntityPlayer player;
     private BlockPos pos;
 
-    private static boolean correctPassword=false;
-
     PlayerDescriptor(EntityPlayer entity, BlockPos position){
         player=entity;
         pos = position;
@@ -19,14 +17,5 @@ public class PlayerDescriptor {
     // Getters
     public EntityPlayer getPlayer() {
         return player;
-    }
-
-    public BlockPos getPos() {
-        return pos;
-    }
-
-    // Setters
-    public void setCorrectPassword() {
-        correctPassword=true;
     }
 }

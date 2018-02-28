@@ -77,7 +77,6 @@ public class RegisterCommand implements ICommand {
             // Free player here
             for (PlayerDescriptor dc : Handler.desc) {
                 if (dc.getPlayer().getName().equals(sender.getName())){
-                    dc.setCorrectPassword();
                     Handler.desc.remove(dc);
                 }
             }
