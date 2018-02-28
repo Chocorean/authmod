@@ -23,9 +23,13 @@ Forge est nécessaire pour faire fonctionner AuthMod.
 
 [Mail](mailto:baptiste.chocot@gmail.com)
 
+## License
+
+(GNU v3.0)[https://www.gnu.org/licenses/gpl-3.0.fr.html]
+
 ## Téléchargements
 
-Cf. l'onglet [Releases](https://github.com/Chocorean/authmod/releases).
+Page Curse [ici](https://minecraft.curseforge.com/projects/authmod).
 
 ## Installation
 
