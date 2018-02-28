@@ -6,8 +6,6 @@ import com.chocorean.authmod.proxy.CommonProxy;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
@@ -38,14 +36,6 @@ public class AuthMod {
                 e.printStackTrace();
             }
         }
-    }
-
-    @Mod.EventHandler
-    public void load(FMLInitializationEvent event) {
-    }
-
-    @Mod.EventHandler
-    public void postload(FMLPostInitializationEvent event){
     }
 
     @Mod.EventHandler
