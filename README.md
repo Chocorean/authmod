@@ -13,6 +13,7 @@
 ## Général
 
 AuthMod est un mod vous permettant d'accepter les joueurs jouant avec la démo de Minecraft (joueurs n'ayant pas payé le jeu) en toute sécurité.
+Forge est nécessaire pour faire fonctionner AuthMod.
 
 ## Fonctionnement
 
