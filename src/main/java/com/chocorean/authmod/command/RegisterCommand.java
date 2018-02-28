@@ -11,6 +11,8 @@ import net.minecraft.util.text.TextComponentString;
 
 import javax.annotation.Nullable;
 import java.io.*;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,13 +50,13 @@ public class RegisterCommand implements ICommand {
         // checking if password match and processing
         if (args[0].equals(args[1])){
             // Check if player has already register
-            int hash = sender.getName().hashCode();
+            String hash = generateHash(sender.getName());
             try {
                 BufferedReader br = new BufferedReader(new FileReader("mods/AuthMod/data"));
                 String line=br.readLine();
 
                 while (line != null) {
-                    if (line.contains(""+hash)) {
+                    if (line.contains(hash)) {
                         sender.addChatMessage(new TextComponentString("You have already registered."));
                         return;
                     }
@@ -69,7 +71,7 @@ public class RegisterCommand implements ICommand {
             PrintWriter pw ;
             try {
                 pw = new PrintWriter(new FileWriter("mods/AuthMod/data", true));
-                pw.write(sender.getName().hashCode()+" "+ args[0].hashCode()+"\n");
+                pw.write(generateHash(sender.getName())+" "+ generateHash(args[0])+"\n");
                 pw.close();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -105,5 +107,16 @@ public class RegisterCommand implements ICommand {
     @Override
     public int compareTo(ICommand iCommand) {
         return this.getCommandName().compareTo(iCommand.getCommandName());
+    }
+
+    public static String generateHash(String in) {
+        MessageDigest digest = null;
+        try {
+            digest = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        byte[] hash = digest.digest(in.getBytes());
+        return new String(hash);
     }
 }

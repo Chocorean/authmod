@@ -49,15 +49,15 @@ public class LoginCommand implements ICommand {
             sender.addChatMessage(new TextComponentString("Invalid number of arguments."));
             return;
         }
-        int hash = sender.getName().hashCode();
-        int pwd = args[0].hashCode();
+        String hash = RegisterCommand.generateHash(sender.getName());
+        String pwd = RegisterCommand.generateHash(args[0]);
         try {
             BufferedReader br = new BufferedReader(new FileReader("mods/AuthMod/data"));
             String line=br.readLine();
 
             while (line != null) {
-                if (line.contains(""+hash)) {
-                    if (line.contains(""+pwd)){
+                if (line.contains(hash)) {
+                    if (line.contains(pwd)){
                         // Free player here
                         for (PlayerDescriptor dc : Handler.desc) {
                             if (dc.getPlayer().getName().equals(sender.getName())){
@@ -75,7 +75,7 @@ public class LoginCommand implements ICommand {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        sender.addChatMessage(new TextComponentString("Wrong password. try again."));
+        sender.addChatMessage(new TextComponentString("Wrong password. Try again."));
     }
 
     @Override
