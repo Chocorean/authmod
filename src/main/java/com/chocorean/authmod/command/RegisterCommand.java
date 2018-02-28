@@ -10,8 +10,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 
 import javax.annotation.Nullable;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,10 +47,29 @@ public class RegisterCommand implements ICommand {
         }
         // checking if password match and processing
         if (args[0].equals(args[1])){
+            // Check if player has already register
+            int hash = sender.getName().hashCode();
+            try {
+                BufferedReader br = new BufferedReader(new FileReader("mods/AuthMod/data"));
+                String line=br.readLine();
+
+                while (line != null) {
+                    if (line.contains(""+hash)) {
+                        sender.addChatMessage(new TextComponentString("You have already registered. Please use login."));
+                        return;
+                    }
+                    line = br.readLine();
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            // if player has not registered yet
             FileWriter writer;
             try {
                 writer = new FileWriter("mods/AuthMod/data");
-                writer.write(sender.getName()+" "+ args[0].hashCode());
+                writer.write(sender.getName().hashCode()+" "+ args[0].hashCode());
                 writer.close();
             } catch (IOException e) {
                 e.printStackTrace();
