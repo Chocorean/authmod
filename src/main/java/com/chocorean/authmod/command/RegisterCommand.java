@@ -66,11 +66,11 @@ public class RegisterCommand implements ICommand {
                 e.printStackTrace();
             }
             // if player has not registered yet
-            FileWriter writer;
+            PrintWriter pw ;
             try {
-                writer = new FileWriter("mods/AuthMod/data");
-                writer.write(sender.getName().hashCode()+" "+ args[0].hashCode());
-                writer.close();
+                pw = new PrintWriter(new FileWriter("mods/AuthMod/data", true));
+                pw.write(sender.getName().hashCode()+" "+ args[0].hashCode()+"\n");
+                pw.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
