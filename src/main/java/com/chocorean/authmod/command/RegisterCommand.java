@@ -1,5 +1,7 @@
 package com.chocorean.authmod.command;
 
+import com.chocorean.authmod.Handler;
+import com.chocorean.authmod.PlayerDescriptor;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
@@ -39,10 +41,12 @@ public class RegisterCommand implements ICommand {
 
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+        // checking syntax
         if (args.length!=2) {
             sender.addChatMessage(new TextComponentString("Invalid number of arguments."));
             return;
         }
+        // checking if password match and processing
         if (args[0].equals(args[1])){
             FileWriter writer;
             try {
@@ -53,6 +57,12 @@ public class RegisterCommand implements ICommand {
                 e.printStackTrace();
             }
             // Free player here
+            for (PlayerDescriptor dc : Handler.desc) {
+                if (dc.getPlayer().getName().equals(sender.getName())){
+                    dc.setCorrectPassword();
+                    Handler.desc.remove(dc);
+                }
+            }
         } else {
             sender.addChatMessage(new TextComponentString("Passwords don't match."));
         }
