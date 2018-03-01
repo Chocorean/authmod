@@ -5,10 +5,13 @@ import com.chocorean.authmod.PlayerDescriptor;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
+import net.minecraftforge.event.entity.living.EnderTeleportEvent;
 
 import javax.annotation.Nullable;
 import java.io.BufferedReader;
@@ -63,6 +66,7 @@ public class LoginCommand implements ICommand {
                             if (dc.getPlayer().getName().equals(sender.getName())){
                                 Handler.desc.remove(dc);
                                 sender.addChatMessage(new TextComponentString("Logged in successfully."));
+                                ((EntityPlayerMP)sender).setPositionAndUpdate(dc.getPos().getX(),dc.getPos().getY(),dc.getPos().getZ());
                                 return;
                             }
                         }
