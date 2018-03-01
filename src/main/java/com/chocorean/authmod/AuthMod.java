@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 public class AuthMod {
     public static final String MODID = "authmod";
     public static final String NAME = "AuthMod";
-    public static final String VERSION = "1.2";
+    public static final String VERSION = "1.3";
     public static final String COMMON_PROXY = "com.chocorean.authmod.proxy.CommonProxy";
     public static final String CLIENT_PROXY = "com.chocorean.authmod.proxy.ClientProxy";
 
