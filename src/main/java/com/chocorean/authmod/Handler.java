@@ -3,6 +3,8 @@ package com.chocorean.authmod;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.play.server.SPacketChat;
+import net.minecraft.network.play.server.SPacketDisconnect;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
@@ -35,7 +37,7 @@ public class Handler {
                             desc.remove(dc);
                             // back to connection position and kicked
                             ((EntityPlayerMP)entity).setPositionAndUpdate(dc.getPos().getX(),dc.getPos().getY(),dc.getPos().getZ());
-                            ((EntityPlayerMP)entity).connection.kickPlayerFromServer("You took too many time to log in.");
+                            ((EntityPlayerMP)entity).connection.sendPacket(new SPacketDisconnect(new TextComponentString("You took too many time to log in.")));
                         }
                     }
                 }
@@ -58,7 +60,7 @@ public class Handler {
                 // player still havent logged in successfully
                 if (event.isCancelable()) {
                     event.setCanceled(true);
-                    entity.addChatMessage(new TextComponentString("You have to use /register ou /login to play."));
+                    ((EntityPlayerMP)entity).connection.sendPacket(new SPacketChat(new TextComponentString("You have to use /register ou /login to play.")));
                 }
             }
         }
@@ -68,11 +70,11 @@ public class Handler {
     public static void onCommand(CommandEvent event){
         if (!(event.getSender() instanceof EntityPlayer))
             return;
-        String name = event.getCommand().getCommandName();
+        String name = event.getCommand().getName();
         if (!(name.equals("register") || name.equals("login"))) {
             if (event.isCancelable()){
                 event.setCanceled(true);
-                event.getSender().addChatMessage(new TextComponentString("You have to use /register ou /login to use commands."));
+                ((EntityPlayerMP)event.getSender()).connection.sendPacket(new SPacketChat(new TextComponentString("You have to use /register ou /login to use commands.")));
             }
         }
     }

@@ -7,6 +7,7 @@ import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.play.server.SPacketChat;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
@@ -31,17 +32,17 @@ public class LoginCommand implements ICommand {
     }
 
     @Override
-    public String getCommandName() {
+    public String getName() {
         return "login";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender) {
+    public String getUsage(ICommandSender sender) {
         return "/login <password> - Allows you to play.";
     }
 
     @Override
-    public List<String> getCommandAliases() {
+    public List<String> getAliases() {
         return aliases;
     }
 
@@ -49,7 +50,7 @@ public class LoginCommand implements ICommand {
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
         // checking syntax
         if (args.length!=1) {
-            sender.addChatMessage(new TextComponentString("Invalid number of arguments."));
+            ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString("Invalid number of arguments.")));
             return;
         }
         String hash = RegisterCommand.generateHash(sender.getName());
@@ -65,7 +66,7 @@ public class LoginCommand implements ICommand {
                         for (PlayerDescriptor dc : Handler.desc) {
                             if (dc.getPlayer().getName().equals(sender.getName())){
                                 Handler.desc.remove(dc);
-                                sender.addChatMessage(new TextComponentString("Logged in successfully."));
+                                ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString("Logged in successfully.")));
                                 ((EntityPlayerMP)sender).setPositionAndUpdate(dc.getPos().getX(),dc.getPos().getY(),dc.getPos().getZ());
                                 return;
                             }
@@ -79,7 +80,7 @@ public class LoginCommand implements ICommand {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        sender.addChatMessage(new TextComponentString("Wrong password. Try again."));
+        ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString("Wrong password. Try again.")));
     }
 
     @Override
@@ -88,8 +89,8 @@ public class LoginCommand implements ICommand {
     }
 
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos) {
-        return new ArrayList<String>();
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
+        return null;
     }
 
     @Override
@@ -99,6 +100,6 @@ public class LoginCommand implements ICommand {
 
     @Override
     public int compareTo(ICommand iCommand) {
-        return this.getCommandName().compareTo(iCommand.getCommandName());
+        return this.getName().compareTo(iCommand.getName());
     }
 }

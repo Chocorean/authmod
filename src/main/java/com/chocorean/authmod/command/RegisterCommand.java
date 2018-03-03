@@ -6,6 +6,7 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.play.server.SPacketChat;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
@@ -27,17 +28,17 @@ public class RegisterCommand implements ICommand {
     }
 
     @Override
-    public String getCommandName() {
+    public String getName() {
         return "register";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender) {
+    public String getUsage(ICommandSender sender) {
         return "/register <password> <password>  - Be careful when choosing it, you'll be asked to login each time you play..";
     }
 
     @Override
-    public List<String> getCommandAliases() {
+    public List<String> getAliases() {
         return aliases;
     }
 
@@ -45,7 +46,7 @@ public class RegisterCommand implements ICommand {
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
         // checking syntax
         if (args.length!=2) {
-            sender.addChatMessage(new TextComponentString("Invalid number of arguments."));
+            ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString("Invalid number of arguments.")));
             return;
         }
         // checking if password match and processing
@@ -58,7 +59,7 @@ public class RegisterCommand implements ICommand {
 
                 while (line != null) {
                     if (line.contains(hash)) {
-                        sender.addChatMessage(new TextComponentString("You have already registered."));
+                        ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString("You have already registered.")));
                         return;
                     }
                     line = br.readLine();
@@ -81,13 +82,13 @@ public class RegisterCommand implements ICommand {
             for (PlayerDescriptor dc : Handler.desc) {
                 if (dc.getPlayer().getName().equals(sender.getName())){
                     Handler.desc.remove(dc);
-                    sender.addChatMessage(new TextComponentString("Logged in successfully."));
+                    ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString("Logged in successfully.")));
                     ((EntityPlayerMP)sender).setPositionAndUpdate(dc.getPos().getX(),dc.getPos().getY(),dc.getPos().getZ());
                     return;
                 }
             }
         } else {
-            sender.addChatMessage(new TextComponentString("Passwords don't match."));
+            ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString("Passwords don't match.")));
         }
     }
 
@@ -97,8 +98,8 @@ public class RegisterCommand implements ICommand {
     }
 
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos) {
-        return new ArrayList<String>();
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
+        return null;
     }
 
     @Override
@@ -108,7 +109,7 @@ public class RegisterCommand implements ICommand {
 
     @Override
     public int compareTo(ICommand iCommand) {
-        return this.getCommandName().compareTo(iCommand.getCommandName());
+        return this.getName().compareTo(iCommand.getName());
     }
 
     public static String generateHash(String in) {
