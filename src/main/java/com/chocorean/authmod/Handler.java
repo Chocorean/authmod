@@ -70,9 +70,15 @@ public class Handler {
             return;
         String name = event.getCommand().getCommandName();
         if (!(name.equals("register") || name.equals("login"))) {
-            if (event.isCancelable()){
-                event.setCanceled(true);
-                event.getSender().addChatMessage(new TextComponentString("You have to use /register ou /login to use commands."));
+            for (PlayerDescriptor dc : Handler.desc) {
+                Entity entity = (Entity)event.getSender();
+                World world = entity.getEntityWorld();
+                if (dc.getPlayer().getName().equals(entity.getName())) {
+                    if (event.isCancelable()){
+                        event.setCanceled(true);
+                        event.getSender().addChatMessage(new TextComponentString("You have to use /register ou /login to use commands."));
+                    }
+                }
             }
         }
     }
