@@ -9,7 +9,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.event.CommandEvent;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -24,8 +23,8 @@ public class Handler {
     public static LinkedList<PlayerDescriptor> desc = new LinkedList();
 
     @SubscribeEvent(priority= EventPriority.HIGHEST)
-    public static void onJoin(EntityJoinWorldEvent event){
-        final Entity entity = event.getEntity();
+    public void onJoin(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent event){
+        final Entity entity = event.player;
         if (entity instanceof EntityPlayer && !entity.isDead) {
             // initializing timer for kicking player if he/she hasn't logged in a minute
             Timer timer = new Timer();
