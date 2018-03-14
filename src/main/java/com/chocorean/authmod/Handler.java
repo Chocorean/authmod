@@ -19,7 +19,7 @@ import java.util.TimerTask;
 
 @Mod.EventBusSubscriber
 public class Handler {
-    public static LinkedList<PlayerDescriptor> desc = new LinkedList();
+    public static LinkedList<PlayerDescriptor> desc = new LinkedList<PlayerDescriptor>();
 
     @SubscribeEvent(priority= EventPriority.HIGHEST)
     public static void onJoin(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent event){
