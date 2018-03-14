@@ -19,11 +19,11 @@ import java.util.TimerTask;
 
 @Mod.EventBusSubscriber
 public class Handler {
-    public static LinkedList<PlayerDescriptor> desc = new LinkedList();
+    public static LinkedList<PlayerDescriptor> desc = new LinkedList<>();
 
     @SubscribeEvent(priority= EventPriority.HIGHEST)
     public static void onJoin(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent event){
-        final EntityPlayer entity = event.player;
+        EntityPlayer entity = event.player;
         // initializing timer for kicking player if he/she hasn't logged in a minute
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {

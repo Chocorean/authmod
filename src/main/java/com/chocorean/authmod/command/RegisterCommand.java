@@ -99,7 +99,7 @@ public class RegisterCommand implements ICommand {
 
     @Override
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos) {
-        return new ArrayList<String>();
+        return new ArrayList<>();
     }
 
     @Override
@@ -113,13 +113,6 @@ public class RegisterCommand implements ICommand {
     }
 
     public static String generateHash(String in) {
-        MessageDigest digest = null;
-        try {
-            digest = MessageDigest.getInstance("SHA-256");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        byte[] hash = digest.digest(in.getBytes());
-        return new String(hash);
+        return org.apache.commons.codec.digest.DigestUtils.sha256Hex(in);
     }
 }
