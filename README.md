@@ -1,25 +1,23 @@
 # AuthMod
 
-## Table des matières
+## Table of contents
 
-* [Général](#général)
-* [Fonctionnement](#fonctionnement)
-* [Contacts](#contacts)
+* [General](#general)
+* [Operation](#operation)
+* [Contact](#contact)
 * [License](#license)
-* [Téléchargements](#téléchargements)
-* [Installation](#installation)
-* [Problèmes](#problèmes)
+* [Webpage](#webpage)
+* [Install](#install)
+* [Issues](#issues)
 
-## Général
+## General
+AuthMod is a mod allowing you to accept players playing with the Minecraft demo (players who have not paid for the game) safely.
 
-AuthMod est un mod vous permettant d'accepter les joueurs jouant avec la démo de Minecraft (joueurs n'ayant pas payé le jeu) en toute sécurité.
-Forge est nécessaire pour faire fonctionner AuthMod.
+## Operation
 
-## Fonctionnement
+At each new connection to the server, the mod will ask the new player to enter a password. This password must be entered in order to play. Otherwise, the player will be unable to play and kicked after a while.
 
-À chaque nouvelle connexion au serveur, le mod va demander au novueau joueur de renseigner un mot de passe. Ce mot de passe devra être renseigné pour pouvoir jouer. Autrement, le joueur se trouvera dans l'incapacité de jouer.
-
-## Contacts
+## Contact
 
 [Mail](mailto:baptiste.chocot@gmail.com)
 
@@ -27,14 +25,14 @@ Forge est nécessaire pour faire fonctionner AuthMod.
 
 [GNU v3.0](https://www.gnu.org/licenses/gpl-3.0.fr.html)
 
-## Téléchargements
+## Webage
 
-Page Curse [ici](https://minecraft.curseforge.com/projects/authmod).
+Further informations and downloads links are available on the [Curse project page](https://minecraft.curseforge.com/projects/authmod).
 
-## Installation
+## Install
 
-Mettre AuthMod dans le dossier mods de votre serveur. Relancer le serveur.
+First make sure you have Forge installed on your server. Then, put AuthMod in the server's mods/ directory. Reload the server.
 
-## Problèmes
+## Issues
 
-Cf. l'onglet [Issues](https://github.com/Chocorean/authmod/issues).
+[Right here](https://github.com/Chocorean/authmod/issues).
