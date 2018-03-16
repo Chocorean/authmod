@@ -1,15 +1,15 @@
 [
 {
-  "modid": "examplemod",
-  "name": "Example Mod",
-  "description": "Example placeholder mod.",
+  "modid": "authmod",
+  "name": "AuthMod",
+  "description": "online-mode=false is now a bit saffer",
   "version": "${version}",
   "mcversion": "${mcversion}",
-  "url": "",
+  "url": "https://minecraft.curseforge.com/projects/authmod",
   "updateUrl": "",
-  "authorList": ["ExampleDude"],
-  "credits": "The Forge and FML guys, for making this example",
-  "logoFile": "",
+  "authorList": ["Chocorean"],
+  "credits": "",
+  "logoFile": "logo.png",
   "screenshots": [],
   "dependencies": []
 }
