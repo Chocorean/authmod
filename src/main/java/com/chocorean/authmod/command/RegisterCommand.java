@@ -1,19 +1,14 @@
 package com.chocorean.authmod.command;
 
-import com.chocorean.authmod.Handler;
-import com.chocorean.authmod.PlayerDescriptor;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 
 import javax.annotation.Nullable;
 import java.io.*;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,14 +73,14 @@ public class RegisterCommand implements ICommand {
                 e.printStackTrace();
             }
             // Free player here
-            for (PlayerDescriptor dc : Handler.desc) {
+            /*for (PlayerDescriptor dc : Handler.desc) {
                 if (dc.getPlayer().getName().equals(sender.getName())){
                     Handler.desc.remove(dc);
                     sender.addChatMessage(new TextComponentString("Logged in successfully."));
                     ((EntityPlayerMP)sender).setPositionAndUpdate(dc.getPos().getX(),dc.getPos().getY(),dc.getPos().getZ());
                     return;
                 }
-            }
+            }*/
         } else {
             sender.addChatMessage(new TextComponentString("Passwords don't match."));
         }
