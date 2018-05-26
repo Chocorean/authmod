@@ -40,7 +40,7 @@ public class AuthMod {
     public static final SimpleNetworkWrapper network = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
     public static final HashMap<EntityPlayer, PlayerDescriptor> descriptors = new HashMap<>();
     @SidedProxy(clientSide = AuthMod.CLIENT_PROXY, serverSide = AuthMod.COMMON_PROXY)
-        public static CommonProxy proxy;
+    public static CommonProxy proxy;
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) { }
@@ -60,8 +60,6 @@ public class AuthMod {
     public void serverStarting(FMLServerStartingEvent event) {
         LOGGER.info("Registering AuthMod Event Handler");
         MinecraftForge.EVENT_BUS.register(new Handler());
-        // LOGGER.info("Registering AuthMod Register Command");
-        // event.registerServerCommand(new RegisterCommand());
         LOGGER.info("Registering AuthMod Login Handler");
         event.registerServerCommand(new LoginCommand());
     }
