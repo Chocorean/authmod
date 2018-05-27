@@ -26,9 +26,4 @@ public class ConnectionFactory {
         }
     }
 
-    public static void main(String[] args) throws SQLException {
-        Connection connection = ConnectionFactory.getConnection();
-        IPlayersDAO dao = new PlayersDAO(connection);
-        System.out.println(dao.findAll());
-    }
 }

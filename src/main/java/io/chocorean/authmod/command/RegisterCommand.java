@@ -5,6 +5,8 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.fml.common.FMLLog;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.io.*;
@@ -12,7 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RegisterCommand implements ICommand {
+
     private final List<String> aliases;
+    public static final Logger LOGGER = FMLLog.getLogger();
 
     public RegisterCommand(){
         aliases = new ArrayList<>();
@@ -58,7 +62,7 @@ public class RegisterCommand implements ICommand {
                     line = br.readLine();
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.catching(e);
             }
             // if player has not registered yet
             PrintWriter pw ;
@@ -67,7 +71,7 @@ public class RegisterCommand implements ICommand {
                 pw.write(generateHash(sender.getName())+" "+ generateHash(args[0])+"\n");
                 pw.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.catching(e);
             }
             // Free player here
             /*for (PlayerDescriptor dc : Handler.desc) {

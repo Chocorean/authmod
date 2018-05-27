@@ -5,9 +5,9 @@ import java.io.File;
 
 public class AuthModConfig {
 
-    private Configuration config;
+    private final Configuration config;
     private final String GEN_CATEGORY = "general";
-    private AuthModDatabaseConfig databaseConfig;
+    private final AuthModDatabaseConfig databaseConfig;
 
     public AuthModConfig(Configuration config) {
         this.config = config;

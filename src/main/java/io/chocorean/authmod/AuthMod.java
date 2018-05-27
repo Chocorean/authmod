@@ -19,17 +19,18 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
 import java.util.HashMap;
+import java.util.Map;
 
 @Mod(modid = AuthMod.MODID, name = AuthMod.NAME, version = AuthMod.VERSION, serverSideOnly = true, acceptableRemoteVersions = "*")
 public class AuthMod {
 
-    public static final String MODID = "authmod";
-    public static final String NAME = "AuthMod";
-    public static final String VERSION = "1.6";
+    static final String MODID = "authmod";
+    static final String NAME = "AuthMod";
+    static final String VERSION = "1.6";
     private static final String COMMON_PROXY = "io.chocorean.authmod.proxy.CommonProxy";
     private static final String CLIENT_PROXY = "io.chocorean.authmod.proxy.ClientProxy";
     private static final org.apache.logging.log4j.Logger LOGGER = FMLLog.getLogger();
-    public static final HashMap<EntityPlayer, PlayerDescriptor> descriptors = new HashMap<>();
+    public static final Map<EntityPlayer, PlayerDescriptor> descriptors = new HashMap<>();
     public static AuthModConfig config;
     public static IAuthenticationStrategy strategy;
     @SidedProxy(clientSide = AuthMod.CLIENT_PROXY, serverSide = AuthMod.COMMON_PROXY)

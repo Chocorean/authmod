@@ -5,6 +5,7 @@ import net.minecraftforge.client.ClientCommandHandler;
 
 public class ClientProxy extends CommonProxy {
 
+    @Override
     public void registerRenderers() {
         ClientCommandHandler.instance.registerCommand(new LoginCommand());
     }

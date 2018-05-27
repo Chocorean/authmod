@@ -22,7 +22,7 @@ import java.sql.SQLException;
 public class DatabaseAuthenticationStrategy implements IAuthenticationStrategy {
 
     private final IPlayersDAO playersDAO;
-    public static final Logger LOGGER = FMLLog.getLogger();
+    private static final Logger LOGGER = FMLLog.getLogger();
 
     public DatabaseAuthenticationStrategy() {
         this.playersDAO = new PlayersDAO(ConnectionFactory.getConnection());
@@ -46,7 +46,7 @@ public class DatabaseAuthenticationStrategy implements IAuthenticationStrategy {
                 throw new BanException(String.format("Your account is  banned (%s), please contact %s.", args[0], AuthMod.config.getContact()));
             boolean correctPassword =  BCrypt.checkpw(args[1], p.getPassword());
             if(!correctPassword)
-                throw new WrongPasswordException(String.format("Wrong password, please retry"));
+                throw new WrongPasswordException("Wrong password, please retry");
             return correctPassword;
         }
         return false;

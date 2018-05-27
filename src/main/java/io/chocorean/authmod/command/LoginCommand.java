@@ -19,7 +19,7 @@ import java.util.List;
 
 public class LoginCommand implements ICommand {
 
-    public static final Logger LOGGER = FMLLog.getLogger();
+    private static final Logger LOGGER = FMLLog.getLogger();
     private final List<String> aliases;
 
     public LoginCommand(){

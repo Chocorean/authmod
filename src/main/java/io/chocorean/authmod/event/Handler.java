@@ -19,7 +19,8 @@ import java.util.concurrent.TimeUnit;
 
 @Mod.EventBusSubscriber
 public class Handler {
-    private final static ScheduledExecutorService scheduler = new ScheduledThreadPoolExecutor(1);
+
+    private static final ScheduledExecutorService scheduler = new ScheduledThreadPoolExecutor(1);
 
     @SubscribeEvent(priority= EventPriority.HIGHEST)
     public static void onJoin(PlayerLoggedInEvent event){
@@ -48,11 +49,9 @@ public class Handler {
     public static void onPlayerEvent(PlayerEvent event) {
         if(AuthMod.config.isAuthenticationEnabled()) {
             EntityPlayer entity = event.getEntityPlayer();
-            if(AuthMod.descriptors.containsKey(entity)) {
-                if (event.isCancelable()) {
-                    event.setCanceled(true);
-                    ((EntityPlayerMP) entity).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.config.getMessage())));
-                }
+            if(AuthMod.descriptors.containsKey(entity) && event.isCancelable()) {
+                event.setCanceled(true);
+                ((EntityPlayerMP) entity).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.config.getMessage())));
             }
         }
     }
@@ -60,11 +59,9 @@ public class Handler {
     @SubscribeEvent(priority= EventPriority.HIGHEST)
     public static void onCommand(CommandEvent event){
         String name = event.getCommand().getCommandName();
-        if (!(name.equals("register") || name.equals("login")) && (event.getSender() instanceof EntityPlayer)) {
-            if (event.isCancelable()){
-                event.setCanceled(true);
-                ((EntityPlayerMP)event.getSender()).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.config.getMessage())));
-            }
+        if (!(name.equals("register") || name.equals("login")) && (event.getSender() instanceof EntityPlayer) && event.isCancelable()) {
+            event.setCanceled(true);
+            ((EntityPlayerMP)event.getSender()).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.config.getMessage())));
         }
     }
 }

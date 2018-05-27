@@ -32,6 +32,7 @@ public class PlayersDAO implements IPlayersDAO {
             ResultSet rs  = stmt.executeQuery(String.format("SELECT * FROM %s", this.table));
             while(rs.next())
                 players.add(PlayersDAO.createPlayer(rs));
+            rs.close();
         }
         return players;
     }
@@ -56,7 +57,7 @@ public class PlayersDAO implements IPlayersDAO {
 
     }
 
-    public static Player createPlayer(ResultSet rs) throws SQLException {
+    private static Player createPlayer(ResultSet rs) throws SQLException {
         if(rs.next()) {
             Player player = new Player();
             player.setId(rs.getInt("id"));
