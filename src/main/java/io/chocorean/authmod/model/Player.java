@@ -1,4 +1,4 @@
-package com.chocorean.authmod.models;
+package io.chocorean.authmod.model;
 
 import java.util.Date;
 

@@ -1,6 +1,6 @@
-package com.chocorean.authmod.proxy;
+package io.chocorean.authmod.proxy;
 
-import com.chocorean.authmod.commands.LoginCommand;
+import io.chocorean.authmod.command.LoginCommand;
 import net.minecraftforge.client.ClientCommandHandler;
 
 public class ClientProxy extends CommonProxy {

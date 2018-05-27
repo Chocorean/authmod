@@ -1,4 +1,4 @@
-package com.chocorean.authmod.exceptions;
+package io.chocorean.authmod.exception;
 
 public class LoginException extends Exception {
 

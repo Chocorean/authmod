@@ -1,8 +1,7 @@
-package com.chocorean.authmod.events;
+package io.chocorean.authmod.event;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
 
 public class PlayerDescriptor {
 
@@ -12,7 +11,6 @@ public class PlayerDescriptor {
     PlayerDescriptor(EntityPlayer entity, BlockPos position){
         player = entity;
         pos = position;
-        player.addChatComponentMessage(new TextComponentString("Use /login <email> <password> to play."));
     }
 
     public EntityPlayer getPlayer() {

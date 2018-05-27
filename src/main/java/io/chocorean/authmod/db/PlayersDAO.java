@@ -1,6 +1,6 @@
-package com.chocorean.authmod.db;
+package io.chocorean.authmod.db;
 
-import com.chocorean.authmod.models.Player;
+import io.chocorean.authmod.model.Player;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -43,6 +43,17 @@ public class PlayersDAO implements IPlayersDAO {
             ResultSet rs = stmt.executeQuery();
             return createPlayer(rs);
         }
+    }
+
+    @Override
+    public Player findByEmailOrUsername(String identifier) throws SQLException {
+        try(PreparedStatement stmt = this.connection.prepareStatement(String.format("SELECT * FROM %s WHERE email = ? OR username = ?", this.table))) {
+            stmt.setString(1, identifier);
+            stmt.setString(2, identifier);
+            ResultSet rs = stmt.executeQuery();
+            return createPlayer(rs);
+        }
+
     }
 
     public static Player createPlayer(ResultSet rs) throws SQLException {

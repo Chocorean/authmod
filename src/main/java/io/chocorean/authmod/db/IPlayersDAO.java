@@ -1,6 +1,7 @@
-package com.chocorean.authmod.db;
+package io.chocorean.authmod.db;
 
-import com.chocorean.authmod.models.Player;
+import io.chocorean.authmod.model.Player;
+
 import java.sql.SQLException;
 import java.util.List;
 
@@ -11,4 +12,6 @@ public interface IPlayersDAO {
     List<Player> findAll() throws SQLException;
 
     Player findByEmail(String email) throws SQLException;
+
+    Player findByEmailOrUsername(String identifier) throws SQLException;
 }

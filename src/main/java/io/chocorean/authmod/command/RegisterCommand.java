@@ -1,6 +1,5 @@
-package com.chocorean.authmod.commands;
+package io.chocorean.authmod.command;
 
-import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -13,10 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RegisterCommand implements ICommand {
-    private final ArrayList aliases;
+    private final List<String> aliases;
 
     public RegisterCommand(){
-        aliases = new ArrayList();
+        aliases = new ArrayList<>();
         aliases.add("register");
         aliases.add("reg");
     }
@@ -37,7 +36,7 @@ public class RegisterCommand implements ICommand {
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
         // checking syntax
         if (args.length!=2) {
             sender.addChatMessage(new TextComponentString("Invalid number of arguments."));
@@ -58,8 +57,6 @@ public class RegisterCommand implements ICommand {
                     }
                     line = br.readLine();
                 }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }

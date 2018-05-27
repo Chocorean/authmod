@@ -1,4 +1,4 @@
-package com.chocorean.authmod.proxy;
+package io.chocorean.authmod.proxy;
 
 public class CommonProxy {
 
