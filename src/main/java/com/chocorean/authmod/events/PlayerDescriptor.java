@@ -6,8 +6,8 @@ import net.minecraft.util.text.TextComponentString;
 
 public class PlayerDescriptor {
 
-    private EntityPlayer player;
-    private BlockPos pos;
+    private final EntityPlayer player;
+    private final BlockPos pos;
 
     PlayerDescriptor(EntityPlayer entity, BlockPos position){
         player = entity;

@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 @Mod.EventBusSubscriber
 public class Handler {
-    private static ScheduledExecutorService scheduler = new ScheduledThreadPoolExecutor(1);
+    private final static ScheduledExecutorService scheduler = new ScheduledThreadPoolExecutor(1);
 
     @SubscribeEvent(priority= EventPriority.HIGHEST)
     public static void onJoin(PlayerLoggedInEvent event){
@@ -38,7 +38,7 @@ public class Handler {
                 );
                 ((EntityPlayerMP) entity).connection.kickPlayerFromServer("You took too many time to log in.");
             }
-        }, 10, TimeUnit.SECONDS);
+        }, 60, TimeUnit.SECONDS);
     }
 
     @SubscribeEvent(priority=EventPriority.HIGHEST)

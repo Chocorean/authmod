@@ -1,8 +1,5 @@
 package com.chocorean.authmod.db;
 
-import com.chocorean.authmod.authentification.IPlayersDAO;
-import com.chocorean.authmod.authentification.PlayersDAO;
-
 import java.sql.*;
 
 /**

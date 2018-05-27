@@ -1,12 +1,12 @@
 # AuthMod
 
-[![Build status](https://travis-ci.org/Mcdostone/authmod.svg?branch=master)
-[![Build status](https://sonarcloud.io/api/project_badges/measure?project=com.chocorean.authmod%3Aauthmod&metric=alert_status)
-[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=com.chocorean.authmod%3Aauthmod&metric=bugs)
-[![code smells](https://sonarcloud.io/api/project_badges/measure?project=com.chocorean.authmod%3Aauthmod&metric=code_smells)
-[![duplicated](https://sonarcloud.io/api/project_badges/measure?project=com.chocorean.authmod%3Aauthmod&metric=duplicated_lines_density)
-[![Maintanability](https://sonarcloud.io/api/project_badges/measure?project=com.chocorean.authmod%3Aauthmod&metric=sqale_rating)
-[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=com.chocorean.authmod%3Aauthmod&metric=vulnerabilities)
+![Build status](https://travis-ci.org/Mcdostone/authmod.svg?branch=master)
+![Build status](https://sonarcloud.io/api/project_badges/measure?project=com.chocorean.authmod%3Aauthmod&metric=alert_status)
+![Bugs](https://sonarcloud.io/api/project_badges/measure?project=com.chocorean.authmod%3Aauthmod&metric=bugs)
+![code smells](https://sonarcloud.io/api/project_badges/measure?project=com.chocorean.authmod%3Aauthmod&metric=code_smells)
+![duplicated](https://sonarcloud.io/api/project_badges/measure?project=com.chocorean.authmod%3Aauthmod&metric=duplicated_lines_density)
+![Maintanability](https://sonarcloud.io/api/project_badges/measure?project=com.chocorean.authmod%3Aauthmod&metric=sqale_rating)
+![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=com.chocorean.authmod%3Aauthmod&metric=vulnerabilities)
 
 
 ## Table of contents

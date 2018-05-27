@@ -1,4 +1,4 @@
-package com.chocorean.authmod.authentification;
+package com.chocorean.authmod.db;
 
 import com.chocorean.authmod.models.Player;
 import java.sql.SQLException;

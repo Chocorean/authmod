@@ -1,4 +1,4 @@
-package com.chocorean.authmod.command;
+package com.chocorean.authmod.commands;
 
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
@@ -93,7 +93,7 @@ public class RegisterCommand implements ICommand {
 
     @Override
     public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos) {
-        return new ArrayList<String>();
+        return new ArrayList<>();
     }
 
     @Override
