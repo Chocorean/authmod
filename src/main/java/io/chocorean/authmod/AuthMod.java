@@ -3,13 +3,11 @@ package io.chocorean.authmod;
 import io.chocorean.authmod.authentification.DatabaseAuthenticationStrategy;
 import io.chocorean.authmod.authentification.FileAuthenticationStrategy;
 import io.chocorean.authmod.authentification.IAuthenticationStrategy;
-import io.chocorean.authmod.authentification.PublicServerAuthenticationStrategy;
 import io.chocorean.authmod.command.LoginCommand;
+import io.chocorean.authmod.command.RegisterCommand;
 import io.chocorean.authmod.config.AuthModConfig;
 import io.chocorean.authmod.event.Handler;
-import io.chocorean.authmod.event.PlayerDescriptor;
 import io.chocorean.authmod.proxy.CommonProxy;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.Mod;
@@ -17,9 +15,6 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Mod(modid = AuthMod.MODID, name = AuthMod.NAME, version = AuthMod.VERSION, serverSideOnly = true, acceptableRemoteVersions = "*")
 public class AuthMod {
@@ -30,7 +25,6 @@ public class AuthMod {
     private static final String COMMON_PROXY = "io.chocorean.authmod.proxy.CommonProxy";
     private static final String CLIENT_PROXY = "io.chocorean.authmod.proxy.ClientProxy";
     private static final org.apache.logging.log4j.Logger LOGGER = FMLLog.getLogger();
-    public static final Map<EntityPlayer, PlayerDescriptor> descriptors = new HashMap<>();
     public static AuthModConfig config;
     public static IAuthenticationStrategy strategy;
     @SidedProxy(clientSide = AuthMod.CLIENT_PROXY, serverSide = AuthMod.COMMON_PROXY)
@@ -49,8 +43,8 @@ public class AuthMod {
                 strategy = new FileAuthenticationStrategy();
                 LOGGER.info("Use FileAuthenticationStrategy");
             default:
-                strategy = new PublicServerAuthenticationStrategy();
-                LOGGER.info("Use PublicServerAuthenticationStrategy");
+                strategy = null;
+                LOGGER.info("No Authentication strategy selected");
         }
     }
 
@@ -61,10 +55,18 @@ public class AuthMod {
 
     @Mod.EventHandler
     public void serverStarting(FMLServerStartingEvent event) {
-        LOGGER.info("Registering AuthMod Event Handler");
-        MinecraftForge.EVENT_BUS.register(new Handler());
-        LOGGER.info("Registering AuthMod Login Handler");
-        event.registerServerCommand(new LoginCommand());
+        if(strategy != null) {
+            if(config.isLoginEnabled()) {
+                LOGGER.info("Registering AuthMod Event Handler");
+                MinecraftForge.EVENT_BUS.register(new Handler());
+                LOGGER.info("Registering AuthMod Login Handler");
+                event.registerServerCommand(new LoginCommand(AuthMod.strategy));
+            }
+            if(config.isRegisterEnabled()) {
+                LOGGER.info("Registering AuthMod Register Handler");
+                event.registerServerCommand(new RegisterCommand(AuthMod.strategy));
+            }
+        }
     }
 
 }

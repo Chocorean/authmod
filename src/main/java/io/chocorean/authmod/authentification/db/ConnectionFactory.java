@@ -1,13 +1,10 @@
-package io.chocorean.authmod.db;
+package io.chocorean.authmod.authentification.db;
 
 import io.chocorean.authmod.AuthMod;
 
 import java.sql.*;
 
-/**
- * Connect to Database
- * @author hany.said
- */
+
 public class ConnectionFactory {
     /**
      * Get a connection to database

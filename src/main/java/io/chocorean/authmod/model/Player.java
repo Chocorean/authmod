@@ -1,120 +1,74 @@
 package io.chocorean.authmod.model;
 
-import java.util.Date;
-
-public class Player {
+public class Player implements IPlayer {
 
     private int id;
-    private String firstname;
-    private String lastname;
-    private Date creationDate;
-    private Date updatedOn;
-    private Date lastConnection;
     private String password;
     private String email;
-    private String avatar;
     private boolean isBan;
-    private boolean isAdmin;
     private String uuid;
     private String username;
 
-    public int getId() {
-        return id;
-    }
+    public int getId() { return id; }
 
     public void setId(int id) {
         this.id = id;
     }
 
-    public String getFirstname() {
-        return firstname;
-    }
-
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-
-    public Date getCreationDate() {
-        return creationDate;
-    }
-
-    public Date getUpdatedOn() {
-        return updatedOn;
-    }
-
-    public Date getLastConnection() {
-        return lastConnection;
-    }
-
-    public void setLastConnection(Date lastConnection) {
-        this.lastConnection = lastConnection;
-    }
-
+    @Override
     public String getPassword() {
         return password;
     }
 
+    @Override
     public void setPassword(String password) {
         this.password = password;
     }
 
+    @Override
     public String getEmail() {
         return email;
     }
 
+    @Override
     public void setEmail(String email) {
         this.email = email;
     }
 
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-
+    @Override
     public boolean isBan() {
         return isBan;
     }
 
+    @Override
     public void setBan(boolean ban) {
         isBan = ban;
     }
 
-    public boolean isAdmin() {
-        return isAdmin;
-    }
-
-    public void setAdmin(boolean admin) {
-        isAdmin = admin;
-    }
-
+    @Override
     public String getUuid() {
         return uuid;
     }
 
+    @Override
     public void setUuid(String uuid) {
         this.uuid = uuid;
     }
 
+    @Override
     public String getUsername() {
         return username;
     }
 
+    @Override
+    public boolean isPremium() { return this.getUuid() != null; }
+
+    @Override
     public void setUsername(String username) {
         this.username = username;
     }
 
     public String toString() {
-        return String.format("%3d | %s | %s | %s |", this.getId(), this.getEmail(), this.getFirstname(), this.getLastname());
+        return String.format("%3d | %s |", this.getId(), this.getEmail());
     }
 }

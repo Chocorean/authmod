@@ -1,4 +1,4 @@
-package io.chocorean.authmod.db;
+package io.chocorean.authmod.authentification.db;
 
 import io.chocorean.authmod.model.Player;
 
@@ -6,7 +6,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlayersDAO implements IPlayersDAO {
+public class PlayersDAO implements IPlayersDAO<Player> {
 
     private final Connection connection;
     private final String table;
@@ -14,6 +14,16 @@ public class PlayersDAO implements IPlayersDAO {
     public PlayersDAO(Connection connection) {
         this.connection = connection;
         this.table = "Players";
+    }
+
+    @Override
+    public void create(Player player) throws SQLException {
+        String query = String.format("INSERT INTO %s(email, password) VALUES(?,?)", this.table);
+        try(PreparedStatement stmt = this.connection.prepareStatement(query)) {
+            stmt.setString(1, player.getEmail());
+            stmt.setString(2, player.getPassword());
+            stmt.executeUpdate();
+        }
     }
 
     @Override
@@ -61,13 +71,8 @@ public class PlayersDAO implements IPlayersDAO {
         if(rs.next()) {
             Player player = new Player();
             player.setId(rs.getInt("id"));
-            player.setAdmin(rs.getInt("isAdmin") != 0);
             player.setBan(rs.getInt("isBan") != 0);
-            player.setAvatar(rs.getString("avatar"));
             player.setEmail(rs.getString("email"));
-            player.setFirstname(rs.getString("firstName"));
-            player.setLastname(rs.getString("lastName"));
-            player.setLastConnection(rs.getDate("lastConnection"));
             player.setPassword(rs.getString("password"));
             player.setUsername(rs.getString("username"));
             player.setUuid(rs.getString("uuid"));

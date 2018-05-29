@@ -13,6 +13,8 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -21,38 +23,35 @@ import java.util.concurrent.TimeUnit;
 public class Handler {
 
     private static final ScheduledExecutorService scheduler = new ScheduledThreadPoolExecutor(1);
+    public static final Map<EntityPlayer, PlayerDescriptor> descriptors = new HashMap<>();
 
     @SubscribeEvent(priority= EventPriority.HIGHEST)
     public static void onJoin(PlayerLoggedInEvent event){
-        if(AuthMod.config.isAuthenticationEnabled()) {
-            EntityPlayer entity = event.player;
-            entity.addChatMessage(new TextComponentString("Use /login to start playing."));
-            // initializing timer for kicking player if he/she hasn't logged in a minute
-            BlockPos pos = entity.getPosition();
-            PlayerDescriptor dc = new PlayerDescriptor(entity, pos);
-            AuthMod.descriptors.put(entity, dc);
-            scheduler.schedule(() -> {
-                if(AuthMod.descriptors.containsKey(entity)) {
-                    AuthMod.descriptors.remove(entity);
-                    entity.setPositionAndUpdate(
-                            dc.getPosition().getX(),
-                            dc.getPosition().getY(),
-                            dc.getPosition().getZ()
-                    );
-                    ((EntityPlayerMP) entity).connection.kickPlayerFromServer("Wake up! You only have " +  AuthMod.config.getDelay() + " seconds to log in.");
-                }
-            }, AuthMod.config.getDelay(), TimeUnit.SECONDS);
-        }
+        EntityPlayer entity = event.player;
+        entity.addChatMessage(new TextComponentString("Use /login to start playing."));
+        // initializing timer for kicking player if he/she hasn't logged in a minute
+        BlockPos pos = entity.getPosition();
+        PlayerDescriptor dc = new PlayerDescriptor(entity, pos);
+        descriptors.put(entity, dc);
+        scheduler.schedule(() -> {
+            if(descriptors.containsKey(entity)) {
+                descriptors.remove(entity);
+                entity.setPositionAndUpdate(
+                        dc.getPosition().getX(),
+                        dc.getPosition().getY(),
+                        dc.getPosition().getZ()
+                );
+                ((EntityPlayerMP) entity).connection.kickPlayerFromServer("Wake up! You only have " +  AuthMod.config.getDelay() + " seconds to log in.");
+            }
+        }, AuthMod.config.getDelay(), TimeUnit.SECONDS);
     }
 
     @SubscribeEvent(priority=EventPriority.HIGHEST)
     public static void onPlayerEvent(PlayerEvent event) {
-        if(AuthMod.config.isAuthenticationEnabled()) {
-            EntityPlayer entity = event.getEntityPlayer();
-            if(AuthMod.descriptors.containsKey(entity) && event.isCancelable()) {
-                event.setCanceled(true);
-                ((EntityPlayerMP) entity).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.config.getMessage())));
-            }
+        EntityPlayer entity = event.getEntityPlayer();
+        if(descriptors.containsKey(entity) && event.isCancelable()) {
+            event.setCanceled(true);
+            ((EntityPlayerMP) entity).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.config.getMessage())));
         }
     }
 
@@ -63,5 +62,9 @@ public class Handler {
             event.setCanceled(true);
             ((EntityPlayerMP)event.getSender()).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.config.getMessage())));
         }
+    }
+
+    public static PlayerDescriptor remove(EntityPlayer player) {
+        return descriptors.remove(player);
     }
 }

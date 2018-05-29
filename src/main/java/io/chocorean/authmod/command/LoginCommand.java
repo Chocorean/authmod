@@ -1,8 +1,10 @@
 package io.chocorean.authmod.command;
 
-import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.authentification.IAuthenticationStrategy;
+import io.chocorean.authmod.event.Handler;
 import io.chocorean.authmod.exception.BanException;
+import io.chocorean.authmod.model.IPlayer;
+import io.chocorean.authmod.model.Player;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,11 +23,13 @@ public class LoginCommand implements ICommand {
 
     private static final Logger LOGGER = FMLLog.getLogger();
     private final List<String> aliases;
+    private IAuthenticationStrategy strategy;
 
-    public LoginCommand(){
+    public LoginCommand(IAuthenticationStrategy strategy){
         this.aliases = new ArrayList<>();
         this.aliases.add("login");
         this.aliases.add("log");
+        this.strategy = strategy;
     }
 
     @Override
@@ -45,25 +49,30 @@ public class LoginCommand implements ICommand {
 
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
-        IAuthenticationStrategy strategy = AuthMod.strategy;
-        boolean isCorrect = false;
-        try {
-            isCorrect = strategy.login(server, sender, args);
-        } catch (BanException e) {
-            ((EntityPlayerMP) sender).connection.kickPlayerFromServer(e.getMessage());
-        } catch (Exception e) {
-            sender.addChatMessage(new TextComponentString(e.getMessage()));
-        }
-        if(isCorrect) {
-            LOGGER.info(sender.getName() + " authenticated");
-            EntityPlayer player = (EntityPlayer) sender;
-            AuthMod.descriptors.remove(player);
-            sender.addChatMessage(new TextComponentString("Logged in successfully. Have fun!"));
-            ((EntityPlayerMP)sender).setPositionAndUpdate(
-                    player.getPosition().getX(),
-                    player.getPosition().getY(),
-                    player.getPosition().getZ()
-            );
+        if (args.length != 2) {
+            sender.addChatMessage(new TextComponentString("Invalid number of arguments: <email or username> <password>"));
+        } else {
+            IPlayer loggedPlayer = new Player();
+            loggedPlayer.setEmail(args[0]);
+            loggedPlayer.setPassword(args[1]);
+            try {
+                loggedPlayer = this.strategy.login(loggedPlayer);
+            } catch (BanException e) {
+                ((EntityPlayerMP) sender).connection.kickPlayerFromServer(e.getMessage());
+            } catch (Exception e) {
+                sender.addChatMessage(new TextComponentString(e.getMessage()));
+            }
+            if (loggedPlayer != null) {
+                LOGGER.info(sender.getName() + " authenticated");
+                EntityPlayer player = (EntityPlayer) sender;
+                Handler.descriptors.remove(player);
+                sender.addChatMessage(new TextComponentString("Logged in successfully. Have fun!"));
+                ((EntityPlayerMP) sender).setPositionAndUpdate(
+                        player.getPosition().getX(),
+                        player.getPosition().getY(),
+                        player.getPosition().getZ()
+                );
+            }
         }
     }
 

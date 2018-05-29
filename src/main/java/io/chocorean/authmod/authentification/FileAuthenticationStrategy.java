@@ -1,12 +1,16 @@
 package io.chocorean.authmod.authentification;
 
-import net.minecraft.command.ICommandSender;
-import net.minecraft.server.MinecraftServer;
+import io.chocorean.authmod.model.IPlayer;
 
 public class FileAuthenticationStrategy implements IAuthenticationStrategy {
 
     @Override
-    public boolean login(MinecraftServer server, ICommandSender sender, String[] args) {
-        return false;
+    public IPlayer login(IPlayer player) throws Exception {
+        throw new Exception("Not implemented yet!");
+    }
+
+    @Override
+    public IPlayer register(IPlayer player) throws Exception {
+        throw new Exception("Not implemented yet!");
     }
 }
