@@ -4,15 +4,12 @@ import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.authentification.db.ConnectionFactory;
 import io.chocorean.authmod.authentification.db.IPlayersDAO;
 import io.chocorean.authmod.authentification.db.PlayersDAO;
-import io.chocorean.authmod.exception.BanException;
 import io.chocorean.authmod.exception.LoginException;
-import io.chocorean.authmod.exception.PlayerNotFoundException;
-import io.chocorean.authmod.exception.WrongPasswordException;
+import io.chocorean.authmod.exception.PlayerAlreadyExistException;
 import io.chocorean.authmod.model.IPlayer;
 import net.minecraftforge.fml.common.FMLLog;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
-import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.SQLException;
 
@@ -34,20 +31,21 @@ public class DatabaseAuthenticationStrategy implements IAuthenticationStrategy {
             LOGGER.catching(Level.ERROR, e);
             throw new LoginException("Authentication is unavailable for the moment. Please contact " + AuthMod.config.getContact());
         }
-        if(p == null)
-            throw new PlayerNotFoundException(String.format("%s doesn't exist", player.getEmail()));
-        if(p.isBan())
-            throw new BanException(String.format("Your account is  banned (%s), please contact %s.", player.getEmail(), AuthMod.config.getContact()));
-        boolean correctPassword =  BCrypt.checkpw(player.getPassword(), p.getPassword());
-        if(!correctPassword)
-            throw new WrongPasswordException("Wrong password, please retry");
+        p = AuthUtils.verifyAuthentication(p, player);
         return p;
     }
 
     @Override
     public IPlayer register(IPlayer player) throws Exception {
-        player.setPassword(BCrypt.hashpw(player.getPassword(), BCrypt.gensalt()));
-        this.playersDAO.create(player);
+        player = AuthUtils.Register(player);
+        try {
+            if(this.playersDAO.findByEmail(player.getEmail()) !=null)
+                throw new PlayerAlreadyExistException(player.getEmail() + " already exists!");
+            this.playersDAO.create(player);
+        } catch(SQLException e) {
+            LOGGER.catching(Level.ERROR, e);
+            throw new LoginException("Authentication is unavailable for the moment. Please contact " + AuthMod.config.getContact());
+        }
         return this.playersDAO.findByEmailOrUsername(player.getEmail());
     }
 

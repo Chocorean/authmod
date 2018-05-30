@@ -46,15 +46,16 @@ public class RegisterCommand implements ICommand {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
         if (args.length != 2) {
-            sender.addChatMessage(new TextComponentString("Invalid number of arguments."));
+            sender.addChatMessage(new TextComponentString("Invalid number of arguments: <email> <password>"));
         } else {
             IPlayer player = new Player();
             player.setEmail(args[0]);
             player.setPassword(args[1]);
             try {
                 this.strategy.register(player);
+                sender.addChatMessage(new TextComponentString("You are registered as " + player.getEmail() + ". Next time, please login to play!"));
             } catch (Exception e) {
-                e.printStackTrace();
+                sender.addChatMessage(new TextComponentString(e.getMessage()));
             }
         }
     }

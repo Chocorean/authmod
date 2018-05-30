@@ -23,12 +23,12 @@ import java.util.concurrent.TimeUnit;
 public class Handler {
 
     private static final ScheduledExecutorService scheduler = new ScheduledThreadPoolExecutor(1);
-    public static final Map<EntityPlayer, PlayerDescriptor> descriptors = new HashMap<>();
+    private static final Map<EntityPlayer, PlayerDescriptor> descriptors = new HashMap<>();
 
     @SubscribeEvent(priority= EventPriority.HIGHEST)
     public static void onJoin(PlayerLoggedInEvent event){
         EntityPlayer entity = event.player;
-        entity.addChatMessage(new TextComponentString("Use /login to start playing."));
+        entity.addChatMessage(new TextComponentString(AuthMod.config.getMessage()));
         // initializing timer for kicking player if he/she hasn't logged in a minute
         BlockPos pos = entity.getPosition();
         PlayerDescriptor dc = new PlayerDescriptor(entity, pos);

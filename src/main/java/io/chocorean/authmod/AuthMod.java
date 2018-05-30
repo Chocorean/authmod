@@ -16,6 +16,9 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
+import java.io.IOException;
+import java.nio.file.Paths;
+
 @Mod(modid = AuthMod.MODID, name = AuthMod.NAME, version = AuthMod.VERSION, serverSideOnly = true, acceptableRemoteVersions = "*")
 public class AuthMod {
 
@@ -31,7 +34,7 @@ public class AuthMod {
     private static CommonProxy proxy;
 
     @Mod.EventHandler
-    public void preInit(FMLPreInitializationEvent event) {
+    public void preInit(FMLPreInitializationEvent event) throws IOException {
         config = new AuthModConfig(event.getSuggestedConfigurationFile());
         config.load();
         switch (config.getAuthenticationStrategy().toUpperCase()) {
@@ -40,8 +43,11 @@ public class AuthMod {
                 LOGGER.info("Use DatabaseAuthenticationStrategy");
                 break;
             case "FILE":
-                strategy = new FileAuthenticationStrategy();
+                strategy = new FileAuthenticationStrategy(Paths.get(
+                        event.getModConfigurationDirectory().getAbsolutePath(),
+                        MODID + "_players.csv").toFile());
                 LOGGER.info("Use FileAuthenticationStrategy");
+                break;
             default:
                 strategy = null;
                 LOGGER.info("No Authentication strategy selected");

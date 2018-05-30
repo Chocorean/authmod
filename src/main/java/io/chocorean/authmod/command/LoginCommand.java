@@ -61,11 +61,12 @@ public class LoginCommand implements ICommand {
                 ((EntityPlayerMP) sender).connection.kickPlayerFromServer(e.getMessage());
             } catch (Exception e) {
                 sender.addChatMessage(new TextComponentString(e.getMessage()));
+                loggedPlayer = null;
             }
             if (loggedPlayer != null) {
                 LOGGER.info(sender.getName() + " authenticated");
                 EntityPlayer player = (EntityPlayer) sender;
-                Handler.descriptors.remove(player);
+                Handler.remove(player);
                 sender.addChatMessage(new TextComponentString("Logged in successfully. Have fun!"));
                 ((EntityPlayerMP) sender).setPositionAndUpdate(
                         player.getPosition().getX(),
@@ -95,4 +96,5 @@ public class LoginCommand implements ICommand {
     public int compareTo(ICommand iCommand) {
         return this.getCommandName().compareTo(iCommand.getCommandName());
     }
+
 }
