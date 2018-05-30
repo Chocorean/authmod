@@ -29,7 +29,7 @@ public class DatabaseAuthenticationStrategy implements IAuthenticationStrategy {
             p = this.playersDAO.findByEmailOrUsername(player.getEmail());
         } catch(SQLException e) {
             LOGGER.catching(Level.ERROR, e);
-            throw new LoginException("Authentication is unavailable for the moment. Please contact " + AuthMod.config.getContact());
+            throw new LoginException("Authentication is unavailable for the moment. Please contact " + AuthMod.getConfig().getContact());
         }
         p = AuthUtils.verifyAuthentication(p, player);
         return p;
@@ -44,7 +44,7 @@ public class DatabaseAuthenticationStrategy implements IAuthenticationStrategy {
             this.playersDAO.create(player);
         } catch(SQLException e) {
             LOGGER.catching(Level.ERROR, e);
-            throw new LoginException("Authentication is unavailable for the moment. Please contact " + AuthMod.config.getContact());
+            throw new LoginException("Authentication is unavailable for the moment. Please contact " + AuthMod.getConfig().getContact());
         }
         return this.playersDAO.findByEmailOrUsername(player.getEmail());
     }

@@ -28,7 +28,7 @@ public class Handler {
     @SubscribeEvent(priority= EventPriority.HIGHEST)
     public static void onJoin(PlayerLoggedInEvent event){
         EntityPlayer entity = event.player;
-        entity.addChatMessage(new TextComponentString(AuthMod.config.getMessage()));
+        entity.addChatMessage(new TextComponentString(AuthMod.getConfig().getMessage()));
         // initializing timer for kicking player if he/she hasn't logged in a minute
         BlockPos pos = entity.getPosition();
         PlayerDescriptor dc = new PlayerDescriptor(entity, pos);
@@ -41,9 +41,9 @@ public class Handler {
                         dc.getPosition().getY(),
                         dc.getPosition().getZ()
                 );
-                ((EntityPlayerMP) entity).connection.kickPlayerFromServer("Wake up! You only have " +  AuthMod.config.getDelay() + " seconds to log in.");
+                ((EntityPlayerMP) entity).connection.kickPlayerFromServer("Wake up! You only have " +  AuthMod.getConfig().getDelay() + " seconds to log in.");
             }
-        }, AuthMod.config.getDelay(), TimeUnit.SECONDS);
+        }, AuthMod.getConfig().getDelay(), TimeUnit.SECONDS);
     }
 
     @SubscribeEvent(priority=EventPriority.HIGHEST)
@@ -51,7 +51,7 @@ public class Handler {
         EntityPlayer entity = event.getEntityPlayer();
         if(descriptors.containsKey(entity) && event.isCancelable()) {
             event.setCanceled(true);
-            ((EntityPlayerMP) entity).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.config.getMessage())));
+            ((EntityPlayerMP) entity).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getMessage())));
         }
     }
 
@@ -60,7 +60,7 @@ public class Handler {
         String name = event.getCommand().getCommandName();
         if (!(name.equals("register") || name.equals("login")) && (event.getSender() instanceof EntityPlayer) && event.isCancelable()) {
             event.setCanceled(true);
-            ((EntityPlayerMP)event.getSender()).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.config.getMessage())));
+            ((EntityPlayerMP)event.getSender()).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getMessage())));
         }
     }
 

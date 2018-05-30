@@ -28,8 +28,8 @@ public class AuthMod {
     private static final String COMMON_PROXY = "io.chocorean.authmod.proxy.CommonProxy";
     private static final String CLIENT_PROXY = "io.chocorean.authmod.proxy.ClientProxy";
     private static final org.apache.logging.log4j.Logger LOGGER = FMLLog.getLogger();
-    public static AuthModConfig config;
-    public static IAuthenticationStrategy strategy;
+    private static AuthModConfig config;
+    private static IAuthenticationStrategy strategy;
     @SidedProxy(clientSide = AuthMod.CLIENT_PROXY, serverSide = AuthMod.COMMON_PROXY)
     private static CommonProxy proxy;
 
@@ -74,5 +74,13 @@ public class AuthMod {
             }
         }
     }
+
+    public static AuthModConfig getConfig() {
+        return AuthMod.config;
+    }
+    public static IAuthenticationStrategy getAuthenticationStrategy() {
+        return AuthMod.strategy;
+    }
+
 
 }

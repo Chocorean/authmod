@@ -13,11 +13,11 @@ public class ConnectionFactory {
     public static Connection getConnection() {
         try {
             return DriverManager.getConnection(String.format("jdbc:%s://%s/%s",
-                    AuthMod.config.getDatabaseConfig().getDialect(),
-                    AuthMod.config.getDatabaseConfig().getHost(),
-                    AuthMod.config.getDatabaseConfig().getName()),
-                    AuthMod.config.getDatabaseConfig().getUser(),
-                    AuthMod.config.getDatabaseConfig().getPassword());
+                    AuthMod.getConfig().getDatabaseConfig().getDialect(),
+                    AuthMod.getConfig().getDatabaseConfig().getHost(),
+                    AuthMod.getConfig().getDatabaseConfig().getName()),
+                    AuthMod.getConfig().getDatabaseConfig().getUser(),
+                    AuthMod.getConfig().getDatabaseConfig().getPassword());
         } catch (SQLException ex) {
             throw new RuntimeException("Error connecting to the database", ex);
         }

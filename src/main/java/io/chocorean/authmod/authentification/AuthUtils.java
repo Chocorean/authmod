@@ -14,7 +14,7 @@ public class AuthUtils {
         if(actual == null)
             throw new PlayerNotFoundException(String.format("%s doesn't exist", actual.getEmail()));
         if(actual.isBan())
-            throw new BanException(String.format("Your account is  banned (%s), please contact %s.", actual.getEmail(), AuthMod.config.getContact()));
+            throw new BanException(String.format("Your account is  banned (%s), please contact %s.", actual.getEmail(), AuthMod.getConfig().getContact()));
         boolean correctPassword =  BCrypt.checkpw(actual.getPassword(), saved.getPassword());
         if(!correctPassword) {
             throw new WrongPasswordException("Wrong password, please retry");
