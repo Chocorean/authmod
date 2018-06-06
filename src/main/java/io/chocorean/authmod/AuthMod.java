@@ -16,7 +16,6 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
-import java.io.IOException;
 import java.nio.file.Paths;
 
 @Mod(modid = AuthMod.MODID, name = AuthMod.NAME, version = AuthMod.VERSION, serverSideOnly = true, acceptableRemoteVersions = "*")
@@ -34,9 +33,8 @@ public class AuthMod {
     private static CommonProxy proxy;
 
     @Mod.EventHandler
-    public void preInit(FMLPreInitializationEvent event) throws IOException {
+    public void preInit(FMLPreInitializationEvent event) {
         config = new AuthModConfig(event.getSuggestedConfigurationFile());
-        config.load();
         switch (config.getAuthenticationStrategy().toUpperCase()) {
             case "DATABASE":
                 strategy = new DatabaseAuthenticationStrategy();

@@ -2,6 +2,7 @@ buildscript {
     repositories {
         jcenter()
         maven { url = "http://files.minecraftforge.net/maven" }
+        mavenCentral()
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
@@ -23,6 +24,11 @@ compileJava {
     sourceCompatibility = targetCompatibility = "1.8"
 }
 
+ext{
+    junitVersion= '4.12'
+}
+
+
 minecraft {
     version = "1.10.2-12.18.3.2185"
     runDir = "run"
@@ -32,7 +38,9 @@ minecraft {
 dependencies {
     compile 'org.mariadb.jdbc:mariadb-java-client:2.1.2'
     compile group: 'org.mindrot', name: 'jbcrypt', version: '0.4'
+    testCompile "junit:junit:$junitVersion"
 }
+
 
 processResources {
     // this will ensure that this task is redone when the versions change.
@@ -47,5 +55,11 @@ processResources {
 
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
+    }
+}
+
+test {
+    testLogging {
+        events "passed", "skipped", "failed"
     }
 }

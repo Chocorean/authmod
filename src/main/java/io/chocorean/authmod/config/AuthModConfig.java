@@ -12,14 +12,11 @@ public class AuthModConfig {
     public AuthModConfig(Configuration config) {
         this.config = config;
         this.databaseConfig = new AuthModDatabaseConfig(config);
+        this.config.load();
     }
 
     public AuthModConfig(File config) {
         this(new Configuration(config));
-    }
-
-    public void load() {
-        this.config.load();
     }
 
     public void save() {
