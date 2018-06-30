@@ -38,3 +38,5 @@ services:
     environment:
       - EULA=TRUE
       - ONLINE_MODE=FALSE
+      - ENV TYPE="FORGE"
+      - ENV FORGE_INSTALLER_URL="http://files.minecraftforge.net/maven/net/minecraftforge/forge/1.10.2-12.18.3.2185/forge-1.10.2-12.18.3.2185-installer.jar"
