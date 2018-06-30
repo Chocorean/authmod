@@ -76,9 +76,9 @@ public class AuthMod {
     public static AuthModConfig getConfig() {
         return AuthMod.config;
     }
+
     public static IAuthenticationStrategy getAuthenticationStrategy() {
         return AuthMod.strategy;
     }
-
 
 }

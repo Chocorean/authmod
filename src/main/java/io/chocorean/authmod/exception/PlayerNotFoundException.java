@@ -5,4 +5,5 @@ public class PlayerNotFoundException extends LoginException {
     public PlayerNotFoundException(String message) {
         super(message);
     }
+
 }

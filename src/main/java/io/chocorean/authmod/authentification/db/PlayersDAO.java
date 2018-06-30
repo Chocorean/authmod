@@ -64,7 +64,6 @@ public class PlayersDAO implements IPlayersDAO<Player> {
             ResultSet rs = stmt.executeQuery();
             return createPlayer(rs);
         }
-
     }
 
     private static Player createPlayer(ResultSet rs) throws SQLException {

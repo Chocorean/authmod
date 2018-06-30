@@ -1,9 +1,7 @@
 package io.chocorean.authmod.authentification.db;
 
 import io.chocorean.authmod.AuthMod;
-
 import java.sql.*;
-
 
 public class ConnectionFactory {
     /**

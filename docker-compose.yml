@@ -1,0 +1,40 @@
+version: '3.5'
+
+services:
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb
+    volumes:
+      - ./data/mariadb:/var/lib/mysql
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - TZ=Europe/Paris
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    ports:
+      - 80:80
+    environment:
+      - PMA_HOST=mariadb
+    container_name: phpmyadmin
+
+  minecraft:
+    image: itzg/minecraft-server:latest
+    container_name: minecraft
+    volumes:
+      - ./data/backups:/data/backups
+      - ./data/world:/data/world
+      - ./conf/whitelist.json:/data/whitelist.json
+      - ./conf/ops.json:/data/ops.json
+      - ./conf/server.properties:/data/server.properties
+      - ./conf/banned-ips.json:/data/banned-ips.json
+      - ./conf/banned-players.json:/data/banned-players.json
+      - ./build/libs/authmod-1.6.jar:/mods
+    ports:
+      - 25565:25565
+    environment:
+      - EULA=TRUE
+      - ONLINE_MODE=FALSE
