@@ -1,0 +1,22 @@
+language: java
+install: true
+
+
+addons:
+  sonarcloud:
+    organization: "chocorean"
+    token:
+      secure: $SONAR_TOKEN
+
+jdk:
+  - oraclejdk8
+
+script:
+  -  ./gradlew sonarqube
+
+cache:
+  directories:
+    - '$HOME/.m2/repository'
+    - '$HOME/.sonar/cache'
+    - '$HOME/.gradle'
+    - '.gradle'

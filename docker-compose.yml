@@ -1,0 +1,43 @@
+version: '3.5'
+
+services:
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb
+    volumes:
+      - ./data/mariadb:/var/lib/mysql
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - TZ=Europe/Paris
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    ports:
+      - 80:80
+    environment:
+      - PMA_HOST=mariadb
+    container_name: phpmyadmin
+
+  minecraft:
+    image: itzg/minecraft-server:latest
+    container_name: minecraft
+    volumes:
+      - ./data/minecraft/backups:/data/backups
+      - ./data/minecraft/world:/data/world
+      - ./conf/minecraft/whitelist.json:/data/whitelist.json
+      - ./conf/minecraft/ops.json:/data/ops.json
+      - ./conf/minecraft/server.properties:/data/server.properties
+      - ./conf/minecraft/banned-ips.json:/data/banned-ips.json
+      - ./conf/minecraft/banned-players.json:/data/banned-players.json
+      - ./build/libs/authmod-1.6.jar:/mods
+      - ./src/main/java/resources/authmod.cfg:/config
+    ports:
+      - 25565:25565
+    environment:
+      - EULA=TRUE
+      - ONLINE_MODE=FALSE
+      - ENV TYPE="FORGE"
+      - ENV FORGE_INSTALLER_URL="http://files.minecraftforge.net/maven/net/minecraftforge/forge/1.10.2-12.18.3.2185/forge-1.10.2-12.18.3.2185-installer.jar"
