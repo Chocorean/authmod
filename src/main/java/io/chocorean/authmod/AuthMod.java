@@ -1,8 +1,8 @@
 package io.chocorean.authmod;
 
-import io.chocorean.authmod.authentification.DatabaseAuthenticationStrategy;
-import io.chocorean.authmod.authentification.FileAuthenticationStrategy;
-import io.chocorean.authmod.authentification.IAuthenticationStrategy;
+import io.chocorean.authmod.authentication.DatabaseAuthenticationStrategy;
+import io.chocorean.authmod.authentication.FileAuthenticationStrategy;
+import io.chocorean.authmod.authentication.IAuthenticationStrategy;
 import io.chocorean.authmod.command.LoginCommand;
 import io.chocorean.authmod.command.RegisterCommand;
 import io.chocorean.authmod.config.AuthModConfig;
@@ -18,7 +18,7 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
 import java.nio.file.Paths;
 
-@Mod(modid = AuthMod.MODID, name = AuthMod.NAME, version = AuthMod.VERSION, serverSideOnly = true, acceptableRemoteVersions = "*")
+@Mod(modid = AuthMod.MODID, name = AuthMod.NAME, version = AuthMod.VERSION, serverSideOnly = false, acceptableRemoteVersions = "*")
 public class AuthMod {
 
     static final String MODID = "authmod";

@@ -1,4 +1,4 @@
-package io.chocorean.authmod.authentification;
+package io.chocorean.authmod.authentication;
 
 import io.chocorean.authmod.model.IPlayer;
 

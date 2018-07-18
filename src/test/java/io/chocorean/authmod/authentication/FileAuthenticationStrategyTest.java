@@ -1,4 +1,4 @@
-package io.chocorean.authmod.authentification;
+package io.chocorean.authmod.authentication;
 
 import org.junit.Before;
 import org.junit.Test;

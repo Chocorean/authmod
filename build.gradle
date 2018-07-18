@@ -28,6 +28,10 @@ ext{
     junitVersion= '4.12'
 }
 
+configurations {
+    embed
+    compile.extendsFrom(embed)
+}
 
 minecraft {
     version = "1.10.2-12.18.3.2185"
@@ -36,11 +40,16 @@ minecraft {
 }
 
 dependencies {
-    compile 'org.mariadb.jdbc:mariadb-java-client:2.1.2'
+    embed 'org.mariadb.jdbc:mariadb-java-client:2.2.5'
     compile group: 'org.mindrot', name: 'jbcrypt', version: '0.4'
     testCompile "junit:junit:$junitVersion"
 }
 
+
+//Add dependencies to the JAR
+jar {
+    from configurations.embed.collect { it.isDirectory() ? it : zipTree(it) }
+}
 
 processResources {
     // this will ensure that this task is redone when the versions change.

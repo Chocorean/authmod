@@ -1,4 +1,4 @@
-package io.chocorean.authmod.authentification.db;
+package io.chocorean.authmod.authentication.db;
 
 import io.chocorean.authmod.AuthMod;
 import java.sql.*;

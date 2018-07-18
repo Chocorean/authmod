@@ -25,19 +25,12 @@ services:
     image: itzg/minecraft-server:latest
     container_name: minecraft
     volumes:
-      - ./data/minecraft/backups:/data/backups
-      - ./data/minecraft/world:/data/world
-      - ./conf/minecraft/whitelist.json:/data/whitelist.json
-      - ./conf/minecraft/ops.json:/data/ops.json
-      - ./conf/minecraft/server.properties:/data/server.properties
-      - ./conf/minecraft/banned-ips.json:/data/banned-ips.json
-      - ./conf/minecraft/banned-players.json:/data/banned-players.json
-      - ./build/libs/authmod-1.6.jar:/mods
-      - ./src/main/java/resources/authmod.cfg:/config
+      - ./build/libs/authmod-1.6.jar:/mods/authmod-1.6.jar
+      - ./src/main/resources/authmod.cfg:/config/authmod.cfg
     ports:
       - 25565:25565
     environment:
       - EULA=TRUE
       - ONLINE_MODE=FALSE
-      - ENV TYPE="FORGE"
-      - ENV FORGE_INSTALLER_URL="http://files.minecraftforge.net/maven/net/minecraftforge/forge/1.10.2-12.18.3.2185/forge-1.10.2-12.18.3.2185-installer.jar"
+      - TYPE=FORGE
+      - FORGE_INSTALLER_URL=https://files.minecraftforge.net/maven/net/minecraftforge/forge/1.10.2-12.18.3.2185/forge-1.10.2-12.18.3.2185-installer.jar

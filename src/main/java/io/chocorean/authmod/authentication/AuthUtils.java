@@ -1,4 +1,4 @@
-package io.chocorean.authmod.authentification;
+package io.chocorean.authmod.authentication;
 
 import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.exception.BanException;
@@ -25,6 +25,10 @@ public class AuthUtils {
     public static IPlayer Register(IPlayer player) {
         player.setPassword(BCrypt.hashpw(player.getPassword(), BCrypt.gensalt()));
         return player;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(BCrypt.checkpw("root", "$2a$04$SCqLGpm84pSysiYXv/1/AOcfIDKtl70W9rx/.b2kjf1KTD/S6RZ7C"));
     }
 
 }

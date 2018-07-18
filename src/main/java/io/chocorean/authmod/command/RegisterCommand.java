@@ -1,6 +1,6 @@
 package io.chocorean.authmod.command;
 
-import io.chocorean.authmod.authentification.IAuthenticationStrategy;
+import io.chocorean.authmod.authentication.IAuthenticationStrategy;
 import io.chocorean.authmod.model.IPlayer;
 import io.chocorean.authmod.model.Player;
 import net.minecraft.command.ICommand;

@@ -1,9 +1,9 @@
-package io.chocorean.authmod.authentification;
+package io.chocorean.authmod.authentication;
 
 import io.chocorean.authmod.AuthMod;
-import io.chocorean.authmod.authentification.db.ConnectionFactory;
-import io.chocorean.authmod.authentification.db.IPlayersDAO;
-import io.chocorean.authmod.authentification.db.PlayersDAO;
+import io.chocorean.authmod.authentication.db.ConnectionFactory;
+import io.chocorean.authmod.authentication.db.IPlayersDAO;
+import io.chocorean.authmod.authentication.db.PlayersDAO;
 import io.chocorean.authmod.exception.LoginException;
 import io.chocorean.authmod.exception.PlayerAlreadyExistException;
 import io.chocorean.authmod.model.IPlayer;

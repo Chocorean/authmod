@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS `players` (
 
 Here some data if you're interested in:
 ```sql
-INSERT INTO `players` (`id`, `firstname`, `lastname`, `email`, `creationDate`, `updatedOn`, `avatar`, `lastConnection`, `password`, `isAdmin`, `isBan`, `uuid`, `username`) VALUES
+INSERT INTO players (id, firstname, lastname, email, creationDate, updatedOn, avatar, lastConnection, password, isAdmin, isBan, uuid, username) VALUES
 	(1, 'Richard', 'Stallman', 'richard.stallman.gnu.org', '2018-06-12 22:59:09', '2018-06-12 22:59:09', NULL, '2018-06-12 22:59:09', NULL, 0, 0, '', ''),
 	(2, 'Linus', 'Torvalds', 'linus.torvalds.linux.org', '2018-06-12 22:59:09', '2018-06-12 22:59:09', 'https://lh3.googleusercontent.com/SyqrxNLd6Eo4-AwTGXktIfMnx4dOBREcZCZvocEVue-GsuBB1dYDjJorgHviJeTHzHYfAKs4wiHmkDk=w1211-h1210-rw-no', '2018-06-12 22:59:09', NULL, 0, 0, '', ''),
 	(3, 'Tony', 'Stark', 'tony.stark.stark-company.com', '2018-06-12 22:59:09', '2018-06-12 22:59:09', 'http://awakenthegreatnesswithin.com/wp-content/uploads/2017/12/Robert-Downey-Jr-Quotes-1.jpg', '2018-06-12 22:59:09', NULL, 0, 0, '', ''),
@@ -79,6 +79,8 @@ INSERT INTO `players` (`id`, `firstname`, `lastname`, `email`, `creationDate`, `
 	(5, 'coding', 'horror', 'coding-horror@sof.com', '2018-06-12 22:59:09', '2018-06-12 22:59:09', 'https://pbs.twimg.com/profile_images/632821853627678720/zPKK7jql_400x400.png', '2018-06-12 22:59:09', NULL, NULL, 0, '', ''),
 	(6, 'Louis', 'De Funes', 'louis.de-funes@actor.fr', '2018-06-12 22:59:09', '2018-06-12 22:59:09', NULL, '2018-06-12 22:59:09', NULL, 0, 1, '', '');
 ```
+
+you can use this [calculator](https://www.dailycred.com/article/bcrypt-calculator) to generate a password!
 
 ### 2. Configuring your IDE
 Follow [this documentation](https://mcforge.readthedocs.io/en/latest/gettingstarted/) to have a functional environment with your preferred IDE!

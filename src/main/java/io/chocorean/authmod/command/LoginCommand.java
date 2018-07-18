@@ -1,6 +1,6 @@
 package io.chocorean.authmod.command;
 
-import io.chocorean.authmod.authentification.IAuthenticationStrategy;
+import io.chocorean.authmod.authentication.IAuthenticationStrategy;
 import io.chocorean.authmod.event.Handler;
 import io.chocorean.authmod.exception.BanException;
 import io.chocorean.authmod.model.IPlayer;
