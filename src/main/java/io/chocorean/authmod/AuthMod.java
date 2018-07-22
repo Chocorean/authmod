@@ -26,7 +26,7 @@ public class AuthMod {
     static final String VERSION = "1.6";
     private static final String COMMON_PROXY = "io.chocorean.authmod.proxy.CommonProxy";
     private static final String CLIENT_PROXY = "io.chocorean.authmod.proxy.ClientProxy";
-    private static final org.apache.logging.log4j.Logger LOGGER = FMLLog.getLogger();
+    public static final org.apache.logging.log4j.Logger LOGGER = FMLLog.getLogger();
     private static AuthModConfig config;
     private static IAuthenticationStrategy strategy;
     @SidedProxy(clientSide = AuthMod.CLIENT_PROXY, serverSide = AuthMod.COMMON_PROXY)

@@ -16,7 +16,7 @@ import java.sql.SQLException;
 public class DatabaseAuthenticationStrategy implements IAuthenticationStrategy {
 
     private final IPlayersDAO playersDAO;
-    private static final Logger LOGGER = FMLLog.getLogger();
+    public static final org.apache.logging.log4j.Logger LOGGER = FMLLog.getLogger();
 
     public DatabaseAuthenticationStrategy() {
         this.playersDAO = new PlayersDAO(ConnectionFactory.getConnection());
@@ -25,6 +25,7 @@ public class DatabaseAuthenticationStrategy implements IAuthenticationStrategy {
     @Override
     public IPlayer login(IPlayer player) throws Exception {
         IPlayer p;
+        LOGGER.info("Checking authentication for " + player.getEmail());
         try {
             p = this.playersDAO.findByEmailOrUsername(player.getEmail());
         } catch(SQLException e) {

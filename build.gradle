@@ -41,7 +41,7 @@ minecraft {
 
 dependencies {
     embed 'org.mariadb.jdbc:mariadb-java-client:2.2.5'
-    compile group: 'org.mindrot', name: 'jbcrypt', version: '0.4'
+    embed group: 'org.mindrot', name: 'jbcrypt', version: '0.4'
     testCompile "junit:junit:$junitVersion"
 }
 
