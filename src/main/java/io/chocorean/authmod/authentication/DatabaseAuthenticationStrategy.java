@@ -4,6 +4,8 @@ import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.authentication.db.ConnectionFactory;
 import io.chocorean.authmod.authentication.db.IPlayersDAO;
 import io.chocorean.authmod.authentication.db.PlayersDAO;
+import io.chocorean.authmod.config.AuthModConfig;
+import io.chocorean.authmod.config.AuthModDatabaseConfig;
 import io.chocorean.authmod.exception.LoginException;
 import io.chocorean.authmod.exception.PlayerAlreadyExistException;
 import io.chocorean.authmod.model.IPlayer;
@@ -18,8 +20,8 @@ public class DatabaseAuthenticationStrategy implements IAuthenticationStrategy {
     private final IPlayersDAO playersDAO;
     public static final org.apache.logging.log4j.Logger LOGGER = FMLLog.getLogger();
 
-    public DatabaseAuthenticationStrategy() {
-        this.playersDAO = new PlayersDAO(ConnectionFactory.getConnection());
+    public DatabaseAuthenticationStrategy(AuthModDatabaseConfig config) {
+        this.playersDAO = new PlayersDAO(ConnectionFactory.getConnection(), config.getTable());
     }
 
     @Override
@@ -40,7 +42,7 @@ public class DatabaseAuthenticationStrategy implements IAuthenticationStrategy {
     public IPlayer register(IPlayer player) throws Exception {
         player = AuthUtils.Register(player);
         try {
-            if(this.playersDAO.findByEmail(player.getEmail()) !=null)
+            if(this.playersDAO.findByEmail(player.getEmail()) != null)
                 throw new PlayerAlreadyExistException(player.getEmail() + " already exists!");
             this.playersDAO.create(player);
         } catch(SQLException e) {

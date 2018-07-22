@@ -12,8 +12,12 @@ public class PlayersDAO implements IPlayersDAO<Player> {
     private final String table;
 
     public PlayersDAO(Connection connection) {
+        this(connection, "players");
+    }
+
+    public PlayersDAO(Connection connection, String table) {
         this.connection = connection;
-        this.table = "Players";
+        this.table = table;
     }
 
     @Override

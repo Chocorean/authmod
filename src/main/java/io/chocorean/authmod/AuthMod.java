@@ -18,7 +18,7 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
 import java.nio.file.Paths;
 
-@Mod(modid = AuthMod.MODID, name = AuthMod.NAME, version = AuthMod.VERSION, serverSideOnly = false, acceptableRemoteVersions = "*")
+@Mod(modid = AuthMod.MODID, name = AuthMod.NAME, version = AuthMod.VERSION, serverSideOnly = true, acceptableRemoteVersions = "*")
 public class AuthMod {
 
     static final String MODID = "authmod";
@@ -37,7 +37,7 @@ public class AuthMod {
         config = new AuthModConfig(event.getSuggestedConfigurationFile());
         switch (config.getAuthenticationStrategy().toUpperCase()) {
             case "DATABASE":
-                strategy = new DatabaseAuthenticationStrategy();
+                strategy = new DatabaseAuthenticationStrategy(config.getDatabaseConfig());
                 LOGGER.info("Use DatabaseAuthenticationStrategy");
                 break;
             case "FILE":

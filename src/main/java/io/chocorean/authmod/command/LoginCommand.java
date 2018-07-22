@@ -49,9 +49,9 @@ public class LoginCommand implements ICommand {
 
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
-        if (args.length != 2) {
-            sender.addChatMessage(new TextComponentString("Invalid number of arguments: <email or username> <password>"));
-        } else {
+            if (args.length != 2) {
+                sender.addChatMessage(new TextComponentString("Invalid number of arguments: <email or username> <password>"));
+            } else {
             IPlayer loggedPlayer = new Player();
             loggedPlayer.setEmail(args[0]);
             loggedPlayer.setPassword(args[1]);

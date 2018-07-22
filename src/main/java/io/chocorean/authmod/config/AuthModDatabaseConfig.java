@@ -21,5 +21,7 @@ public class AuthModDatabaseConfig {
 
     public String getDialect() { return this.get("dialect", "mariadb"); }
 
+    public String getTable() { return this.get("table", "players"); }
+
 }
 
