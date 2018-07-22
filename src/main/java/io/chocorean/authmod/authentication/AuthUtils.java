@@ -26,9 +26,5 @@ public class AuthUtils {
         player.setPassword(BCrypt.hashpw(player.getPassword(), BCrypt.gensalt()));
         return player;
     }
-
-    public static void main(String[] args) {
-        System.out.println(BCrypt.checkpw("root", "$2a$04$SCqLGpm84pSysiYXv/1/AOcfIDKtl70W9rx/.b2kjf1KTD/S6RZ7C"));
-    }
-
+    
 }
