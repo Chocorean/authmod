@@ -11,7 +11,7 @@ import org.mindrot.jbcrypt.BCrypt;
 public class AuthUtils {
 
     public static IPlayer verifyAuthentication(IPlayer saved, IPlayer actual) throws LoginException {
-        if(actual == null)
+        if(actual == null || saved == null)
             throw new PlayerNotFoundException(String.format("%s doesn't exist", actual.getEmail()));
         if(actual.isBan())
             throw new BanException(String.format("Your account is  banned (%s), please contact %s.", actual.getEmail(), AuthMod.getConfig().getContact()));
@@ -26,5 +26,5 @@ public class AuthUtils {
         player.setPassword(BCrypt.hashpw(player.getPassword(), BCrypt.gensalt()));
         return player;
     }
-    
+
 }
