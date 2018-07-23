@@ -23,7 +23,7 @@ public class AuthMod {
 
     static final String MODID = "authmod";
     static final String NAME = "AuthMod";
-    static final String VERSION = "1.6";
+    static final String VERSION = "2.1";
     private static final String COMMON_PROXY = "io.chocorean.authmod.proxy.CommonProxy";
     private static final String CLIENT_PROXY = "io.chocorean.authmod.proxy.ClientProxy";
     public static final org.apache.logging.log4j.Logger LOGGER = FMLLog.getLogger();
