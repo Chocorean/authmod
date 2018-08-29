@@ -39,7 +39,7 @@ public class LoginCommand implements ICommand {
 
     @Override
     public String getCommandUsage(ICommandSender sender) {
-        return "/login <email or username> <password> - Allows you to authenticate on the server";
+        return "/login <email or username> password - Allows you to authenticate on the server";
     }
 
     @Override
@@ -49,31 +49,38 @@ public class LoginCommand implements ICommand {
 
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
-            if (args.length != 2) {
-                sender.addChatMessage(new TextComponentString("Invalid number of arguments: <email or username> <password>"));
-            } else {
-            IPlayer loggedPlayer = new Player();
+        EntityPlayer player = (EntityPlayer) sender;
+        IPlayer loggedPlayer = new Player();
+        if(args.length == 1) {
+            loggedPlayer.setUsername(player.getDisplayNameString());
+            loggedPlayer.setPassword(args[0]);
+        }
+        if(args.length == 2) {
             loggedPlayer.setEmail(args[0]);
             loggedPlayer.setPassword(args[1]);
-            try {
-                loggedPlayer = this.strategy.login(loggedPlayer);
-            } catch (BanException e) {
-                ((EntityPlayerMP) sender).connection.kickPlayerFromServer(e.getMessage());
-            } catch (Exception e) {
-                sender.addChatMessage(new TextComponentString(e.getMessage()));
-                loggedPlayer = null;
-            }
-            if (loggedPlayer != null) {
-                LOGGER.info(sender.getName() + " authenticated");
-                EntityPlayer player = (EntityPlayer) sender;
-                Handler.remove(player);
-                sender.addChatMessage(new TextComponentString("Logged in successfully. Have fun!"));
-                ((EntityPlayerMP) sender).setPositionAndUpdate(
-                        player.getPosition().getX(),
-                        player.getPosition().getY(),
-                        player.getPosition().getZ()
-                );
-            }
+        }
+        else {
+            sender.addChatMessage(new TextComponentString("You have at least provide a password when using /login"));
+        }
+
+
+        try {
+            loggedPlayer = this.strategy.login(loggedPlayer);
+        } catch (BanException e) {
+            ((EntityPlayerMP) sender).connection.kickPlayerFromServer(e.getMessage());
+        } catch (Exception e) {
+            sender.addChatMessage(new TextComponentString(e.getMessage()));
+            loggedPlayer = null;
+        }
+        if (loggedPlayer != null) {
+            LOGGER.info(sender.getName() + " authenticated");
+            Handler.remove(player);
+            sender.addChatMessage(new TextComponentString("Logged in successfully. Have fun!"));
+            ((EntityPlayerMP) sender).setPositionAndUpdate(
+                    player.getPosition().getX(),
+                    player.getPosition().getY(),
+                    player.getPosition().getZ()
+            );
         }
     }
 
@@ -98,3 +105,7 @@ public class LoginCommand implements ICommand {
     }
 
 }
+
+
+
+

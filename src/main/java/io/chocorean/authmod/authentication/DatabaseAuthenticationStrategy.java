@@ -4,7 +4,6 @@ import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.authentication.db.ConnectionFactory;
 import io.chocorean.authmod.authentication.db.IPlayersDAO;
 import io.chocorean.authmod.authentication.db.PlayersDAO;
-import io.chocorean.authmod.config.AuthModConfig;
 import io.chocorean.authmod.config.AuthModDatabaseConfig;
 import io.chocorean.authmod.exception.LoginException;
 import io.chocorean.authmod.exception.PlayerAlreadyExistException;
@@ -18,7 +17,7 @@ import java.sql.SQLException;
 public class DatabaseAuthenticationStrategy implements IAuthenticationStrategy {
 
     private final IPlayersDAO playersDAO;
-    public static final org.apache.logging.log4j.Logger LOGGER = FMLLog.getLogger();
+    public static final Logger LOGGER = FMLLog.getLogger();
 
     public DatabaseAuthenticationStrategy(AuthModDatabaseConfig config) {
         this.playersDAO = new PlayersDAO(ConnectionFactory.getConnection(), config.getTable());
@@ -27,9 +26,10 @@ public class DatabaseAuthenticationStrategy implements IAuthenticationStrategy {
     @Override
     public IPlayer login(IPlayer player) throws Exception {
         IPlayer p;
+        String data = player.getEmail() == null ? player.getUsername() : player.getEmail();
         LOGGER.info("Checking authentication for " + player.getEmail());
         try {
-            p = this.playersDAO.findByEmailOrUsername(player.getEmail());
+            p = this.playersDAO.findByEmailOrUsername(data);
         } catch(SQLException e) {
             LOGGER.catching(Level.ERROR, e);
             throw new LoginException("Authentication is unavailable for the moment. Please contact " + AuthMod.getConfig().getContact());

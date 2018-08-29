@@ -58,7 +58,7 @@ public class Handler {
     @SubscribeEvent(priority= EventPriority.HIGHEST)
     public static void onCommand(CommandEvent event){
         String name = event.getCommand().getCommandName();
-        if (!(name.equals("register") || name.equals("login")) && (event.getSender() instanceof EntityPlayer) && event.isCancelable()) {
+        if (descriptors.containsKey(event.getSender()) && !(name.equals("register") || name.equals("login")) && (event.getSender() instanceof EntityPlayer) && event.isCancelable()) {
             event.setCanceled(true);
             ((EntityPlayerMP)event.getSender()).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getMessage())));
         }
