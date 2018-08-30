@@ -51,34 +51,39 @@ public class LoginCommand implements ICommand {
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
         EntityPlayer player = (EntityPlayer) sender;
         IPlayer loggedPlayer = new Player();
-        loggedPlayer.setUsername(player.getDisplayNameString());
-        if(args.length == 1) {
-            loggedPlayer.setPassword(args[0]);
-        }
-        if(args.length == 2) {
-            loggedPlayer.setEmail(args[0]);
-            loggedPlayer.setPassword(args[1]);
-        }
-        else {
-            sender.addChatMessage(new TextComponentString("You have at least provide a password when using /login"));
-        }
-        try {
-            loggedPlayer = this.strategy.login(loggedPlayer);
-        } catch (BanException e) {
-            ((EntityPlayerMP) sender).connection.kickPlayerFromServer(e.getMessage());
-        } catch (Exception e) {
-            sender.addChatMessage(new TextComponentString(e.getMessage()));
-            loggedPlayer = null;
-        }
-        if (loggedPlayer != null) {
-            LOGGER.info(sender.getName() + " authenticated");
-            Handler.authorizePlayer(player);
-            sender.addChatMessage(new TextComponentString("Logged in successfully. Have fun!"));
-            ((EntityPlayerMP) sender).setPositionAndUpdate(
-                    player.getPosition().getX(),
-                    player.getPosition().getY(),
-                    player.getPosition().getZ()
-            );
+        if(Handler.isLogged(player)) {
+            sender.addChatMessage(new TextComponentString("You are already logged"));
+        } else {
+            loggedPlayer.setUsername(player.getDisplayNameString());
+            if(args.length == 1) {
+                loggedPlayer.setPassword(args[0]);
+            } else {
+                if(args.length == 2) {
+                    loggedPlayer.setEmail(args[0]);
+                    loggedPlayer.setPassword(args[1]);
+                }
+                else {
+                    sender.addChatMessage(new TextComponentString("You have at least provide a password when using /login"));
+                }
+            }
+            try {
+                loggedPlayer = this.strategy.login(loggedPlayer);
+            } catch (BanException e) {
+                ((EntityPlayerMP) sender).connection.kickPlayerFromServer(e.getMessage());
+            } catch (Exception e) {
+                sender.addChatMessage(new TextComponentString(e.getMessage()));
+                loggedPlayer = null;
+            }
+            if (loggedPlayer != null) {
+                LOGGER.info(sender.getName() + " authenticated");
+                Handler.authorizePlayer(player);
+                sender.addChatMessage(new TextComponentString("Logged in successfully. Have fun!"));
+                ((EntityPlayerMP) sender).setPositionAndUpdate(
+                        player.getPosition().getX(),
+                        player.getPosition().getY(),
+                        player.getPosition().getZ()
+                );
+            }
         }
     }
 

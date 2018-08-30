@@ -1,5 +1,6 @@
 package io.chocorean.authmod.event;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import io.chocorean.authmod.AuthMod;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -17,7 +18,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
-
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ScheduledExecutorService;
@@ -29,6 +30,7 @@ public class Handler {
 
     private static final ScheduledExecutorService scheduler = new ScheduledThreadPoolExecutor(1);
     private static final Map<EntityPlayer, PlayerDescriptor> descriptors = new HashMap<>();
+    private static final Map<EntityPlayer, Boolean> logged = new HashMap<>();
 
     @SubscribeEvent(priority= EventPriority.HIGHEST)
     public static void onJoin(PlayerLoggedInEvent event){
@@ -41,6 +43,7 @@ public class Handler {
         scheduler.schedule(() -> {
             if(descriptors.containsKey(entity)) {
                 descriptors.remove(entity);
+                logged.remove(entity);
                 entity.setPositionAndUpdate(
                         dc.getPosition().getX(),
                         dc.getPosition().getY(),
@@ -49,6 +52,11 @@ public class Handler {
                 ((EntityPlayerMP) entity).connection.kickPlayerFromServer("Wake up! You only have " +  AuthMod.getConfig().getDelay() + " seconds to log in.");
             }
         }, AuthMod.getConfig().getDelay(), TimeUnit.SECONDS);
+    }
+
+    @SubscribeEvent(priority= EventPriority.HIGHEST)
+    public static void onLeave(PlayerLoggedOutEvent event){
+        logged.remove(event.player);
     }
 
     @SubscribeEvent(priority=EventPriority.HIGHEST)
@@ -63,7 +71,7 @@ public class Handler {
     @SubscribeEvent(priority= EventPriority.HIGHEST)
     public static void onCommand(CommandEvent event){
         String name = event.getCommand().getCommandName();
-        if (descriptors.containsKey(event.getSender()) && !(name.equals("register") || name.equals("login")) && (event.getSender() instanceof EntityPlayer) && event.isCancelable()) {
+        if (descriptors.containsKey(event.getSender()) && !(name.equals("register") || name.equals("login") || name.equals("logged?")) && (event.getSender() instanceof EntityPlayer) && event.isCancelable()) {
             event.setCanceled(true);
             ((EntityPlayerMP)event.getSender()).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getMessage())));
         }
@@ -135,6 +143,11 @@ public class Handler {
     }
 
     public static PlayerDescriptor authorizePlayer(EntityPlayer player) {
+        logged.put(player, true);
         return descriptors.remove(player);
+    }
+
+    public static boolean isLogged(EntityPlayer player) {
+        return logged.getOrDefault(player, false);
     }
 }

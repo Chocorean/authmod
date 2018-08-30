@@ -48,19 +48,23 @@ public class RegisterCommand implements ICommand {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
         EntityPlayer player = (EntityPlayer) sender;
-        if (args.length != 2) {
-            sender.addChatMessage(new TextComponentString("Invalid number of arguments expected: <email> <password>"));
+        if(Handler.isLogged(player)) {
+            sender.addChatMessage(new TextComponentString("You are already registered"));
         } else {
-            IPlayer playerToRegister = new Player();
-            playerToRegister.setEmail(args[0]);
-            playerToRegister.setPassword(args[1]);
-            playerToRegister.setUsername(player.getDisplayNameString());
-            try {
-                this.strategy.register(playerToRegister);
-                sender.addChatMessage(new TextComponentString("You are registered as " + playerToRegister.getEmail() + ". Next time, please login to play!"));
-                Handler.authorizePlayer(player);
-            } catch (Exception e) {
-                sender.addChatMessage(new TextComponentString(e.getMessage()));
+            if (args.length != 2) {
+                sender.addChatMessage(new TextComponentString("Invalid number of arguments expected: <email> <password>"));
+            } else {
+                IPlayer playerToRegister = new Player();
+                playerToRegister.setEmail(args[0]);
+                playerToRegister.setPassword(args[1]);
+                playerToRegister.setUsername(player.getDisplayNameString());
+                try {
+                    this.strategy.register(playerToRegister);
+                    sender.addChatMessage(new TextComponentString("You are registered as " + playerToRegister.getEmail() + ". Next time, please login to play!"));
+                    Handler.authorizePlayer(player);
+                } catch (Exception e) {
+                    sender.addChatMessage(new TextComponentString(e.getMessage()));
+                }
             }
         }
     }

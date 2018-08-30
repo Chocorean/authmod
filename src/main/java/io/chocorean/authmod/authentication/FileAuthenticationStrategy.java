@@ -45,6 +45,12 @@ public class FileAuthenticationStrategy implements IAuthenticationStrategy {
     @Override
     public IPlayer login(IPlayer player) throws Exception {
         IPlayer check = this.players.get(player.getEmail());
+        if(check == null) {
+            IPlayer finalPlayer = player;
+            check = this.players.values().stream().filter(p -> p.getUsername().equals(finalPlayer.getUsername()))
+                    .findFirst()
+                    .orElse(null);
+        }
         player = AuthUtils.verifyAuthentication(check, player);
         return player;
     }
@@ -64,7 +70,7 @@ public class FileAuthenticationStrategy implements IAuthenticationStrategy {
     private void saveFile() throws IOException {
         BufferedWriter bw = new BufferedWriter(new FileWriter(this.authFile));
         for(String email: this.players.keySet())
-            bw.write(String.format("%s%s%s%s%s", email, SEPARATOR, this.players.get(email).getUsername(), SEPARATOR, this.players.get(email).getPassword()));
+            bw.write(String.format("%s%s%s%s%s\n", email, SEPARATOR, this.players.get(email).getUsername(), SEPARATOR, this.players.get(email).getPassword()));
         bw.close();
     }
 

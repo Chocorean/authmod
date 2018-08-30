@@ -3,6 +3,7 @@ package io.chocorean.authmod;
 import io.chocorean.authmod.authentication.DatabaseAuthenticationStrategy;
 import io.chocorean.authmod.authentication.FileAuthenticationStrategy;
 import io.chocorean.authmod.authentication.IAuthenticationStrategy;
+import io.chocorean.authmod.command.LoggedCommand;
 import io.chocorean.authmod.command.LoginCommand;
 import io.chocorean.authmod.command.RegisterCommand;
 import io.chocorean.authmod.config.AuthModConfig;
@@ -65,6 +66,8 @@ public class AuthMod {
                 MinecraftForge.EVENT_BUS.register(new Handler());
                 LOGGER.info("Registering AuthMod Login Handler");
                 event.registerServerCommand(new LoginCommand(AuthMod.strategy));
+                LOGGER.info("Registering AuthMod Logged Handler");
+                event.registerServerCommand(new LoggedCommand());
             }
             if(config.isRegisterEnabled()) {
                 LOGGER.info("Registering AuthMod Register Handler");
