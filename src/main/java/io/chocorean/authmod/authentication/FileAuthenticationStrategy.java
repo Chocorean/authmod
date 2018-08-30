@@ -35,7 +35,8 @@ public class FileAuthenticationStrategy implements IAuthenticationStrategy {
             String[] parts = line.split(SEPARATOR);
             IPlayer p = new Player();
             p.setEmail(parts[0]);
-            p.setPassword(parts[1]);
+            p.setUsername(parts[1]);
+            p.setPassword(parts[2]);
             this.players.put(p.getEmail(), p);
         }
         bf.close();
@@ -63,7 +64,7 @@ public class FileAuthenticationStrategy implements IAuthenticationStrategy {
     private void saveFile() throws IOException {
         BufferedWriter bw = new BufferedWriter(new FileWriter(this.authFile));
         for(String email: this.players.keySet())
-            bw.write(String.format("%s%s%s", email,SEPARATOR, this.players.get(email).getPassword()));
+            bw.write(String.format("%s%s%s%s%s", email, SEPARATOR, this.players.get(email).getUsername(), SEPARATOR, this.players.get(email).getPassword()));
         bw.close();
     }
 

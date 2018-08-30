@@ -39,7 +39,7 @@ public class LoginCommand implements ICommand {
 
     @Override
     public String getCommandUsage(ICommandSender sender) {
-        return "/login <email or username> password - Allows you to authenticate on the server";
+        return "/login <email> password - Allows you to authenticate on the server";
     }
 
     @Override
@@ -51,8 +51,8 @@ public class LoginCommand implements ICommand {
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
         EntityPlayer player = (EntityPlayer) sender;
         IPlayer loggedPlayer = new Player();
+        loggedPlayer.setUsername(player.getDisplayNameString());
         if(args.length == 1) {
-            loggedPlayer.setUsername(player.getDisplayNameString());
             loggedPlayer.setPassword(args[0]);
         }
         if(args.length == 2) {
@@ -62,8 +62,6 @@ public class LoginCommand implements ICommand {
         else {
             sender.addChatMessage(new TextComponentString("You have at least provide a password when using /login"));
         }
-
-
         try {
             loggedPlayer = this.strategy.login(loggedPlayer);
         } catch (BanException e) {
@@ -74,7 +72,7 @@ public class LoginCommand implements ICommand {
         }
         if (loggedPlayer != null) {
             LOGGER.info(sender.getName() + " authenticated");
-            Handler.remove(player);
+            Handler.authorizePlayer(player);
             sender.addChatMessage(new TextComponentString("Logged in successfully. Have fun!"));
             ((EntityPlayerMP) sender).setPositionAndUpdate(
                     player.getPosition().getX(),

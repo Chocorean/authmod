@@ -1,10 +1,7 @@
 package io.chocorean.authmod.authentication;
 
 import io.chocorean.authmod.AuthMod;
-import io.chocorean.authmod.exception.BanException;
-import io.chocorean.authmod.exception.LoginException;
-import io.chocorean.authmod.exception.PlayerNotFoundException;
-import io.chocorean.authmod.exception.WrongPasswordException;
+import io.chocorean.authmod.exception.*;
 import io.chocorean.authmod.model.IPlayer;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -22,7 +19,11 @@ public class AuthUtils {
         return actual;
     }
 
-    public static IPlayer Register(IPlayer player) {
+    public static IPlayer Register(IPlayer player) throws UnauthorizedHostedDomainException {
+        String hostedDomain = AuthMod.getConfig().getHostedDomain();
+        if(hostedDomain.length() > 0 && !player.getEmail().endsWith(hostedDomain)) {
+            throw new UnauthorizedHostedDomainException();
+        }
         player.setPassword(BCrypt.hashpw(player.getPassword(), BCrypt.gensalt()));
         return player;
     }

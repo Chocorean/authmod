@@ -26,12 +26,14 @@ public class AuthModConfig {
     public String getAuthenticationStrategy() { return this.config.get(GEN_CATEGORY, "strategy", "file").getString(); }
 
     public String getContact() {
-        return this.config.get(GEN_CATEGORY, "contact", "admins").getString();
+        return this.config.get(GEN_CATEGORY, "contact", "the admins").getString();
     }
 
     public String getMessage() { return this.config.get(GEN_CATEGORY, "message", "Use /login to start playing!").getString(); }
 
-    public String getWebsite() { return this.config.get(GEN_CATEGORY, "website", "files.minecraftforge.net").getString(); }
+    public String getHostedDomain() { return this.config.get(GEN_CATEGORY, "hostedDomain", "").getString(); }
+
+    public String getWebsite() { return this.config.get(GEN_CATEGORY, "website", "https://github.com/Chocorean/authmod").getString(); }
 
     public boolean isLoginEnabled() {
         return this.config.get(GEN_CATEGORY, "enableLogin", true).getBoolean();

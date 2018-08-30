@@ -134,7 +134,7 @@ public class Handler {
         }
     }
 
-    public static PlayerDescriptor remove(EntityPlayer player) {
+    public static PlayerDescriptor authorizePlayer(EntityPlayer player) {
         return descriptors.remove(player);
     }
 }

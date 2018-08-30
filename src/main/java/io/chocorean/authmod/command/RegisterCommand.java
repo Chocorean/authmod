@@ -1,10 +1,12 @@
 package io.chocorean.authmod.command;
 
 import io.chocorean.authmod.authentication.IAuthenticationStrategy;
+import io.chocorean.authmod.event.Handler;
 import io.chocorean.authmod.model.IPlayer;
 import io.chocorean.authmod.model.Player;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
@@ -35,7 +37,7 @@ public class RegisterCommand implements ICommand {
 
     @Override
     public String getCommandUsage(ICommandSender sender) {
-        return "/register <email> <password> - Be careful when choosing it, you'll be asked to login each time you play..";
+        return "/register email password - Be careful when choosing it, you'll be asked to login each time you play..";
     }
 
     @Override
@@ -45,15 +47,18 @@ public class RegisterCommand implements ICommand {
 
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
+        EntityPlayer player = (EntityPlayer) sender;
         if (args.length != 2) {
-            sender.addChatMessage(new TextComponentString("Invalid number of arguments: <email> <password>"));
+            sender.addChatMessage(new TextComponentString("Invalid number of arguments expected: <email> <password>"));
         } else {
-            IPlayer player = new Player();
-            player.setEmail(args[0]);
-            player.setPassword(args[1]);
+            IPlayer playerToRegister = new Player();
+            playerToRegister.setEmail(args[0]);
+            playerToRegister.setPassword(args[1]);
+            playerToRegister.setUsername(player.getDisplayNameString());
             try {
-                this.strategy.register(player);
-                sender.addChatMessage(new TextComponentString("You are registered as " + player.getEmail() + ". Next time, please login to play!"));
+                this.strategy.register(playerToRegister);
+                sender.addChatMessage(new TextComponentString("You are registered as " + playerToRegister.getEmail() + ". Next time, please login to play!"));
+                Handler.authorizePlayer(player);
             } catch (Exception e) {
                 sender.addChatMessage(new TextComponentString(e.getMessage()));
             }
