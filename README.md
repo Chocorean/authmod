@@ -88,7 +88,7 @@ Features            | File strategy         | Database strategy        |
 The mod provides to the users a set of commands that can be used once connected on the server. Those commands are:
 ```bash
 # Allow the user to authenticate on the server
-/login  email@example.com password
+/login email@example.com password
 
 # Allow the user to register on the server
 /register email@example.com password
@@ -103,8 +103,6 @@ For the `/login` command, once this command is entered by the user, the mod will
 
 ### Requirements
  - [gradle](https://gradle.org/): build tool used by the forge community
- - [Minecraft](https://minecraft.net/en-us/download/) with at least a demo account
- - [Minecraft forge 1.22.2](https://files.minecraftforge.net/) installed
  - [JDK](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) installed 
  - Your prefered java IDE
 
