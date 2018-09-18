@@ -22,12 +22,12 @@ import java.nio.file.Paths;
 @Mod(modid = AuthMod.MODID, name = AuthMod.NAME, version = AuthMod.VERSION, serverSideOnly = true, acceptableRemoteVersions = "*")
 public class AuthMod {
 
-    static final String MODID = "authmod";
-    static final String NAME = "AuthMod";
-    static final String VERSION = "2.1";
+    static final String MODID = "authmod-tncy";
+    static final String NAME = "AuthMod-TNCY";
+    static final String VERSION = "2.2";
     private static final String COMMON_PROXY = "io.chocorean.authmod.proxy.CommonProxy";
     private static final String CLIENT_PROXY = "io.chocorean.authmod.proxy.ClientProxy";
-    public static final org.apache.logging.log4j.Logger LOGGER = FMLLog.getLogger();
+    public static final org.apache.logging.log4j.Logger LOGGER = FMLLog.log;
     private static AuthModConfig config;
     private static IAuthenticationStrategy strategy;
     @SidedProxy(clientSide = AuthMod.CLIENT_PROXY, serverSide = AuthMod.COMMON_PROXY)

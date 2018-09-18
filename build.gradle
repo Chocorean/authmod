@@ -2,10 +2,9 @@ buildscript {
     repositories {
         jcenter()
         maven { url = "http://files.minecraftforge.net/maven" }
-        mavenCentral()
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
     }
 }
 
@@ -15,9 +14,9 @@ plugins {
 
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "2.1"
-group= "io.chocorean.authmod"
-archivesBaseName = "authmod"
+version = "2.2"
+group= "io.chocorean.authmod.tncy"
+archivesBaseName = "authmod.tncy"
 sourceCompatibility = targetCompatibility = "1.8"
 
 compileJava {
@@ -34,9 +33,9 @@ configurations {
 }
 
 minecraft {
-    version = "1.10.2-12.18.3.2185"
+    version = "1.12.2-14.23.4.2705"
     runDir = "run"
-    mappings = "snapshot_20161111"
+    mappings = "snapshot_20171003"
 }
 
 dependencies {

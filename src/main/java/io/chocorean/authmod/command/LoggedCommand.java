@@ -4,6 +4,8 @@ import io.chocorean.authmod.event.Handler;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.play.server.SPacketChat;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
@@ -15,8 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LoggedCommand implements ICommand {
-
-    private static final Logger LOGGER = FMLLog.getLogger();
     private final List<String> aliases;
 
     public LoggedCommand(){
@@ -26,17 +26,17 @@ public class LoggedCommand implements ICommand {
     }
 
     @Override
-    public String getCommandName() {
+    public String getName() {
         return "logged?";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender) {
+    public String getUsage(ICommandSender sender) {
         return "/logged? - Tell you if you are authenticated on the server";
     }
 
     @Override
-    public List<String> getCommandAliases() {
+    public List<String> getAliases() {
         return aliases;
     }
 
@@ -44,7 +44,7 @@ public class LoggedCommand implements ICommand {
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
         EntityPlayer player = (EntityPlayer) sender;
         boolean logged = Handler.isLogged(player);
-        sender.addChatMessage(new TextComponentString(logged ? "Yes" : "No"));
+        ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString(logged ? "Yes" : "No")));
     }
 
     @Override
@@ -53,7 +53,7 @@ public class LoggedCommand implements ICommand {
     }
 
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos) {
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos) {
         return new ArrayList<>();
     }
 
@@ -64,7 +64,7 @@ public class LoggedCommand implements ICommand {
 
     @Override
     public int compareTo(ICommand iCommand) {
-        return this.getCommandName().compareTo(iCommand.getCommandName());
+        return this.getName().compareTo(iCommand.getName());
     }
 
 }

@@ -7,6 +7,8 @@ import io.chocorean.authmod.model.Player;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.play.server.SPacketChat;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
@@ -20,7 +22,6 @@ import java.util.List;
 public class RegisterCommand implements ICommand {
 
     private final List<String> aliases;
-    public static final Logger LOGGER = FMLLog.getLogger();
     private IAuthenticationStrategy strategy;
 
     public RegisterCommand(IAuthenticationStrategy strategy){
@@ -31,17 +32,17 @@ public class RegisterCommand implements ICommand {
     }
 
     @Override
-    public String getCommandName() {
+    public String getName() {
         return "register";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender) {
+    public String getUsage(ICommandSender sender) {
         return "/register email password - Be careful when choosing it, you'll be asked to login each time you play..";
     }
 
     @Override
-    public List<String> getCommandAliases() {
+    public List<String> getAliases() {
         return aliases;
     }
 
@@ -49,10 +50,10 @@ public class RegisterCommand implements ICommand {
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
         EntityPlayer player = (EntityPlayer) sender;
         if(Handler.isLogged(player)) {
-            sender.addChatMessage(new TextComponentString("You are already registered"));
+            ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString("You are already logged.")));
         } else {
             if (args.length != 2) {
-                sender.addChatMessage(new TextComponentString("Invalid number of arguments expected: <email> <password>"));
+                ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString("Invalid number of arguments expected: <email> <password>")));
             } else {
                 IPlayer playerToRegister = new Player();
                 playerToRegister.setEmail(args[0]);
@@ -60,10 +61,10 @@ public class RegisterCommand implements ICommand {
                 playerToRegister.setUsername(player.getDisplayNameString());
                 try {
                     this.strategy.register(playerToRegister);
-                    sender.addChatMessage(new TextComponentString("You are registered as " + playerToRegister.getEmail() + ". Next time, please login to play!"));
+                    ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString("You are registered as " + playerToRegister.getEmail() + ". Next time, please login to play!")));
                     Handler.authorizePlayer(player);
                 } catch (Exception e) {
-                    sender.addChatMessage(new TextComponentString(e.getMessage()));
+                    ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString(e.getMessage())));
                 }
             }
         }
@@ -75,7 +76,7 @@ public class RegisterCommand implements ICommand {
     }
 
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos) {
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos) {
         return new ArrayList<>();
     }
 
@@ -86,7 +87,6 @@ public class RegisterCommand implements ICommand {
 
     @Override
     public int compareTo(ICommand iCommand) {
-        return this.getCommandName().compareTo(iCommand.getCommandName());
+        return this.getName().compareTo(iCommand.getName());
     }
-
 }

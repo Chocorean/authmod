@@ -7,6 +7,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.play.server.SPacketChat;
+import net.minecraft.network.play.server.SPacketDisconnect;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.event.CommandEvent;
@@ -35,7 +36,7 @@ public class Handler {
     @SubscribeEvent(priority= EventPriority.HIGHEST)
     public static void onJoin(PlayerLoggedInEvent event){
         EntityPlayer entity = event.player;
-        entity.addChatMessage(new TextComponentString(AuthMod.getConfig().getMessage()));
+        ((EntityPlayerMP)entity).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getMessage())));
         // initializing timer for kicking player if he/she hasn't logged in a minute
         BlockPos pos = entity.getPosition();
         PlayerDescriptor dc = new PlayerDescriptor(entity, pos);
@@ -49,7 +50,7 @@ public class Handler {
                         dc.getPosition().getY(),
                         dc.getPosition().getZ()
                 );
-                ((EntityPlayerMP) entity).connection.kickPlayerFromServer("Wake up! You only have " +  AuthMod.getConfig().getDelay() + " seconds to log in.");
+                ((EntityPlayerMP) entity).connection.sendPacket(new SPacketDisconnect(new TextComponentString("Wake up! You only have " +  AuthMod.getConfig().getDelay() + " seconds to log in.")));
             }
         }, AuthMod.getConfig().getDelay(), TimeUnit.SECONDS);
     }
@@ -70,7 +71,7 @@ public class Handler {
 
     @SubscribeEvent(priority= EventPriority.HIGHEST)
     public static void onCommand(CommandEvent event){
-        String name = event.getCommand().getCommandName();
+        String name = event.getCommand().getName();
         if (descriptors.containsKey(event.getSender()) && !(name.equals("register") || name.equals("login") || name.equals("logged?")) && (event.getSender() instanceof EntityPlayer) && event.isCancelable()) {
             event.setCanceled(true);
             ((EntityPlayerMP)event.getSender()).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getMessage())));
@@ -91,7 +92,7 @@ public class Handler {
         EntityPlayer entity = event.getPlayer();
         if (event.isCancelable() && descriptors.containsKey(entity)) {
             event.setCanceled(true);
-            entity.inventory.addItemStackToInventory(event.getEntityItem().getEntityItem());
+            entity.inventory.addItemStackToInventory(event.getEntityItem().getItem());
             ((EntityPlayerMP)event.getPlayer()).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getMessage())));
         }
     }

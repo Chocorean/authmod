@@ -1,5 +1,6 @@
 package io.chocorean.authmod.command;
 
+import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.authentication.IAuthenticationStrategy;
 import io.chocorean.authmod.event.Handler;
 import io.chocorean.authmod.exception.BanException;
@@ -9,6 +10,8 @@ import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.play.server.SPacketChat;
+import net.minecraft.network.play.server.SPacketDisconnect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
@@ -20,8 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LoginCommand implements ICommand {
-
-    private static final Logger LOGGER = FMLLog.getLogger();
     private final List<String> aliases;
     private IAuthenticationStrategy strategy;
 
@@ -33,17 +34,17 @@ public class LoginCommand implements ICommand {
     }
 
     @Override
-    public String getCommandName() {
+    public String getName() {
         return "login";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender) {
+    public String getUsage(ICommandSender sender) {
         return "/login <email> password - Allows you to authenticate on the server";
     }
 
     @Override
-    public List<String> getCommandAliases() {
+    public List<String> getAliases() {
         return aliases;
     }
 
@@ -52,7 +53,7 @@ public class LoginCommand implements ICommand {
         EntityPlayer player = (EntityPlayer) sender;
         IPlayer loggedPlayer = new Player();
         if(Handler.isLogged(player)) {
-            sender.addChatMessage(new TextComponentString("You are already logged"));
+            ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString("You are already logged")));
         } else {
             loggedPlayer.setUsername(player.getDisplayNameString());
             if(args.length == 1) {
@@ -63,21 +64,21 @@ public class LoginCommand implements ICommand {
                     loggedPlayer.setPassword(args[1]);
                 }
                 else {
-                    sender.addChatMessage(new TextComponentString("You have at least provide a password when using /login"));
+                    ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString("You have at least provide a password when using /login")));
                 }
             }
             try {
                 loggedPlayer = this.strategy.login(loggedPlayer);
             } catch (BanException e) {
-                ((EntityPlayerMP) sender).connection.kickPlayerFromServer(e.getMessage());
+                ((EntityPlayerMP) sender).connection.sendPacket(new SPacketDisconnect(new TextComponentString(e.getMessage())));
             } catch (Exception e) {
-                sender.addChatMessage(new TextComponentString(e.getMessage()));
+                ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString(e.getMessage())));
                 loggedPlayer = null;
             }
             if (loggedPlayer != null) {
-                LOGGER.info(sender.getName() + " authenticated");
+                AuthMod.LOGGER.info(sender.getName() + " authenticated");
                 Handler.authorizePlayer(player);
-                sender.addChatMessage(new TextComponentString("Logged in successfully. Have fun!"));
+                ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString("Logged in successfully. Have fun!")));
                 ((EntityPlayerMP) sender).setPositionAndUpdate(
                         player.getPosition().getX(),
                         player.getPosition().getY(),
@@ -93,7 +94,7 @@ public class LoginCommand implements ICommand {
     }
 
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos) {
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos) {
         return new ArrayList<>();
     }
 
@@ -104,7 +105,7 @@ public class LoginCommand implements ICommand {
 
     @Override
     public int compareTo(ICommand iCommand) {
-        return this.getCommandName().compareTo(iCommand.getCommandName());
+        return this.getName().compareTo(iCommand.getName());
     }
 
 }
