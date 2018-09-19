@@ -13,8 +13,8 @@
 <p align="center">
 
 
-  <a href="https://travis-ci.org/Mcdostone/authmod.svg?branch=master">
-    <img src="https://travis-ci.org/Mcdostone/authmod.svg?branch=master" alt="build status"/>
+  <a href="https://travis-ci.org/Chocorean/authmod.svg?branch=master">
+    <img src="https://travis-ci.org/Chocorean/authmod.svg?branch=master" alt="build status"/>
   </a>
   <a href="https://sonarcloud.io/api/project_badges/measure?project=io.chocorean.authmod%3Aauthmod&metric=alert_status">
     <img src="https://sonarcloud.io/api/project_badges/measure?project=io.chocorean.authmod%3Aauthmod&metric=alert_status" alt="build status on sonarcloud"/>
