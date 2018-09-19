@@ -1,55 +1,146 @@
+<div align="center">
+  <br>
+  <img
+    alt="DEV"
+    src="./src/main/resources/logo.png"
+    width=200px
+  />
+  <br/>
+  <h1>Authmod</h1>
+  <strong>Server side mod that allow to safely accept demo versions on your minecraft server</strong>
+</div>
+<br/>
+<p align="center">
+
+
+  <a href="https://travis-ci.org/Mcdostone/authmod.svg?branch=master">
+    <img src="https://travis-ci.org/Mcdostone/authmod.svg?branch=master" alt="build status"/>
+  </a>
+  <a href="https://sonarcloud.io/api/project_badges/measure?project=io.chocorean.authmod%3Aauthmod&metric=alert_status">
+    <img src="https://sonarcloud.io/api/project_badges/measure?project=io.chocorean.authmod%3Aauthmod&metric=alert_status" alt="build status on sonarcloud"/>
+  </a>
+  <a href="https://sonarcloud.io/api/project_badges/measure?project=io.chocorean.authmod%3Aauthmod&metric=bugs">
+    <img src="https://sonarcloud.io/api/project_badges/measure?project=io.chocorean.authmod%3Aauthmod&metric=bugs" alt="bugs"/>
+  </a>
+  <a href="https://sonarcloud.io/api/project_badges/measure?project=io.chocorean.authmod%3Aauthmod&metric=code_smells">
+    <img src="https://sonarcloud.io/api/project_badges/measure?project=io.chocorean.authmod%3Aauthmod&metric=code_smells" />
+  </a>
+  <a href="https://sonarcloud.io/api/project_badges/measure?project=io.chocorean.authmod%3Aauthmod&metric=duplicated_lines_density">
+    <img src="https://sonarcloud.io/api/project_badges/measure?project=io.chocorean.authmod%3Aauthmod&metric=duplicated_lines_density" />
+  </a>
+  <a href="https://sonarcloud.io/api/project_badges/measure?project=io.chocorean.authmod%3Aauthmod&metric=sqale_rating">
+    <img src="https://sonarcloud.io/api/project_badges/measure?project=io.chocorean.authmod%3Aauthmod&metric=sqale_rating" />
+  </a>
+  <a href="https://sonarcloud.io/api/project_badges/measure?project=io.chocorean.authmod%3Aauthmod&metric=vulnerabilities">
+    <img src="https://sonarcloud.io/api/project_badges/measure?project=io.chocorean.authmod%3Aauthmod&metric=vulnerabilities" />
+  </a>
+  <a href="https://img.shields.io/badge/forge%20version-1.12.2-blue.svg">
+    <img src="https://img.shields.io/badge/forge%20version-1.12.2-blue.svg" />
+  </a>
+  <a href="https://img.shields.io/badge/java-1.8-blue.svg">
+    <img src="https://img.shields.io/badge/java-1.8-blue.svg" />
+  </a>
+
+</p>
+
+
 # AuthMod
-
-![Build status](https://travis-ci.org/Mcdostone/authmod.svg?branch=master)
-![Build status](https://sonarcloud.io/api/project_badges/measure?project=io.chocorean.authmod%3Aauthmod&metric=alert_status)
-![Bugs](https://sonarcloud.io/api/project_badges/measure?project=io.chocorean.authmod%3Aauthmod&metric=bugs)
-![code smells](https://sonarcloud.io/api/project_badges/measure?project=io.chocorean.authmod%3Aauthmod&metric=code_smells)
-![duplicated](https://sonarcloud.io/api/project_badges/measure?project=io.chocorean.authmod%3Aauthmod&metric=duplicated_lines_density)
-![Maintanability](https://sonarcloud.io/api/project_badges/measure?project=io.chocorean.authmod%3Aauthmod&metric=sqale_rating)
-![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=io.chocorean.authmod%3Aauthmod&metric=vulnerabilities)
-
 
 ## Table of contents
 
-- [General](#general)
-- [Operation](#operation)
-- [Getting started for developers](#Getting started for developers)
+- [What is authmod?](#What-is-authmod?)
+- [How it works](#how-it-works)
+- [Getting started for developers](#Getting-started-for-developers)
+  - [Requirements](#requirements)
+  - [Installation](#installation)
+  - [Using the file strategy](#Using-the-file-strategy)
+  - [Using the database strategy](#Using-the-database-strategy)
 - [Contact](#contact)
 - [License](#license)
 - [Webpage](#webpage)
 - [Install](#install)
+- [resources](#resources)
 - [Issues](#issues)
 
 
-## General
-AuthMod is a mod allowing you to accept players playing with the Minecraft demo (players who have not paid for the game) safely.
+## What is authmod?
 
- - Possibility to choose the delay to automatically exclude not authenticated players.
- - Enable or disable the registration of players
- - Enable or disable the authentication of players (if disabled, everyone can join the server)
+*We are 2 students wanted to create a minecraft server for our school. At the beginning, the server was opened to everyone. We wanted to  accept only students from our school while accepting students that didn't buy the game. We were to lazy to build a custom launcher to do that. So we came up with this idea to build a mod adding a authentication layer that replaces the classic [mojang one](https://wiki.vg/Authentication).*
+
+
+AuthMod is a server side minecraft mod allowing you to accept premium or demo minecraft accounts safely. What is important to remind with this mod is **the mojang authentication cannot be used**. So if you rely on this, this mod is maybe not a good solution for you. Authmod proposes a set of interesting features:
+
+ - Possibility to enable or disable the registration on the minecraft server. 
+ - Possibility to enable or disable the authentication on the minecraft server.
+ - Possibility to register a list of allowed users.
+ - Possibility to exclude a player if he's not logged after a certain delay.
  
+ All the data related to the registration, the authentication... are stored either in a SQL database or a file.
+
 Features            | File strategy         | Database strategy        |
 | ----------------- |:---------------------:|:------------------------:| 
 | Registration      | **✖**                 | **✔**                   |
 | authentication    | **✔**                 | **✔**                   |
 
 
-## Operation
+### How it works
 
-At each new connection to the server, the mod will ask the new player to enter a password. This password must be entered in order to play. Otherwise, the player will be unable to play and kicked after a while.
+The mod provides to the users a set of commands that can be used once connected on the server. Those commands are:
+```bash
+# Allow the user to authenticate on the server
+/login email@example.com password
 
+# Allow the user to register on the server
+/register email@example.com password
+
+# Tell to the user if authenticated
+/logged
+```
+
+For the `/login` command, once this command is entered by the user, the mod will check wether **the email address, the password and the username**  corresponds to data stored in the database or in the file (it depends on the strategy  you chose).
 
 ## Getting started for developers
 
-### 1. Setup the database
+### Requirements
+ - [gradle](https://gradle.org/): build tool used by the forge community
+ - [JDK](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) installed 
+ - Your prefered java IDE
 
-I used mariadb but you can use whatever you want. Create a database named `minecraft`
+### Installation
+
+Here the steps to follow if you want to contribute or hack the project:
+
+1. First step is to clone the repository:
+```bash
+git clone https://github.com/Chocorean/authmod
+```
+2. For this step, you just have to follow [this documentation](https://mcforge.readthedocs.io/en/latest/gettingstarted/) in order to setup you developer environment.
+3. The Last step is simply configure the `authmod.cfg`. an example is available [here](https://github.com/Mcdostone/authmod/blob/master/src/main/resources/authmod.cfg). In a development environment,
+this file is located in `run/authmod.cfg`
+
+
+
+### Using the file strategy
+TODO
+
+### Using the database strategy
+
+If you want to test the `database` strategy, you need a database instance running on your machine. For those who are familiar with docker, there is a `docker-compose.yml` file available to setup everything with no worries. Otherwise, install one manually. We use by default [mariadb](https://mariadb.org/) but any other classic SQL database should be ok. 
+
+Change the `authmod.cfg` configuration by modifying this:
+ ```graph
+ general {
+    # S:strategy=file
+    S:strategy=database
+}
+```
+Don't forget to configure in this file all information related to the database (under the `database {...}` key).
+ 
+The last step is to init the database and a table `players`:
+
 ```sql
 CREATE DATABASE minecraft;
-```
 
-After that, create a new table `players`
-```sql
 CREATE TABLE IF NOT EXISTS `players` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `firstname` varchar(255) DEFAULT NULL,
@@ -67,27 +158,16 @@ CREATE TABLE IF NOT EXISTS `players` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
-```
 
-Here some data if you're interested in:
-```sql
+/* Insert two players */
 INSERT INTO players (id, firstname, lastname, email, creationDate, updatedOn, avatar, lastConnection, password, isAdmin, isBan, uuid, username) VALUES
 	(1, 'Richard', 'Stallman', 'richard.stallman.gnu.org', '2018-06-12 22:59:09', '2018-06-12 22:59:09', NULL, '2018-06-12 22:59:09', NULL, 0, 0, '', ''),
-	(2, 'Linus', 'Torvalds', 'linus.torvalds.linux.org', '2018-06-12 22:59:09', '2018-06-12 22:59:09', 'https://lh3.googleusercontent.com/SyqrxNLd6Eo4-AwTGXktIfMnx4dOBREcZCZvocEVue-GsuBB1dYDjJorgHviJeTHzHYfAKs4wiHmkDk=w1211-h1210-rw-no', '2018-06-12 22:59:09', NULL, 0, 0, '', ''),
-	(3, 'Tony', 'Stark', 'tony.stark.stark-company.com', '2018-06-12 22:59:09', '2018-06-12 22:59:09', 'http://awakenthegreatnesswithin.com/wp-content/uploads/2017/12/Robert-Downey-Jr-Quotes-1.jpg', '2018-06-12 22:59:09', NULL, 0, 0, '', ''),
-	(4, 'El', 'Profesor', 'el-profesor@cdp.com', '2018-06-12 22:59:09', '2018-06-12 22:59:09', 'https://pbs.twimg.com/profile_images/966755261619851264/_SReV3xm_400x400.jpg', '2018-06-12 22:59:09', NULL, 1, 0, '', ''),
-	(5, 'coding', 'horror', 'coding-horror@sof.com', '2018-06-12 22:59:09', '2018-06-12 22:59:09', 'https://pbs.twimg.com/profile_images/632821853627678720/zPKK7jql_400x400.png', '2018-06-12 22:59:09', NULL, NULL, 0, '', ''),
-	(6, 'Louis', 'De Funes', 'louis.de-funes@actor.fr', '2018-06-12 22:59:09', '2018-06-12 22:59:09', NULL, '2018-06-12 22:59:09', NULL, 0, 1, '', '');
+	(2, 'Linus', 'Torvalds', 'linus.torvalds.linux.org', '2018-06-12 22:59:09', '2018-06-12 22:59:09', 'https://lh3.googleusercontent.com/SyqrxNLd6Eo4-AwTGXktIfMnx4dOBREcZCZvocEVue-GsuBB1dYDjJorgHviJeTHzHYfAKs4wiHmkDk=w1211-h1210-rw-no', '2018-06-12 22:59:09', NULL, 0, 0, '', '');
 ```
 
-you can use this [calculator](https://www.dailycred.com/article/bcrypt-calculator) to generate a password!
+## Resources
 
-### 2. Configuring your IDE
-Follow [this documentation](https://mcforge.readthedocs.io/en/latest/gettingstarted/) to have a functional environment with your preferred IDE!
-
-### 3. Editing the *authmod.cfg* file
-
-A example is available [here](https://github.com/Mcdostone/authmod/blob/master/src/main/resources/authmod.cfg).
+ - [bcrypt calculator](https://www.dailycred.com/article/bcrypt-calculator): useful to generate a hashed password using the bcrypt algorithm (this is the same used in the mod)
 
 
 ## Contact
