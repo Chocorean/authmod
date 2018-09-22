@@ -1,6 +1,8 @@
 package io.chocorean.authmod.command;
 
+import io.chocorean.authmod.authentication.AuthModule;
 import io.chocorean.authmod.authentication.IAuthenticationStrategy;
+import io.chocorean.authmod.authentication.IDataSourceStrategy;
 import io.chocorean.authmod.event.Handler;
 import io.chocorean.authmod.model.IPlayer;
 import io.chocorean.authmod.model.Player;
@@ -12,8 +14,6 @@ import net.minecraft.network.play.server.SPacketChat;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.fml.common.FMLLog;
-import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -22,13 +22,13 @@ import java.util.List;
 public class RegisterCommand implements ICommand {
 
     private final List<String> aliases;
-    private IAuthenticationStrategy strategy;
+    private final AuthModule auth;
 
-    public RegisterCommand(IAuthenticationStrategy strategy){
+    public RegisterCommand(IDataSourceStrategy strategy){
         aliases = new ArrayList<>();
         aliases.add("register");
         aliases.add("reg");
-        this.strategy = strategy;
+        this.auth = new AuthModule(strategy);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class RegisterCommand implements ICommand {
                 playerToRegister.setPassword(args[1]);
                 playerToRegister.setUsername(player.getDisplayNameString());
                 try {
-                    this.strategy.register(playerToRegister);
+                    this.auth.register(playerToRegister);
                     ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString("You are registered as " + playerToRegister.getEmail() + ". Next time, please login to play!")));
                     Handler.authorizePlayer(player);
                 } catch (Exception e) {

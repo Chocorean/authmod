@@ -1,8 +1,8 @@
 package io.chocorean.authmod;
 
-import io.chocorean.authmod.authentication.DatabaseAuthenticationStrategy;
-import io.chocorean.authmod.authentication.FileAuthenticationStrategy;
-import io.chocorean.authmod.authentication.IAuthenticationStrategy;
+import io.chocorean.authmod.authentication.DatabaseSourceStrategy;
+import io.chocorean.authmod.authentication.FileDataSourceStrategy;
+import io.chocorean.authmod.authentication.IDataSourceStrategy;
 import io.chocorean.authmod.command.LoggedCommand;
 import io.chocorean.authmod.command.LoginCommand;
 import io.chocorean.authmod.command.RegisterCommand;
@@ -22,14 +22,14 @@ import java.nio.file.Paths;
 @Mod(modid = AuthMod.MODID, name = AuthMod.NAME, version = AuthMod.VERSION, serverSideOnly = true, acceptableRemoteVersions = "*")
 public class AuthMod {
 
-    static final String MODID = "authmod-tncy";
-    static final String NAME = "AuthMod-TNCY";
+    static final String MODID = "authmod";
+    static final String NAME = "AuthMod";
     static final String VERSION = "2.2";
     private static final String COMMON_PROXY = "io.chocorean.authmod.proxy.CommonProxy";
     private static final String CLIENT_PROXY = "io.chocorean.authmod.proxy.ClientProxy";
     public static final org.apache.logging.log4j.Logger LOGGER = FMLLog.log;
     private static AuthModConfig config;
-    private static IAuthenticationStrategy strategy;
+    private static IDataSourceStrategy strategy;
     @SidedProxy(clientSide = AuthMod.CLIENT_PROXY, serverSide = AuthMod.COMMON_PROXY)
     private static CommonProxy proxy;
 
@@ -38,11 +38,11 @@ public class AuthMod {
         config = new AuthModConfig(event.getSuggestedConfigurationFile());
         switch (config.getAuthenticationStrategy().toUpperCase()) {
             case "DATABASE":
-                strategy = new DatabaseAuthenticationStrategy(config.getDatabaseConfig());
+                strategy = new DatabaseSourceStrategy(config.getDatabaseConfig());
                 LOGGER.info("Use DatabaseAuthenticationStrategy");
                 break;
             case "FILE":
-                strategy = new FileAuthenticationStrategy(Paths.get(
+                strategy = new FileDataSourceStrategy(Paths.get(
                         event.getModConfigurationDirectory().getAbsolutePath(),
                         MODID + "_players.csv").toFile());
                 LOGGER.info("Use FileAuthenticationStrategy");
@@ -80,7 +80,7 @@ public class AuthMod {
         return AuthMod.config;
     }
 
-    public static IAuthenticationStrategy getAuthenticationStrategy() {
+    public static IDataSourceStrategy getDataSourceStrategy() {
         return AuthMod.strategy;
     }
 

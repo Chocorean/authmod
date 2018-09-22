@@ -1,6 +1,6 @@
 package io.chocorean.authmod.exception;
 
-public class LoginException extends Exception {
+public class LoginException extends AuthmodException {
 
     public LoginException(String message) {
         super(message);

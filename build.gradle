@@ -16,8 +16,8 @@ plugins {
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 version = "2.2"
-group= "io.chocorean.authmod.tncy"
-archivesBaseName = "authmod.tncy"
+group= "io.chocorean.authmod"
+archivesBaseName = "authmod"
 sourceCompatibility = targetCompatibility = "1.8"
 
 compileJava {

@@ -11,10 +11,6 @@ public class PlayersDAO implements IPlayersDAO<Player> {
     private final Connection connection;
     private final String table;
 
-    public PlayersDAO(Connection connection) {
-        this(connection, "players");
-    }
-
     public PlayersDAO(Connection connection, String table) {
         this.connection = connection;
         this.table = table;
@@ -22,10 +18,12 @@ public class PlayersDAO implements IPlayersDAO<Player> {
 
     @Override
     public void create(Player player) throws SQLException {
-        String query = String.format("INSERT INTO %s(email, password) VALUES(?,?)", this.table);
+        String query = String.format("INSERT INTO %s(email, password, uuid, username) VALUES(?,?)", this.table);
         try(PreparedStatement stmt = this.connection.prepareStatement(query)) {
             stmt.setString(1, player.getEmail());
             stmt.setString(2, player.getPassword());
+            stmt.setString(3, player.getUuid());
+            stmt.setString(4, player.getUsername());
             stmt.executeUpdate();
         }
     }
@@ -61,10 +59,10 @@ public class PlayersDAO implements IPlayersDAO<Player> {
     }
 
     @Override
-    public Player findByEmailOrUsername(String identifier) throws SQLException {
+    public Player findFirst(Player player) throws SQLException {
         try(PreparedStatement stmt = this.connection.prepareStatement(String.format("SELECT * FROM %s WHERE email = ? OR username = ?", this.table))) {
-            stmt.setString(1, identifier);
-            stmt.setString(2, identifier);
+            stmt.setString(1, player.getEmail());
+            stmt.setString(2, player.getUsername());
             ResultSet rs = stmt.executeQuery();
             return createPlayer(rs);
         }

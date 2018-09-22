@@ -143,21 +143,18 @@ CREATE DATABASE minecraft;
 
 CREATE TABLE IF NOT EXISTS `players` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `firstname` varchar(255) DEFAULT NULL,
-  `lastname` varchar(255) DEFAULT NULL,
-  `email` varchar(255) DEFAULT NULL,
-  `creationDate` datetime NOT NULL DEFAULT current_timestamp(),
-  `updatedOn` datetime NOT NULL DEFAULT current_timestamp(),
-  `avatar` varchar(255) DEFAULT NULL,
-  `lastConnection` datetime DEFAULT current_timestamp(),
+  `email` varchar(255) NOT NULL,
   `password` varchar(255) DEFAULT NULL,
-  `isAdmin` tinyint(1) DEFAULT 0,
+  `uuid` varchar(255) DEFAULT NULL,
+  `username` varchar(255) NOT NULL,
   `isBan` tinyint(1) DEFAULT 0,
-  `uuid` varchar(255) DEFAULT '',
-  `username` varchar(255) DEFAULT '',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `email` (`email`)
+  UNIQUE KEY `unique_email` (`email`),
+  UNIQUE KEY `unique_uuid` (`uuid`),
+  UNIQUE KEY `unique_username` (`username`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+
+
 
 /* Insert two players */
 INSERT INTO players (id, firstname, lastname, email, creationDate, updatedOn, avatar, lastConnection, password, isAdmin, isBan, uuid, username) VALUES

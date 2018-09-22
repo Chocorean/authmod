@@ -10,14 +10,14 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FileAuthenticationStrategy implements IAuthenticationStrategy {
+public class FileDataSourceStrategy implements IDataSourceStrategy {
 
     private final File authFile;
     private Map<String, IPlayer> players;
     private static final Logger LOGGER = FMLLog.getLogger();
     private static final String SEPARATOR = ";";
 
-    public FileAuthenticationStrategy(File authFile) {
+    public FileDataSourceStrategy(File authFile) {
         this.authFile = authFile;
         this.players = new HashMap<>();
         try {
@@ -37,40 +37,41 @@ public class FileAuthenticationStrategy implements IAuthenticationStrategy {
             p.setEmail(parts[0]);
             p.setUsername(parts[1]);
             p.setPassword(parts[2]);
+            p.setBan(Boolean.parseBoolean(parts[3]));
             this.players.put(p.getEmail(), p);
         }
         bf.close();
     }
 
     @Override
-    public IPlayer login(IPlayer player) throws Exception {
-        IPlayer check = this.players.get(player.getEmail());
-        if(check == null) {
-            IPlayer finalPlayer = player;
-            check = this.players.values().stream().filter(p -> p.getUsername().equals(finalPlayer.getUsername()))
-                    .findFirst()
-                    .orElse(null);
-        }
-        player = AuthUtils.verifyAuthentication(check, player);
+    public IPlayer retrieve(IPlayer player) {
+        return this.players.get(player.getEmail());
+    }
+
+    @Override
+    public IPlayer add(IPlayer player) throws Exception {
+        this.players.put(player.getEmail(), player);
+        this.saveFile();
         return player;
     }
 
     @Override
-    public IPlayer register(IPlayer player) throws Exception {
-        if(this.players.containsKey(player.getEmail())) {
-            throw new PlayerAlreadyExistException(player.getEmail() + " already exists!");
-        } else {
-            player = AuthUtils.Register(player);
-            this.players.put(player.getEmail(), player);
-            this.saveFile();
-            return player;
-        }
+    public boolean exist(IPlayer player) {
+        IPlayer p = this.players.values().stream()
+                .filter(tmp -> player.getEmail().equals(tmp.getEmail()) || player.getUsername().equals(tmp.getUsername()))
+                .findFirst().orElse(null);
+        return p != null;
     }
 
     private void saveFile() throws IOException {
         BufferedWriter bw = new BufferedWriter(new FileWriter(this.authFile));
         for(String email: this.players.keySet())
-            bw.write(String.format("%s%s%s%s%s\n", email, SEPARATOR, this.players.get(email).getUsername(), SEPARATOR, this.players.get(email).getPassword()));
+            bw.write(String.join(SEPARATOR,
+                    email,
+                    this.players.get(email).getUsername(),
+                    this.players.get(email).getPassword(),
+                    Boolean.toString(this.players.get(email).isBan()))
+                    + "\n");
         bw.close();
     }
 

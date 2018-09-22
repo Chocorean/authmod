@@ -1,9 +1,10 @@
 package io.chocorean.authmod.command;
 
 import io.chocorean.authmod.AuthMod;
+import io.chocorean.authmod.authentication.AuthModule;
 import io.chocorean.authmod.authentication.IAuthenticationStrategy;
+import io.chocorean.authmod.authentication.IDataSourceStrategy;
 import io.chocorean.authmod.event.Handler;
-import io.chocorean.authmod.exception.BanException;
 import io.chocorean.authmod.model.IPlayer;
 import io.chocorean.authmod.model.Player;
 import net.minecraft.command.ICommand;
@@ -11,12 +12,9 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.play.server.SPacketChat;
-import net.minecraft.network.play.server.SPacketDisconnect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.fml.common.FMLLog;
-import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -24,13 +22,13 @@ import java.util.List;
 
 public class LoginCommand implements ICommand {
     private final List<String> aliases;
-    private IAuthenticationStrategy strategy;
+    private final AuthModule auth;
 
-    public LoginCommand(IAuthenticationStrategy strategy){
+    public LoginCommand(IDataSourceStrategy strategy){
         this.aliases = new ArrayList<>();
         this.aliases.add("login");
         this.aliases.add("log");
-        this.strategy = strategy;
+        this.auth = new AuthModule(strategy);
     }
 
     @Override
@@ -40,7 +38,7 @@ public class LoginCommand implements ICommand {
 
     @Override
     public String getUsage(ICommandSender sender) {
-        return "/login <email> password - Allows you to authenticate on the server";
+        return "/login email password - Allows you to authenticate on the server";
     }
 
     @Override
@@ -55,22 +53,17 @@ public class LoginCommand implements ICommand {
         if(Handler.isLogged(player)) {
             ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString("You are already logged")));
         } else {
-            loggedPlayer.setUsername(player.getDisplayNameString());
-            if(args.length == 1) {
-                loggedPlayer.setPassword(args[0]);
-            } else {
-                if(args.length == 2) {
-                    loggedPlayer.setEmail(args[0]);
-                    loggedPlayer.setPassword(args[1]);
-                }
-                else {
-                    ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString("You have at least provide a password when using /login")));
-                }
+            if(args.length == 2) {
+                loggedPlayer.setEmail(args[0]);
+                loggedPlayer.setPassword(args[1]);
+                loggedPlayer.setUsername(player.getDisplayNameString());
+                loggedPlayer.setUuid(EntityPlayer.getUUID(player.getGameProfile()).toString());
+            }
+            else {
+                ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString("You have at least provide the email address and the password to log in.")));
             }
             try {
-                loggedPlayer = this.strategy.login(loggedPlayer);
-            } catch (BanException e) {
-                ((EntityPlayerMP) sender).connection.sendPacket(new SPacketDisconnect(new TextComponentString(e.getMessage())));
+                loggedPlayer = this.auth.login(loggedPlayer);
             } catch (Exception e) {
                 ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString(e.getMessage())));
                 loggedPlayer = null;

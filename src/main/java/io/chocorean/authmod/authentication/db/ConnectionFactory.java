@@ -10,9 +10,10 @@ public class ConnectionFactory {
      */
     public static Connection getConnection() {
         try {
-            return DriverManager.getConnection(String.format("jdbc:%s://%s/%s",
+            return DriverManager.getConnection(String.format("jdbc:%s:%s//%s/%s",
                     AuthMod.getConfig().getDatabaseConfig().getDialect(),
                     AuthMod.getConfig().getDatabaseConfig().getHost(),
+                    AuthMod.getConfig().getDatabaseConfig().getPort(),
                     AuthMod.getConfig().getDatabaseConfig().getName()),
                     AuthMod.getConfig().getDatabaseConfig().getUser(),
                     AuthMod.getConfig().getDatabaseConfig().getPassword());

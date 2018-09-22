@@ -23,5 +23,7 @@ public class AuthModDatabaseConfig {
 
     public String getTable() { return this.get("table", "players"); }
 
+    public String getPort() { return this.get("port", ""); }
+
 }
 
