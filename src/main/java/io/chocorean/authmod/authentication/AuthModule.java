@@ -22,7 +22,7 @@ public class AuthModule implements IAuthenticationStrategy {
     @Override
     public IPlayer login(IPlayer player) throws Exception {
         IPlayer saved = this.strategy.retrieve(player);
-        if(player == null || saved == null)
+        if(saved == null)
             throw new PlayerNotFoundException(String.format("%s doesn't exist", player.getEmail()));
         if(!saved.getUsername().equals(player.getUsername()))
             throw new DifferentUsernameException(String.format("Your username should be %s instead of %s. Please change it to login.", saved.getUsername(), player.getUsername()));
@@ -49,6 +49,7 @@ public class AuthModule implements IAuthenticationStrategy {
             throw new PlayerAlreadyExistException(player.getEmail() + " already exists!");
         }
         player.setPassword(BCrypt.hashpw(player.getPassword(), BCrypt.gensalt()));
+        this.strategy.add(player);
         return player;
     }
 

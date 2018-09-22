@@ -1,6 +1,5 @@
 package io.chocorean.authmod.authentication;
 
-import io.chocorean.authmod.exception.PlayerAlreadyExistException;
 import io.chocorean.authmod.model.IPlayer;
 import io.chocorean.authmod.model.Player;
 import net.minecraftforge.fml.common.FMLLog;

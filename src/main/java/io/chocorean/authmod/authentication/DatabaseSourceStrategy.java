@@ -39,14 +39,17 @@ public class DatabaseSourceStrategy implements IDataSourceStrategy {
     @Override
     public IPlayer add(IPlayer player) throws Exception {
         try {
-            if(this.playersDAO.findByEmail(player.getEmail()) != null)
-                throw new PlayerAlreadyExistException(player.getEmail() + " already exists!");
+            IPlayer saved = this.playersDAO.findFirst(player);
+            if(saved != null) {
+                String alreadyTaken = player.getUsername().equals(saved.getUsername()) ? player.getUsername() : player.getEmail();
+                throw new PlayerAlreadyExistException(alreadyTaken + " already exists!");
+            }
             this.playersDAO.create(player);
         } catch(SQLException e) {
             LOGGER.catching(Level.ERROR, e);
             throw new LoginException("Authentication is unavailable for the moment. Please contact " + AuthMod.getConfig().getContact());
         }
-        return this.playersDAO.findFirst(player);
+        return player;
     }
 
     @Override
