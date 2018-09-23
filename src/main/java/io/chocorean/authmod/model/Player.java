@@ -2,18 +2,11 @@ package io.chocorean.authmod.model;
 
 public class Player implements IPlayer {
 
-    private int id;
     private String password;
     private String email;
     private boolean isBan;
     private String uuid;
     private String username;
-
-    public int getId() { return id; }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     @Override
     public String getPassword() {
@@ -32,7 +25,7 @@ public class Player implements IPlayer {
 
     @Override
     public void setEmail(String email) {
-        this.email = email;
+        this.email = email.trim();
     }
 
     @Override
@@ -52,7 +45,7 @@ public class Player implements IPlayer {
 
     @Override
     public void setUuid(String uuid) {
-        this.uuid = uuid;
+        this.uuid = uuid.trim();
     }
 
     @Override
@@ -65,10 +58,10 @@ public class Player implements IPlayer {
 
     @Override
     public void setUsername(String username) {
-        this.username = username;
+        this.username = username.trim();
     }
 
     public String toString() {
-        return String.format("%3d | %s |", this.getId(), this.getEmail());
+        return String.format("{%s, %s}", this.getEmail(), this.getUsername());
     }
 }

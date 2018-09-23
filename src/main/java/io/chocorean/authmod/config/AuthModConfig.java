@@ -6,7 +6,8 @@ import java.io.File;
 public class AuthModConfig {
 
     private final Configuration config;
-    private final String GEN_CATEGORY = "general";
+    private static final int MINIMUM_DELAY = 10;
+    private static final String GEN_CATEGORY = "general";
     private final AuthModDatabaseConfig databaseConfig;
 
     public AuthModConfig(Configuration config) {
@@ -17,10 +18,6 @@ public class AuthModConfig {
 
     public AuthModConfig(File config) {
         this(new Configuration(config));
-    }
-
-    public void save() {
-        this.config.save();
     }
 
     public String getAuthenticationStrategy() { return this.config.get(GEN_CATEGORY, "strategy", "file").getString(); }
@@ -44,16 +41,12 @@ public class AuthModConfig {
     }
 
     public int getDelay() {
-        return this.config.get(GEN_CATEGORY, "delay", "60").getInt();
+        int delay = this.config.get(GEN_CATEGORY, "delay", "60").getInt();
+        return delay < MINIMUM_DELAY ? MINIMUM_DELAY : delay;
     }
 
     public AuthModDatabaseConfig getDatabaseConfig() {
         return this.databaseConfig;
-    }
-
-    private static AuthModConfig load(File file) {
-        Configuration config =  new Configuration(file);
-        return new AuthModConfig(config);
     }
 
 }

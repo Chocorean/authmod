@@ -5,7 +5,7 @@ import net.minecraftforge.common.config.Configuration;
 public class AuthModDatabaseConfig {
 
     private final Configuration config;
-    private final String DB_CATEGORY = "database";
+    private static final String DB_CATEGORY = "database";
 
     public AuthModDatabaseConfig(Configuration config) { this.config = config; }
 
@@ -15,7 +15,7 @@ public class AuthModDatabaseConfig {
 
     public String getName() { return this.get("name", "minecraft"); }
 
-    public String getPassword() { return this.get("password", "root"); }
+    public String getPassword() { return this.get("password", ""); }
 
     public String getHost() { return this.get("host", "127.0.0.1"); }
 

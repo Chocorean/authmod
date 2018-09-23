@@ -102,11 +102,9 @@ public class Handler {
     We cannot block every single LivingEvent because of LivingUpdateEvent (defined in LivingEvent)
      */
     private static void handleLivingEvents(LivingEvent event, Entity entity) {
-        if (event.getEntity() instanceof EntityPlayer) {
-            if (event.isCancelable() && descriptors.containsKey(entity)) {
-                event.setCanceled(true);
-                ((EntityPlayerMP) entity).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getMessage())));
-            }
+        if (event.getEntity() instanceof EntityPlayer && event.isCancelable() && descriptors.containsKey(entity)) {
+            event.setCanceled(true);
+            ((EntityPlayerMP) entity).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getMessage())));
         }
     }
 

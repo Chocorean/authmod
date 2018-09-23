@@ -30,9 +30,9 @@ public class PlayersDAO implements IPlayersDAO<Player> {
 
     @Override
     public Player findById(int id) throws SQLException {
-        try(PreparedStatement stmt = this.connection.prepareStatement(String.format("SELECT * FROM %s WHERE id = ?", this.table))) {
+        try(PreparedStatement stmt = this.connection.prepareStatement(String.format("SELECT * FROM %s WHERE id = ?", this.table));
+            ResultSet rs = stmt.executeQuery()) {
             stmt.setInt(1, id);
-            ResultSet rs= stmt.executeQuery();
             return createPlayer(rs);
         }
     }
@@ -40,38 +40,41 @@ public class PlayersDAO implements IPlayersDAO<Player> {
     @Override
     public List<Player> findAll() throws SQLException {
         List<Player> players = new ArrayList<>();
-        try(Statement stmt = this.connection.createStatement()) {
-            ResultSet rs  = stmt.executeQuery(String.format("SELECT * FROM %s", this.table));
+        try(Statement stmt = this.connection.createStatement();
+            ResultSet rs  = stmt.executeQuery(String.format("SELECT * FROM %s", this.table))) {
             while(rs.next())
                 players.add(PlayersDAO.createPlayer(rs));
-            rs.close();
         }
         return players;
     }
 
     @Override
     public Player findByEmail(String email) throws SQLException {
+        ResultSet rs = null;
         try(PreparedStatement stmt = this.connection.prepareStatement(String.format("SELECT * FROM %s WHERE email = ?", this.table))) {
             stmt.setString(1, email);
-            ResultSet rs = stmt.executeQuery();
+            rs = stmt.executeQuery();
             return createPlayer(rs);
         }
+        finally { if (rs != null) rs.close(); }
     }
 
     @Override
     public Player findFirst(Player player) throws SQLException {
-        try(PreparedStatement stmt = this.connection.prepareStatement(String.format("SELECT * FROM %s WHERE email = ? OR username = ?", this.table))) {
+        ResultSet rs = null;
+        try(PreparedStatement stmt = this.connection.prepareStatement(
+                String.format("SELECT * FROM %s WHERE email = ? OR username = ?", this.table))) {
             stmt.setString(1, player.getEmail());
             stmt.setString(2, player.getUsername());
-            ResultSet rs = stmt.executeQuery();
+            rs = stmt.executeQuery();
             return createPlayer(rs);
         }
+        finally { if (rs != null) rs.close(); }
     }
 
     private static Player createPlayer(ResultSet rs) throws SQLException {
-        if(rs.next()) {
+        if(rs != null && rs.next()) {
             Player player = new Player();
-            player.setId(rs.getInt("id"));
             player.setBan(rs.getInt("isBan") != 0);
             player.setEmail(rs.getString("email"));
             player.setPassword(rs.getString("password"));
@@ -79,7 +82,8 @@ public class PlayersDAO implements IPlayersDAO<Player> {
             player.setUuid(rs.getString("uuid"));
             return player;
         }
-        else
+        else {
             return null;
+        }
     }
 }

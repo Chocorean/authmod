@@ -4,6 +4,8 @@ import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.authentication.datasource.IDataSourceStrategy;
 import io.chocorean.authmod.exception.*;
 import io.chocorean.authmod.model.IPlayer;
+import net.minecraftforge.fml.common.FMLLog;
+import org.apache.logging.log4j.Logger;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.regex.Matcher;
@@ -11,6 +13,7 @@ import java.util.regex.Pattern;
 
 public class AuthModule implements IAuthenticationStrategy {
 
+    public static final Logger LOGGER = FMLLog.log;
     private static final Pattern VALID_EMAIL_ADDRESS_REGEX =
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
     private final IDataSourceStrategy strategy;
@@ -20,8 +23,9 @@ public class AuthModule implements IAuthenticationStrategy {
     }
 
     @Override
-    public IPlayer login(IPlayer player) throws Exception {
+    public IPlayer login(IPlayer player) throws AuthmodException {
         IPlayer saved = this.strategy.retrieve(player);
+        LOGGER.info(player + " trying to login");
         if(saved == null)
             throw new PlayerNotFoundException(String.format("%s doesn't exist", player.getEmail()));
         if(!saved.getUsername().equals(player.getUsername()))
@@ -36,7 +40,8 @@ public class AuthModule implements IAuthenticationStrategy {
     }
 
     @Override
-    public IPlayer register(IPlayer player) throws Exception {
+    public IPlayer register(IPlayer player) throws AuthmodException {
+        LOGGER.info(player + " trying to register");
         String hostedDomain = AuthMod.getConfig().getHostedDomain();
         Matcher matcher = VALID_EMAIL_ADDRESS_REGEX .matcher(player.getEmail());
         if(!matcher.find()) {

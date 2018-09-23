@@ -5,6 +5,7 @@ import io.chocorean.authmod.authentication.db.ConnectionFactory;
 import io.chocorean.authmod.authentication.db.IPlayersDAO;
 import io.chocorean.authmod.authentication.db.PlayersDAO;
 import io.chocorean.authmod.config.AuthModDatabaseConfig;
+import io.chocorean.authmod.exception.AuthmodException;
 import io.chocorean.authmod.exception.LoginException;
 import io.chocorean.authmod.exception.PlayerAlreadyExistException;
 import io.chocorean.authmod.model.IPlayer;
@@ -24,7 +25,7 @@ public class DatabaseSourceStrategy implements IDataSourceStrategy {
     }
 
     @Override
-    public IPlayer retrieve(IPlayer player) throws Exception {
+    public IPlayer retrieve(IPlayer player) throws AuthmodException {
         IPlayer p;
         LOGGER.info("Checking authentication for " + player.getEmail());
         try {
@@ -37,7 +38,7 @@ public class DatabaseSourceStrategy implements IDataSourceStrategy {
     }
 
     @Override
-    public IPlayer add(IPlayer player) throws Exception {
+    public IPlayer add(IPlayer player) throws AuthmodException {
         try {
             IPlayer saved = this.playersDAO.findFirst(player);
             if(saved != null) {

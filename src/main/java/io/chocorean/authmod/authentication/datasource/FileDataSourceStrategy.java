@@ -1,5 +1,6 @@
 package io.chocorean.authmod.authentication.datasource;
 
+import io.chocorean.authmod.exception.AuthmodException;
 import io.chocorean.authmod.model.IPlayer;
 import io.chocorean.authmod.model.Player;
 import net.minecraftforge.fml.common.FMLLog;
@@ -20,38 +21,36 @@ public class FileDataSourceStrategy implements IDataSourceStrategy {
     public FileDataSourceStrategy(File authFile) {
         this.authFile = authFile;
         this.players = new HashMap<>();
-        try {
-            this.readFile();
-        } catch (IOException e) {
-            LOGGER.catching(e);
-        }
+        this.readFile();
     }
 
-    private void readFile() throws IOException {
+    private void readFile() {
+        this.players.clear();
+        try {
             this.authFile.createNewFile();
-            BufferedReader bf = new BufferedReader(new FileReader(this.authFile));
+        } catch (IOException e) { LOGGER.catching(e); }
+        try(BufferedReader bf = new BufferedReader(new FileReader(this.authFile))) {
             String line;
-            while((line = bf.readLine()) != null) {
-                String[] parts = line.split(SEPARATOR);
-                IPlayer p = new Player();
-                p.setEmail(parts[0]);
-                p.setUsername(parts[1]);
-                p.setPassword(parts[2]);
-                p.setBan(Boolean.parseBoolean(parts[3]));
-                this.players.put(p.getEmail(), p);
+            while((line = bf.readLine()) != null && line.trim().length() > 0) {
+                if(!line.startsWith("#")) {
+                    String[] parts = line.trim().split(SEPARATOR);
+                    IPlayer p = new Player();
+                    p.setEmail(parts[0].trim());
+                    p.setUsername(parts[1].trim());
+                    p.setPassword(parts[2].trim());
+                    p.setBan(Boolean.parseBoolean(parts[3].trim()));
+                    this.players.put(p.getEmail(), p);
+                }
             }
-            bf.close();
             this.lastModification = this.authFile.lastModified();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void reloadFile() {
-        if (lastModification != this.authFile.lastModified()) {
-            try {
-                this.readFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        if (lastModification != this.authFile.lastModified())
+            this.readFile();
     }
 
     @Override
@@ -61,7 +60,7 @@ public class FileDataSourceStrategy implements IDataSourceStrategy {
     }
 
     @Override
-    public IPlayer add(IPlayer player) throws Exception {
+    public IPlayer add(IPlayer player) {
         this.reloadFile();
         this.players.put(player.getEmail(), player);
         this.saveFile();
@@ -77,16 +76,23 @@ public class FileDataSourceStrategy implements IDataSourceStrategy {
         return p != null;
     }
 
-    private void saveFile() throws IOException {
-        BufferedWriter bw = new BufferedWriter(new FileWriter(this.authFile));
-        for(String email: this.players.keySet())
+    private void saveFile() {
+        try(BufferedWriter bw = new BufferedWriter(new FileWriter(this.authFile))) {
             bw.write(String.join(SEPARATOR,
-                    email,
-                    this.players.get(email).getUsername(),
-                    this.players.get(email).getPassword(),
-                    Boolean.toString(this.players.get(email).isBan()))
-                    + "\n");
-        bw.close();
+                    "# email",
+                    " username",
+                    " hashed password",
+                    " is banned ?"));
+            bw.newLine();
+            for(Map.Entry<String, IPlayer> entry: this.players.entrySet()) {
+                bw.write(String.join(SEPARATOR,
+                        entry.getKey(),
+                        entry.getValue().getUsername(),
+                        entry.getValue().getPassword(),
+                        Boolean.toString(entry.getValue().isBan())));
+                bw.newLine();
+            }
+        } catch (IOException e) { LOGGER.catching(e); }
     }
 
 }

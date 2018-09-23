@@ -13,6 +13,8 @@ import net.minecraft.network.play.server.SPacketChat;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.fml.common.FMLLog;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ import java.util.List;
 
 public class RegisterCommand implements ICommand {
 
+    public static final Logger LOGGER = FMLLog.log;
     private final List<String> aliases;
     private final AuthModule auth;
 
@@ -63,6 +66,7 @@ public class RegisterCommand implements ICommand {
                     ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString("You are registered as " + playerToRegister.getEmail() + ". Next time, please login to play!")));
                     Handler.authorizePlayer(player);
                 } catch (Exception e) {
+                    LOGGER.error(e.getMessage());
                     ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString(e.getMessage())));
                 }
             }
