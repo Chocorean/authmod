@@ -13,26 +13,26 @@
 <p align="center">
 
 
-  <a href="https://travis-ci.org/Chocorean/authmod.svg?branch=master">
-    <img src="https://travis-ci.org/Chocorean/authmod.svg?branch=master" alt="build status"/>
+  <a href="https://travis-ci.com/Chocorean/authmod">
+    <img src="https://travis-ci.com/Chocorean/authmod.svg?branch=master" alt="build status"/>
   </a>
-  <a href="https://sonarcloud.io/api/project_badges/measure?project=io.chocorean.authmod.tncy%3Aauthmod&metric=alert_status">
-    <img src="https://sonarcloud.io/api/project_badges/measure?project=io.chocorean.authmod.tncy%3Aauthmod&metric=alert_status" alt="build status on sonarcloud"/>
+  <a href="https://sonarcloud.io/dashboard?id=authmod">
+    <img src="https://sonarcloud.io/api/project_badges/measure?project=authmod&metric=alert_status" alt="build status on sonarcloud"/>
   </a>
-  <a href="https://sonarcloud.io/api/project_badges/measure?project=io.chocorean.authmod.tncy%3Aauthmod&metric=bugs">
-    <img src="https://sonarcloud.io/api/project_badges/measure?project=io.chocorean.authmod.tncy%3Aauthmod&metric=bugs" alt="bugs"/>
+  <a href="https://sonarcloud.io/dashboard?id=authmod">
+    <img src="https://sonarcloud.io/api/project_badges/measure?project=authmod&metric=bugs" alt="bugs"/>
   </a>
-  <a href="https://sonarcloud.io/api/project_badges/measure?project=io.chocorean.authmod.tncy%3Aauthmod&metric=code_smells">
-    <img src="https://sonarcloud.io/api/project_badges/measure?project=io.chocorean.authmod.tncy%3Aauthmod&metric=code_smells" />
+  <a href="https://sonarcloud.io/dashboard?id=authmod">
+    <img src="https://sonarcloud.io/api/project_badges/measure?project=authmod&metric=code_smells" />
   </a>
-  <a href="https://sonarcloud.io/api/project_badges/measure?project=io.chocorean.authmod.tncy%3Aauthmod&metric=duplicated_lines_density">
-    <img src="https://sonarcloud.io/api/project_badges/measure?project=io.chocorean.authmod.tncy%3Aauthmod&metric=duplicated_lines_density" />
+  <a href="https://sonarcloud.io/dashboard?id=authmod">
+    <img src="https://sonarcloud.io/api/project_badges/measure?project=authmod&metric=duplicated_lines_density" />
   </a>
-  <a href="https://sonarcloud.io/api/project_badges/measure?project=io.chocorean.authmod.tncy%3Aauthmod&metric=sqale_rating">
-    <img src="https://sonarcloud.io/api/project_badges/measure?project=io.chocorean.authmod.tncy%3Aauthmod&metric=sqale_rating" />
+  <a href="https://sonarcloud.io/dashboard?id=authmod">
+    <img src="https://sonarcloud.io/api/project_badges/measure?project=authmod&metric=sqale_rating" />
   </a>
-  <a href="https://sonarcloud.io/api/project_badges/measure?project=io.chocorean.authmod.tncy%3Aauthmod&metric=vulnerabilities">
-    <img src="https://sonarcloud.io/api/project_badges/measure?project=io.chocorean.authmod.tncy%3Aauthmod&metric=vulnerabilities" />
+  <a href="https://sonarcloud.io/dashboard?id=authmod">
+    <img src="https://sonarcloud.io/api/project_badges/measure?project=authmod&metric=vulnerabilities" />
   </a>
   <a href="https://img.shields.io/badge/forge%20version-1.12.2-blue.svg">
     <img src="https://img.shields.io/badge/forge%20version-1.12.2-blue.svg" />

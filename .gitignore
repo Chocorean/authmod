@@ -26,5 +26,4 @@ data
 classes
 
 .DS_Store
-gradle
 gradlew.bat
