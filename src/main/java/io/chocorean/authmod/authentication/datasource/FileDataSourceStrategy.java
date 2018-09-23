@@ -1,4 +1,4 @@
-package io.chocorean.authmod.authentication;
+package io.chocorean.authmod.authentication.datasource;
 
 import io.chocorean.authmod.model.IPlayer;
 import io.chocorean.authmod.model.Player;
@@ -13,7 +13,8 @@ public class FileDataSourceStrategy implements IDataSourceStrategy {
 
     private final File authFile;
     private Map<String, IPlayer> players;
-    private static final Logger LOGGER = FMLLog.getLogger();
+    private long lastModification;
+    private static final Logger LOGGER = FMLLog.log;
     private static final String SEPARATOR = ";";
 
     public FileDataSourceStrategy(File authFile) {
@@ -27,28 +28,41 @@ public class FileDataSourceStrategy implements IDataSourceStrategy {
     }
 
     private void readFile() throws IOException {
-        this.authFile.createNewFile();
-        BufferedReader bf = new BufferedReader(new FileReader(this.authFile));
-        String line;
-        while((line = bf.readLine()) != null) {
-            String[] parts = line.split(SEPARATOR);
-            IPlayer p = new Player();
-            p.setEmail(parts[0]);
-            p.setUsername(parts[1]);
-            p.setPassword(parts[2]);
-            p.setBan(Boolean.parseBoolean(parts[3]));
-            this.players.put(p.getEmail(), p);
+            this.authFile.createNewFile();
+            BufferedReader bf = new BufferedReader(new FileReader(this.authFile));
+            String line;
+            while((line = bf.readLine()) != null) {
+                String[] parts = line.split(SEPARATOR);
+                IPlayer p = new Player();
+                p.setEmail(parts[0]);
+                p.setUsername(parts[1]);
+                p.setPassword(parts[2]);
+                p.setBan(Boolean.parseBoolean(parts[3]));
+                this.players.put(p.getEmail(), p);
+            }
+            bf.close();
+            this.lastModification = this.authFile.lastModified();
+    }
+
+    private void reloadFile() {
+        if (lastModification != this.authFile.lastModified()) {
+            try {
+                this.readFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        bf.close();
     }
 
     @Override
     public IPlayer retrieve(IPlayer player) {
+        this.reloadFile();
         return this.players.get(player.getEmail());
     }
 
     @Override
     public IPlayer add(IPlayer player) throws Exception {
+        this.reloadFile();
         this.players.put(player.getEmail(), player);
         this.saveFile();
         return player;
@@ -56,6 +70,7 @@ public class FileDataSourceStrategy implements IDataSourceStrategy {
 
     @Override
     public boolean exist(IPlayer player) {
+        this.reloadFile();
         IPlayer p = this.players.values().stream()
                 .filter(tmp -> player.getEmail().equals(tmp.getEmail()) || player.getUsername().equals(tmp.getUsername()))
                 .findFirst().orElse(null);

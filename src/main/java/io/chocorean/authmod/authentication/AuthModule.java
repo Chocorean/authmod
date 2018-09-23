@@ -1,6 +1,7 @@
 package io.chocorean.authmod.authentication;
 
 import io.chocorean.authmod.AuthMod;
+import io.chocorean.authmod.authentication.datasource.IDataSourceStrategy;
 import io.chocorean.authmod.exception.*;
 import io.chocorean.authmod.model.IPlayer;
 import org.mindrot.jbcrypt.BCrypt;
@@ -12,7 +13,6 @@ public class AuthModule implements IAuthenticationStrategy {
 
     private static final Pattern VALID_EMAIL_ADDRESS_REGEX =
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
-
     private final IDataSourceStrategy strategy;
 
     public AuthModule(IDataSourceStrategy strategy) {
@@ -46,7 +46,7 @@ public class AuthModule implements IAuthenticationStrategy {
             throw new UnauthorizedHostedDomainException();
         }
         if(this.strategy.exist(player)) {
-            throw new PlayerAlreadyExistException(player.getEmail() + " already exists!");
+            throw new PlayerAlreadyExistException(String.format("the email address (%s) or the username (%s) already exists!", player.getEmail(), player.getUsername()));
         }
         player.setPassword(BCrypt.hashpw(player.getPassword(), BCrypt.gensalt()));
         this.strategy.add(player);

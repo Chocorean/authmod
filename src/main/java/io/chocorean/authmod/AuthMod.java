@@ -1,8 +1,8 @@
 package io.chocorean.authmod;
 
-import io.chocorean.authmod.authentication.DatabaseSourceStrategy;
-import io.chocorean.authmod.authentication.FileDataSourceStrategy;
-import io.chocorean.authmod.authentication.IDataSourceStrategy;
+import io.chocorean.authmod.authentication.datasource.DatabaseSourceStrategy;
+import io.chocorean.authmod.authentication.datasource.FileDataSourceStrategy;
+import io.chocorean.authmod.authentication.datasource.IDataSourceStrategy;
 import io.chocorean.authmod.command.LoggedCommand;
 import io.chocorean.authmod.command.LoginCommand;
 import io.chocorean.authmod.command.RegisterCommand;
@@ -16,6 +16,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import org.apache.logging.log4j.Logger;
 
 import java.nio.file.Paths;
 
@@ -27,7 +28,7 @@ public class AuthMod {
     static final String VERSION = "2.2";
     private static final String COMMON_PROXY = "io.chocorean.authmod.proxy.CommonProxy";
     private static final String CLIENT_PROXY = "io.chocorean.authmod.proxy.ClientProxy";
-    public static final org.apache.logging.log4j.Logger LOGGER = FMLLog.log;
+    public static final Logger LOGGER = FMLLog.log;
     private static AuthModConfig config;
     private static IDataSourceStrategy strategy;
     @SidedProxy(clientSide = AuthMod.CLIENT_PROXY, serverSide = AuthMod.COMMON_PROXY)

@@ -2,7 +2,7 @@ package io.chocorean.authmod.command;
 
 import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.authentication.AuthModule;
-import io.chocorean.authmod.authentication.IDataSourceStrategy;
+import io.chocorean.authmod.authentication.datasource.IDataSourceStrategy;
 import io.chocorean.authmod.event.Handler;
 import io.chocorean.authmod.model.IPlayer;
 import io.chocorean.authmod.model.Player;
