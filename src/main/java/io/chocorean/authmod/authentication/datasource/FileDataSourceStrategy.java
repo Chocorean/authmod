@@ -1,6 +1,5 @@
 package io.chocorean.authmod.authentication.datasource;
 
-import io.chocorean.authmod.exception.AuthmodException;
 import io.chocorean.authmod.model.IPlayer;
 import io.chocorean.authmod.model.Player;
 import net.minecraftforge.fml.common.FMLLog;
@@ -13,10 +12,10 @@ import java.util.Map;
 public class FileDataSourceStrategy implements IDataSourceStrategy {
 
     private final File authFile;
-    private Map<String, IPlayer> players;
+    private final Map<String, IPlayer> players;
     private long lastModification;
     private static final Logger LOGGER = FMLLog.log;
-    private static final String SEPARATOR = ";";
+    private static final String SEPARATOR = ",";
 
     public FileDataSourceStrategy(File authFile) {
         this.authFile = authFile;

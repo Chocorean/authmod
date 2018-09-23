@@ -18,7 +18,7 @@ import java.sql.SQLException;
 public class DatabaseSourceStrategy implements IDataSourceStrategy {
 
     private final IPlayersDAO playersDAO;
-    public static final Logger LOGGER = FMLLog.log;
+    private static final Logger LOGGER = FMLLog.log;
 
     public DatabaseSourceStrategy(AuthModDatabaseConfig config) {
         this.playersDAO = new PlayersDAO(ConnectionFactory.getConnection(), config.getTable());

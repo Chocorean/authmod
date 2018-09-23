@@ -10,7 +10,7 @@ public class AuthModConfig {
     private static final String GEN_CATEGORY = "general";
     private final AuthModDatabaseConfig databaseConfig;
 
-    public AuthModConfig(Configuration config) {
+    private AuthModConfig(Configuration config) {
         this.config = config;
         this.databaseConfig = new AuthModDatabaseConfig(config);
         this.config.load();

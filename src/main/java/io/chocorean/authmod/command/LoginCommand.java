@@ -23,7 +23,7 @@ import java.util.List;
 
 public class LoginCommand implements ICommand {
 
-    public static final Logger LOGGER = FMLLog.log;
+    private static final Logger LOGGER = FMLLog.log;
     private final List<String> aliases;
     private final AuthModule auth;
 
