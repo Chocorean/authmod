@@ -9,6 +9,7 @@ import io.chocorean.authmod.exception.AuthmodException;
 import io.chocorean.authmod.exception.LoginException;
 import io.chocorean.authmod.exception.PlayerAlreadyExistException;
 import io.chocorean.authmod.model.IPlayer;
+import io.chocorean.authmod.model.Player;
 import net.minecraftforge.fml.common.FMLLog;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
@@ -17,11 +18,11 @@ import java.sql.SQLException;
 
 public class DatabaseSourceStrategy implements IDataSourceStrategy {
 
-    private final IPlayersDAO playersDAO;
+    private final IPlayersDAO<IPlayer> playersDAO;
     private static final Logger LOGGER = FMLLog.log;
 
     public DatabaseSourceStrategy(AuthModDatabaseConfig config) {
-        this.playersDAO = new PlayersDAO(ConnectionFactory.getConnection(), config.getTable());
+        this.playersDAO = new PlayersDAO<Player>(ConnectionFactory.getConnection(), config.getTable());
     }
 
     @Override

@@ -22,6 +22,7 @@ sourceCompatibility = targetCompatibility = "1.8"
 
 compileJava {
     sourceCompatibility = targetCompatibility = "1.8"
+    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
 }
 
 ext{

@@ -1,12 +1,13 @@
 package io.chocorean.authmod.authentication.db;
 
+import io.chocorean.authmod.model.IPlayer;
 import io.chocorean.authmod.model.Player;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlayersDAO implements IPlayersDAO<Player> {
+public class PlayersDAO<P> implements IPlayersDAO<IPlayer> {
 
     private final Connection connection;
     private final String table;
@@ -17,7 +18,7 @@ public class PlayersDAO implements IPlayersDAO<Player> {
     }
 
     @Override
-    public void create(Player player) throws SQLException {
+    public void create(IPlayer player) throws SQLException {
         String query = String.format("INSERT INTO %s(email, password, uuid, username) VALUES(?,?)", this.table);
         try(PreparedStatement stmt = this.connection.prepareStatement(query)) {
             stmt.setString(1, player.getEmail());
@@ -38,8 +39,8 @@ public class PlayersDAO implements IPlayersDAO<Player> {
     }
 
     @Override
-    public List<Player> findAll() throws SQLException {
-        List<Player> players = new ArrayList<>();
+    public List<IPlayer> findAll() throws SQLException {
+        List<IPlayer> players = new ArrayList<>();
         try(Statement stmt = this.connection.createStatement();
             ResultSet rs  = stmt.executeQuery(String.format("SELECT * FROM %s", this.table))) {
             while(rs.next())
@@ -60,8 +61,8 @@ public class PlayersDAO implements IPlayersDAO<Player> {
     }
 
     @Override
-    public Player findFirst(Player player) throws SQLException {
-        ResultSet rs = null;
+    public IPlayer findFirst(IPlayer player) throws SQLException {
+       ResultSet rs = null;
         try(PreparedStatement stmt = this.connection.prepareStatement(
                 String.format("SELECT * FROM %s WHERE email = ? OR username = ?", this.table))) {
             stmt.setString(1, player.getEmail());
