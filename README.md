@@ -95,7 +95,7 @@ The mod provides to the users a set of commands that can be used once connected 
 # Allow the user to register on the server
 /register email@example.com password
 
-# Tell to the user if authenticated
+# Tell to the user whether authenticated
 /logged
 ```
 
