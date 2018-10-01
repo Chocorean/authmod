@@ -141,7 +141,7 @@ Each row is composed of 4 types of data:
  - The address email
  - The username of the player
  - The hashed password
- - `true` wether the player is banned
+ - `true` whether the player is banned
 
 
 ### Using the database strategy
@@ -186,13 +186,27 @@ INSERT INTO players (id, email, password, uuid, username, isBan) VALUES
 
 ## Getting started for administrators
 
-<p style="text-align: center">
-TODO
-</p>
 
-<p style="text-align: center">
-<img style="width: 50%" src="https://media.giphy.com/media/xsY3sM9kXHmPS/giphy.gif" alt="Frank Zappa"/>
-</p>
+1. stop your minecraft server.
+2. Add the latest version of the authmod jar in the `mods` directory:
+```bash
+# execute this in the mods folder
+curl -s https://api.github.com/repos/chocorean/authmod/releases/latest \
+  | grep "browser_download_url.*jar" \
+  | cut -d : -f 2,3 \
+  | tr -d \" \
+  | wget -qi -
+```
+
+3. Now, we configure the authmod. Go under the `config` folder and download the cfg template file:
+```bash
+# in the config/ folder
+wget https://raw.githubusercontent.com/Chocorean/authmod/master/src/main/resources/authmod.cfg
+```
+
+4. Edit the `config/authmod.cfg` file depending on your needs.
+
+5. Restart the server and everything should be ok!
 
 
 ## Resources
