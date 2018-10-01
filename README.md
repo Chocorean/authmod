@@ -48,18 +48,18 @@
 
 ## Table of contents
 
-- [What is authmod?](#What-is-authmod?)
+- [What is authmod?](#what-is-authmod?)
 - [How it works](#how-it-works)
-- [Getting started for developers](#Getting-started-for-developers)
+- [Getting started for developers](#getting-started-for-developers)
   - [Requirements](#requirements)
   - [Installation](#installation)
-  - [Using the file strategy](#Using-the-file-strategy)
-  - [Using the database strategy](#Using-the-database-strategy)
-- [Getting started for administrators](#Getting-started-for-administrators)
+  - [Using the file strategy](#using-the-file-strategy)
+  - [Using the database strategy](#using-the-database-strategy)
+- [Getting started for administrators](#getting-started-for-administrators)
 
 - [Contact](#contact)
 - [License](#license)
-- [Curse project page](#Curse-project-page)
+- [Curse project page](#curse-project-page)
 - [Install](#install)
 - [resources](#resources)
 - [Issues](#issues)
