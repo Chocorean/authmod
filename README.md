@@ -99,7 +99,7 @@ The mod provides to the users a set of commands that can be used once connected 
 /logged
 ```
 
-For the `/login` command, once this command is entered by the user, the mod will check wether **the email address, the password and the username**  corresponds to data stored in the database or in the file (it depends on the strategy  you chose).
+For the `/login` command, once this command is entered by the user, the mod will check whether **the email address, the password and the username**  corresponds to data stored in the database or in the file (it depends on the strategy  you chose).
 
 ## Getting started for developers
 
