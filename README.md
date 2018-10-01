@@ -48,7 +48,7 @@
 
 ## Table of contents
 
-- [What is authmod?](#what-is-authmod?)
+- [What is authmod?](#what-is-authmod)
 - [How it works](#how-it-works)
 - [Getting started for developers](#getting-started-for-developers)
   - [Requirements](#requirements)
