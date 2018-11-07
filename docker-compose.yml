@@ -33,4 +33,4 @@ services:
       - EULA=TRUE
       - ONLINE_MODE=FALSE
       - TYPE=FORGE
-      - FORGE_INSTALLER_URL=https://files.minecraftforge.net/maven/net/minecraftforge/forge/1.10.2-12.18.3.2185/forge-1.10.2-12.18.3.2185-installer.jar
+      - FORGE_INSTALLER_URL=https://files.minecraftforge.net/maven/net/minecraftforge/forge/1.12.2-14.23.4.2705/forge-1.12.2-14.23.4.2705-installer.jar
