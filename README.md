@@ -121,7 +121,7 @@ git clone https://github.com/Chocorean/authmod
 4. Run once the minecraft server in order to generate all the necessary files.
 5. Accept the EULA agreement by modifing the file `run/eula.txt`.
 5. Modify the `run/server.properties` and switch `online-mode` to `false`.
-3. The Last step is simply configure the `authmod.cfg`. an example is available [here](https://github.com/Mcdostone/authmod/blob/master/src/main/resources/authmod.cfg). In a development environment,
+3. The Last step is simply configure the `authmod.cfg`. an example is available [here](https://github.com/Chocorean/authmod/blob/master/src/main/resources/authmod.cfg). In a development environment,
 this file is located in `run/authmod.cfg`.
 
 
