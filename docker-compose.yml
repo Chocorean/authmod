@@ -25,7 +25,7 @@ services:
     image: itzg/minecraft-server:latest
     container_name: minecraft
     volumes:
-      - ./build/libs/authmod-1.6.jar:/mods/authmod-1.6.jar
+      - ./build/libs/authmod-2.3.jar:/mods/authmod-2.3.jar
       - ./src/main/resources/authmod.cfg:/config/authmod.cfg
     ports:
       - 25565:25565
