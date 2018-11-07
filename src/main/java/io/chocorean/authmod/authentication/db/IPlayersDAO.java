@@ -15,5 +15,5 @@ public interface IPlayersDAO<P extends IPlayer> {
 
     P findByEmail(String email) throws SQLException;
 
-    P findByEmailOrUsername(String identifier) throws SQLException;
+    P findFirst(P player) throws SQLException;
 }

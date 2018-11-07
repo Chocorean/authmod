@@ -15,13 +15,14 @@ plugins {
 
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "2.2"
-group= "io.chocorean.authmod.tncy"
-archivesBaseName = "authmod.tncy"
+version = "2.3"
+group= "io.chocorean.authmod"
+archivesBaseName = "authmod"
 sourceCompatibility = targetCompatibility = "1.8"
 
 compileJava {
     sourceCompatibility = targetCompatibility = "1.8"
+    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
 }
 
 ext{

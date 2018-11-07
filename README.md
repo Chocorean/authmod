@@ -13,8 +13,8 @@
 <p align="center">
 
 
-  <a href="https://travis-ci.org/Chocorean/authmod.svg?branch=master">
-    <img src="https://travis-ci.org/Chocorean/authmod.svg?branch=master" alt="build status"/>
+  <a href="https://travis-ci.com/Chocorean/authmod">
+    <img src="https://travis-ci.com/Chocorean/authmod.svg?branch=master" alt="build status"/>
   </a>
   <a href="https://sonarcloud.io/dashboard?id=authmod">
     <img src="https://sonarcloud.io/api/project_badges/measure?project=authmod&metric=alert_status" alt="build status on sonarcloud"/>
@@ -48,16 +48,18 @@
 
 ## Table of contents
 
-- [What is authmod?](#What-is-authmod?)
+- [What is authmod?](#what-is-authmod)
 - [How it works](#how-it-works)
-- [Getting started for developers](#Getting-started-for-developers)
+- [Getting started for developers](#getting-started-for-developers)
   - [Requirements](#requirements)
   - [Installation](#installation)
-  - [Using the file strategy](#Using-the-file-strategy)
-  - [Using the database strategy](#Using-the-database-strategy)
+  - [Using the file strategy](#using-the-file-strategy)
+  - [Using the database strategy](#using-the-database-strategy)
+- [Getting started for administrators](#getting-started-for-administrators)
+
 - [Contact](#contact)
 - [License](#license)
-- [Webpage](#webpage)
+- [Curse project page](#curse-project-page)
 - [Install](#install)
 - [resources](#resources)
 - [Issues](#issues)
@@ -65,7 +67,7 @@
 
 ## What is authmod?
 
-*We are 2 students wanted to create a minecraft server for our school. At the beginning, the server was opened to everyone. We wanted to  accept only students from our school while accepting students that didn't buy the game. We were to lazy to build a custom launcher to do that. So we came up with this idea to build a mod adding a authentication layer that replaces the classic [mojang one](https://wiki.vg/Authentication).*
+*We are 2 students from TELECOM Nancy wanted to create a minecraft server for our school. At the beginning, the server was opened to everyone. We wanted to  accept only students from our school while accepting students that didn't buy the game. We were to lazy to build a custom launcher to do that. So we came up with this idea to build a mod adding a authentication layer that replaces the classic [mojang one](https://wiki.vg/Authentication).*
 
 
 AuthMod is a server side minecraft mod allowing you to accept premium or demo minecraft accounts safely. What is important to remind with this mod is **the mojang authentication cannot be used**. So if you rely on this, this mod is maybe not a good solution for you. Authmod proposes a set of interesting features:
@@ -79,7 +81,7 @@ AuthMod is a server side minecraft mod allowing you to accept premium or demo mi
 
 Features            | File strategy         | Database strategy        |
 | ----------------- |:---------------------:|:------------------------:| 
-| Registration      | **✖**                 | **✔**                   |
+| Registration      | **✔**                 | **✔**                   |
 | authentication    | **✔**                 | **✔**                   |
 
 
@@ -93,11 +95,11 @@ The mod provides to the users a set of commands that can be used once connected 
 # Allow the user to register on the server
 /register email@example.com password
 
-# Tell to the user if authenticated
+# Tell to the user whether authenticated
 /logged
 ```
 
-For the `/login` command, once this command is entered by the user, the mod will check wether **the email address, the password and the username**  corresponds to data stored in the database or in the file (it depends on the strategy  you chose).
+For the `/login` command, once this command is entered by the user, the mod will check whether **the email address, the password and the username**  correspond to data stored in the database or in the file (it depends on the strategy you choose).
 
 ## Getting started for developers
 
@@ -115,23 +117,43 @@ Here the steps to follow if you want to contribute or hack the project:
 git clone https://github.com/Chocorean/authmod
 ```
 2. For this step, you just have to follow [this documentation](https://mcforge.readthedocs.io/en/latest/gettingstarted/) in order to setup you developer environment.
+
+4. Run once the minecraft server in order to generate all the necessary files.
+5. Accept the EULA agreement by modifing the file `run/eula.txt`.
+5. Modify the `run/server.properties` and switch `online-mode` to `false`.
 3. The Last step is simply configure the `authmod.cfg`. an example is available [here](https://github.com/Mcdostone/authmod/blob/master/src/main/resources/authmod.cfg). In a development environment,
-this file is located in `run/authmod.cfg`
+this file is located in `run/authmod.cfg`.
 
 
 
 ### Using the file strategy
-TODO
+
+The only thing to do is to modify the `authmod.cfg` file:
+```bash
+general {
+  # ...
+  # S:strategy=database
+  S:strategy=file
+}
+```
+And that's it! There is nothing particular to do. When using this strategy, the `authmod_players.csv` file will be created in the `config/` folder.
+Each row is composed of 4 types of data:
+ - The address email
+ - The username of the player
+ - The hashed password
+ - `true` whether the player is banned
+
 
 ### Using the database strategy
 
 If you want to test the `database` strategy, you need a database instance running on your machine. For those who are familiar with docker, there is a `docker-compose.yml` file available to setup everything with no worries. Otherwise, install one manually. We use by default [mariadb](https://mariadb.org/) but any other classic SQL database should be ok. 
 
 Change the `authmod.cfg` configuration by modifying this:
- ```graph
- general {
-    # S:strategy=file
-    S:strategy=database
+```bash
+general {
+  # ...
+  # S:strategy=file
+  S:strategy=database
 }
 ```
 Don't forget to configure in this file all information related to the database (under the `database {...}` key).
@@ -139,31 +161,53 @@ Don't forget to configure in this file all information related to the database (
 The last step is to init the database and a table `players`:
 
 ```sql
+/* Create the database */
 CREATE DATABASE minecraft;
 
-CREATE TABLE IF NOT EXISTS `players` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `firstname` varchar(255) DEFAULT NULL,
-  `lastname` varchar(255) DEFAULT NULL,
-  `email` varchar(255) DEFAULT NULL,
-  `creationDate` datetime NOT NULL DEFAULT current_timestamp(),
-  `updatedOn` datetime NOT NULL DEFAULT current_timestamp(),
-  `avatar` varchar(255) DEFAULT NULL,
-  `lastConnection` datetime DEFAULT current_timestamp(),
-  `password` varchar(255) DEFAULT NULL,
-  `isAdmin` tinyint(1) DEFAULT 0,
-  `isBan` tinyint(1) DEFAULT 0,
-  `uuid` varchar(255) DEFAULT '',
-  `username` varchar(255) DEFAULT '',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+/* Create the table containing the players data */
+CREATE TABLE IF NOT EXISTS 'players' (
+  'id' int(11) NOT NULL AUTO_INCREMENT,
+  'email' varchar(255) NOT NULL,
+  'password' varchar(255) DEFAULT NULL,
+  'uuid' varchar(255) DEFAULT NULL,
+  'username' varchar(255) NOT NULL,
+  'isBan' tinyint(1) DEFAULT 0,
+  PRIMARY KEY ('id'),
+  UNIQUE KEY 'unique_email' ('email'),
+  UNIQUE KEY 'unique_uuid' ('uuid'),
+  UNIQUE KEY 'unique_username' ('username')
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-/* Insert two players */
-INSERT INTO players (id, firstname, lastname, email, creationDate, updatedOn, avatar, lastConnection, password, isAdmin, isBan, uuid, username) VALUES
-	(1, 'Richard', 'Stallman', 'richard.stallman.gnu.org', '2018-06-12 22:59:09', '2018-06-12 22:59:09', NULL, '2018-06-12 22:59:09', NULL, 0, 0, '', ''),
-	(2, 'Linus', 'Torvalds', 'linus.torvalds.linux.org', '2018-06-12 22:59:09', '2018-06-12 22:59:09', 'https://lh3.googleusercontent.com/SyqrxNLd6Eo4-AwTGXktIfMnx4dOBREcZCZvocEVue-GsuBB1dYDjJorgHviJeTHzHYfAKs4wiHmkDk=w1211-h1210-rw-no', '2018-06-12 22:59:09', NULL, 0, 0, '', '');
+/* Insert two players, passwords are not set*/
+INSERT INTO players (id, email, password, uuid, username, isBan) VALUES
+  (1, 'richard.stallman.gnu.org', NULL, NULL, 'stallman', 0),
+  (2, 'linus.torvalds.linux.org', NULL, NULL, 'linux', 0);
 ```
+
+## Getting started for administrators
+
+
+1. stop your minecraft server.
+2. Add the latest version of the authmod jar in the `mods` directory:
+```bash
+# execute this in the mods folder
+curl -s https://api.github.com/repos/chocorean/authmod/releases/latest \
+  | grep "browser_download_url.*jar" \
+  | cut -d : -f 2,3 \
+  | tr -d \" \
+  | wget -qi -
+```
+
+3. Now, we configure the authmod. Go under the `config` folder and download the cfg template file:
+```bash
+# in the config/ folder
+wget https://raw.githubusercontent.com/Chocorean/authmod/master/src/main/resources/authmod.cfg
+```
+
+4. Edit the `config/authmod.cfg` file depending on your needs.
+
+5. Restart the server and everything should be ok!
+
 
 ## Resources
 
@@ -180,7 +224,7 @@ INSERT INTO players (id, firstname, lastname, email, creationDate, updatedOn, av
 [GNU v3.0](https://www.gnu.org/licenses/gpl-3.0.fr.html)
 
 
-## Webage
+## Curse project page
 
 Further informations and downloads links are available on the [Curse project page](https://minecraft.curseforge.com/projects/authmod).
 

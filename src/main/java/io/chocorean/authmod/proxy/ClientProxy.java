@@ -8,7 +8,7 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void registerRenderers() {
-        ClientCommandHandler.instance.registerCommand(new LoginCommand(AuthMod.getAuthenticationStrategy()));
+        ClientCommandHandler.instance.registerCommand(new LoginCommand(AuthMod.getDataSourceStrategy()));
     }
 
 }

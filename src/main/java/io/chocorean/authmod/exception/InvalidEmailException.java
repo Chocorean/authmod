@@ -2,13 +2,12 @@ package io.chocorean.authmod.exception;
 
 import io.chocorean.authmod.AuthMod;
 
-public class UnauthorizedHostedDomainException extends InvalidEmailException {
-
-    public UnauthorizedHostedDomainException(String message) {
+public class InvalidEmailException extends AuthmodException {
+    public InvalidEmailException(String message) {
         super(message);
     }
 
-    public UnauthorizedHostedDomainException() {
+    public InvalidEmailException() {
         super(String.format("Your email address must belong to the domain %s, please contact %s.", AuthMod.getConfig().getHostedDomain(), AuthMod.getConfig().getContact()));
     }
 

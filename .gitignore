@@ -24,3 +24,6 @@ run
 dataclasses
 data
 classes
+
+.DS_Store
+gradlew.bat

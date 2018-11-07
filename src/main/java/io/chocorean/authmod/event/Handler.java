@@ -1,6 +1,5 @@
 package io.chocorean.authmod.event;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import io.chocorean.authmod.AuthMod;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -20,6 +19,7 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ScheduledExecutorService;
@@ -102,11 +102,9 @@ public class Handler {
     We cannot block every single LivingEvent because of LivingUpdateEvent (defined in LivingEvent)
      */
     private static void handleLivingEvents(LivingEvent event, Entity entity) {
-        if (event.getEntity() instanceof EntityPlayer) {
-            if (event.isCancelable() && descriptors.containsKey(entity)) {
-                event.setCanceled(true);
-                ((EntityPlayerMP) entity).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getMessage())));
-            }
+        if (event.getEntity() instanceof EntityPlayer && event.isCancelable() && descriptors.containsKey(entity)) {
+            event.setCanceled(true);
+            ((EntityPlayerMP) entity).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getMessage())));
         }
     }
 

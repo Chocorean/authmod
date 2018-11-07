@@ -1,6 +1,7 @@
 package io.chocorean.authmod.command;
 
-import io.chocorean.authmod.authentication.IAuthenticationStrategy;
+import io.chocorean.authmod.authentication.AuthModule;
+import io.chocorean.authmod.authentication.datasource.IDataSourceStrategy;
 import io.chocorean.authmod.event.Handler;
 import io.chocorean.authmod.model.IPlayer;
 import io.chocorean.authmod.model.Player;
@@ -21,14 +22,15 @@ import java.util.List;
 
 public class RegisterCommand implements ICommand {
 
+    private static final Logger LOGGER = FMLLog.log;
     private final List<String> aliases;
-    private IAuthenticationStrategy strategy;
+    private final AuthModule auth;
 
-    public RegisterCommand(IAuthenticationStrategy strategy){
+    public RegisterCommand(IDataSourceStrategy strategy){
         aliases = new ArrayList<>();
         aliases.add("register");
         aliases.add("reg");
-        this.strategy = strategy;
+        this.auth = new AuthModule(strategy);
     }
 
     @Override
@@ -60,10 +62,11 @@ public class RegisterCommand implements ICommand {
                 playerToRegister.setPassword(args[1]);
                 playerToRegister.setUsername(player.getDisplayNameString());
                 try {
-                    this.strategy.register(playerToRegister);
+                    this.auth.register(playerToRegister);
                     ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString("You are registered as " + playerToRegister.getEmail() + ". Next time, please login to play!")));
                     Handler.authorizePlayer(player);
                 } catch (Exception e) {
+                    LOGGER.error(e.getMessage());
                     ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString(e.getMessage())));
                 }
             }
