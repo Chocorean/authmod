@@ -59,7 +59,7 @@ public class DatabaseSourceStrategy implements IDataSourceStrategy {
         try {
             return this.playersDAO.findFirst(player) != null;
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.catching(Level.ERROR, e);
         }
         return false;
     }

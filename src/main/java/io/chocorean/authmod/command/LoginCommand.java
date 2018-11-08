@@ -74,10 +74,8 @@ public class LoginCommand implements ICommand {
                         );
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
                     LOGGER.error(e.getMessage());
                     ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString(e.getMessage())));
-                    loggedPlayer = null;
                 }
             }
             else {

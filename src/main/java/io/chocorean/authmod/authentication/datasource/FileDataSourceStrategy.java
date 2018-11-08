@@ -3,6 +3,7 @@ package io.chocorean.authmod.authentication.datasource;
 import io.chocorean.authmod.model.IPlayer;
 import io.chocorean.authmod.model.Player;
 import net.minecraftforge.fml.common.FMLLog;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
@@ -25,26 +26,28 @@ public class FileDataSourceStrategy implements IDataSourceStrategy {
 
     private void readFile() {
         this.players.clear();
+        boolean created;
         try {
-            this.authFile.createNewFile();
-        } catch (IOException e) { LOGGER.catching(e); }
-        try(BufferedReader bf = new BufferedReader(new FileReader(this.authFile))) {
-            String line;
-            while((line = bf.readLine()) != null && line.trim().length() > 0) {
-                if(!line.startsWith("#")) {
-                    String[] parts = line.trim().split(SEPARATOR);
-                    IPlayer p = new Player();
-                    p.setEmail(parts[0].trim());
-                    p.setUsername(parts[1].trim());
-                    p.setPassword(parts[2].trim());
-                    p.setBan(Boolean.parseBoolean(parts[3].trim()));
-                    this.players.put(p.getEmail(), p);
+            created = this.authFile.createNewFile();
+            if(created) {
+                try(BufferedReader bf = new BufferedReader(new FileReader(this.authFile))) {
+                    String line;
+                    while((line = bf.readLine()) != null && line.trim().length() > 0) {
+                        if(!line.startsWith("#")) {
+                            String[] parts = line.trim().split(SEPARATOR);
+                            IPlayer p = new Player();
+                            p.setEmail(parts[0].trim());
+                            p.setUsername(parts[1].trim());
+                            p.setPassword(parts[2].trim());
+                            p.setBan(Boolean.parseBoolean(parts[3].trim()));
+                            this.players.put(p.getEmail(), p);
+                        }
+                    }
+                    this.lastModification = this.authFile.lastModified();
                 }
             }
-            this.lastModification = this.authFile.lastModified();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (IOException e) { LOGGER.catching(e); }
+
     }
 
     private void reloadFile() {
