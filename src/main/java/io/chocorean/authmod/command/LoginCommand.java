@@ -61,26 +61,27 @@ public class LoginCommand implements ICommand {
                 loggedPlayer.setPassword(args[1]);
                 loggedPlayer.setUsername(player.getDisplayNameString());
                 loggedPlayer.setUuid(EntityPlayer.getUUID(player.getGameProfile()).toString());
+                try {
+                    loggedPlayer = this.auth.login(loggedPlayer);
+                    if (loggedPlayer != null) {
+                        AuthMod.LOGGER.info(sender.getName() + " authenticated");
+                        Handler.authorizePlayer(player);
+                        ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString("Logged in successfully. Have fun!")));
+                        ((EntityPlayerMP) sender).setPositionAndUpdate(
+                                player.getPosition().getX(),
+                                player.getPosition().getY(),
+                                player.getPosition().getZ()
+                        );
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    LOGGER.error(e.getMessage());
+                    ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString(e.getMessage())));
+                    loggedPlayer = null;
+                }
             }
             else {
                 ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString("You have at least provide the email address and the password to log in.")));
-            }
-            try {
-                loggedPlayer = this.auth.login(loggedPlayer);
-            } catch (Exception e) {
-                LOGGER.error(e.getMessage());
-                ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString(e.getMessage())));
-                loggedPlayer = null;
-            }
-            if (loggedPlayer != null) {
-                AuthMod.LOGGER.info(sender.getName() + " authenticated");
-                Handler.authorizePlayer(player);
-                ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString("Logged in successfully. Have fun!")));
-                ((EntityPlayerMP) sender).setPositionAndUpdate(
-                        player.getPosition().getX(),
-                        player.getPosition().getY(),
-                        player.getPosition().getZ()
-                );
             }
         }
     }

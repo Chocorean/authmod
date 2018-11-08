@@ -45,7 +45,8 @@ public class Player implements IPlayer {
 
     @Override
     public void setUuid(String uuid) {
-        this.uuid = uuid.trim();
+        if(uuid != null)
+            this.uuid = uuid.trim();
     }
 
     @Override

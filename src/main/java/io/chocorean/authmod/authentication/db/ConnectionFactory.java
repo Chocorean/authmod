@@ -14,7 +14,7 @@ public class ConnectionFactory {
                     AuthMod.getConfig().getDatabaseConfig().getDialect(),
                     AuthMod.getConfig().getDatabaseConfig().getHost(),
                     AuthMod.getConfig().getDatabaseConfig().getPort(),
-                    AuthMod.getConfig().getDatabaseConfig().getName()),
+                    AuthMod.getConfig().getDatabaseConfig().getDatabase()),
                     AuthMod.getConfig().getDatabaseConfig().getUser(),
                     AuthMod.getConfig().getDatabaseConfig().getPassword());
         } catch (SQLException ex) {
