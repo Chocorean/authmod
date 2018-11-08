@@ -13,7 +13,7 @@ public class AuthModDatabaseConfig {
 
     public String getUser() { return this.get("user", "root"); }
 
-    public String getDatabase() { return this.get("name", "minecraft"); }
+    public String getDatabase() { return this.get("database", "minecraft"); }
 
     public String getPassword() { return this.get("password", ""); }
 
