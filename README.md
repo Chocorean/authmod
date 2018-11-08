@@ -162,24 +162,24 @@ The last step is to init the database and a table `players`:
 
 ```sql
 /* Create the database */
-CREATE DATABASE minecraft;
+CREATE OR REPLACE DATABASE minecraft;
 
 /* Create the table containing the players data */
-CREATE TABLE IF NOT EXISTS 'players' (
-  'id' int(11) NOT NULL AUTO_INCREMENT,
-  'email' varchar(255) NOT NULL,
-  'password' varchar(255) DEFAULT NULL,
-  'uuid' varchar(255) DEFAULT NULL,
-  'username' varchar(255) NOT NULL,
-  'isBan' tinyint(1) DEFAULT 0,
-  PRIMARY KEY ('id'),
-  UNIQUE KEY 'unique_email' ('email'),
-  UNIQUE KEY 'unique_uuid' ('uuid'),
-  UNIQUE KEY 'unique_username' ('username')
+CREATE TABLE IF NOT EXISTS minecraft.players (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  email varchar(255) NOT NULL,
+  password varchar(255) DEFAULT NULL,
+  uuid varchar(255) DEFAULT NULL,
+  username varchar(255) NOT NULL,
+  isBan tinyint(1) DEFAULT 0,
+  PRIMARY KEY (id),
+  UNIQUE KEY unique_email (email),
+  UNIQUE KEY unique_uuid (uuid),
+  UNIQUE KEY unique_username (username)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /* Insert two players, passwords are not set*/
-INSERT INTO players (id, email, password, uuid, username, isBan) VALUES
+INSERT INTO minecraft.players (id, email, password, uuid, username, isBan) VALUES
   (1, 'richard.stallman.gnu.org', NULL, NULL, 'stallman', 0),
   (2, 'linus.torvalds.linux.org', NULL, NULL, 'linux', 0);
 ```
