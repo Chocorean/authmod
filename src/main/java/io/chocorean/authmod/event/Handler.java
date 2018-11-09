@@ -136,7 +136,7 @@ public class Handler {
     /* NOT CANCELABLE*/
     @SubscribeEvent(priority=EventPriority.HIGHEST)
     public static void onLivingSetTargetAttackEvent(LivingSetAttackTargetEvent event) {
-        if (event.getTarget() instanceof EntityPlayer) {
+        if (event.getTarget() instanceof EntityPlayer && descriptors.containsKey(event.getTarget())) {
             ((EntityLiving)event.getEntityLiving()).setAttackTarget(null);
         }
     }
