@@ -41,7 +41,7 @@ public class LoginCommand implements ICommand {
 
     @Override
     public String getUsage(ICommandSender sender) {
-        return "/login email password - Allows you to authenticate on the server";
+        return AuthMod.getConfig().getLoginUsageMsg();
     }
 
     @Override
@@ -54,7 +54,8 @@ public class LoginCommand implements ICommand {
         EntityPlayer player = (EntityPlayer) sender;
         IPlayer loggedPlayer = new Player();
         if(Handler.isLogged(player)) {
-            ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString("You are already logged")));
+            AuthMod.LOGGER.info(String.format("[AuthMod]: User %s tried to sign in twice."), loggedPlayer.getUsername());
+            ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getPlayerAlreadyLoggedMsg())));
         } else {
             if(args.length == 2) {
                 loggedPlayer.setEmail(args[0]);
@@ -64,9 +65,9 @@ public class LoginCommand implements ICommand {
                 try {
                     loggedPlayer = this.auth.login(loggedPlayer);
                     if (loggedPlayer != null) {
-                        AuthMod.LOGGER.info(sender.getName() + " authenticated");
+                        AuthMod.LOGGER.info("[AuthMod]: "+sender.getName() + " authenticated");
                         Handler.authorizePlayer(player);
-                        ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString("Logged in successfully. Have fun!")));
+                        ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getSuccessMsg())));
                         ((EntityPlayerMP) sender).setPositionAndUpdate(
                                 player.getPosition().getX(),
                                 player.getPosition().getY(),
@@ -79,7 +80,7 @@ public class LoginCommand implements ICommand {
                 }
             }
             else {
-                ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString("You have at least provide the email address and the password to log in.")));
+                ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getWrongNumberOfArgsMsg())));
             }
         }
     }

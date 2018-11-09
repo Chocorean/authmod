@@ -28,12 +28,12 @@ public class DatabaseSourceStrategy implements IDataSourceStrategy {
     @Override
     public IPlayer retrieve(IPlayer player) throws AuthmodException {
         IPlayer p;
-        LOGGER.info("Checking authentication for " + player.getEmail());
+        LOGGER.info("[AuthMod]: Checking authentication for " + player.getEmail());
         try {
             p = this.playersDAO.findFirst(player);
         } catch(SQLException e) {
             LOGGER.catching(Level.ERROR, e);
-            throw new LoginException("Authentication is unavailable for the moment. Please contact " + AuthMod.getConfig().getContact());
+            throw new LoginException(AuthMod.getConfig().getDatabaseErrorMsg());
         }
         return p;
     }
@@ -43,13 +43,12 @@ public class DatabaseSourceStrategy implements IDataSourceStrategy {
         try {
             IPlayer saved = this.playersDAO.findFirst(player);
             if(saved != null) {
-                String alreadyTaken = player.getUsername().equals(saved.getUsername()) ? player.getUsername() : player.getEmail();
-                throw new PlayerAlreadyExistException(alreadyTaken + " already exists!");
+                throw new PlayerAlreadyExistException(AuthMod.getConfig().getPlayerAlreadyExistsMsg());
             }
             this.playersDAO.create(player);
         } catch(SQLException e) {
             LOGGER.catching(Level.ERROR, e);
-            throw new LoginException("Authentication is unavailable for the moment. Please contact " + AuthMod.getConfig().getContact());
+            throw new LoginException(AuthMod.getConfig().getDatabaseErrorMsg());
         }
         return player;
     }

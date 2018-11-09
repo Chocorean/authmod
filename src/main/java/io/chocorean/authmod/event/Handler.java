@@ -36,7 +36,7 @@ public class Handler {
     @SubscribeEvent(priority= EventPriority.HIGHEST)
     public static void onJoin(PlayerLoggedInEvent event){
         EntityPlayer entity = event.player;
-        ((EntityPlayerMP)entity).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getMessage())));
+        ((EntityPlayerMP)entity).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getWelcomeMessage())));
         // initializing timer for kicking player if he/she hasn't logged in a minute
         BlockPos pos = entity.getPosition();
         PlayerDescriptor dc = new PlayerDescriptor(entity, pos);
@@ -65,7 +65,7 @@ public class Handler {
         EntityPlayer entity = event.getEntityPlayer();
         if(descriptors.containsKey(entity) && event.isCancelable()) {
             event.setCanceled(true);
-            ((EntityPlayerMP) entity).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getMessage())));
+            ((EntityPlayerMP) entity).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getWelcomeMessage())));
         }
     }
 
@@ -74,7 +74,7 @@ public class Handler {
         String name = event.getCommand().getName();
         if (descriptors.containsKey(event.getSender()) && !(name.equals("register") || name.equals("login") || name.equals("logged?")) && (event.getSender() instanceof EntityPlayer) && event.isCancelable()) {
             event.setCanceled(true);
-            ((EntityPlayerMP)event.getSender()).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getMessage())));
+            ((EntityPlayerMP)event.getSender()).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getWelcomeMessage())));
         }
     }
 
@@ -83,7 +83,7 @@ public class Handler {
         EntityPlayerMP entity = event.getPlayer();
         if (event.isCancelable() && descriptors.containsKey(entity)) {
             event.setCanceled(true);
-            event.getPlayer().connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getMessage())));
+            event.getPlayer().connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getWelcomeMessage())));
         }
     }
 
@@ -93,7 +93,7 @@ public class Handler {
         if (event.isCancelable() && descriptors.containsKey(entity)) {
             event.setCanceled(true);
             entity.inventory.addItemStackToInventory(event.getEntityItem().getItem());
-            ((EntityPlayerMP)event.getPlayer()).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getMessage())));
+            ((EntityPlayerMP)event.getPlayer()).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getWelcomeMessage())));
         }
     }
 
@@ -104,7 +104,7 @@ public class Handler {
     private static void handleLivingEvents(LivingEvent event, Entity entity) {
         if (event.getEntity() instanceof EntityPlayer && event.isCancelable() && descriptors.containsKey(entity)) {
             event.setCanceled(true);
-            ((EntityPlayerMP) entity).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getMessage())));
+            ((EntityPlayerMP) entity).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getWelcomeMessage())));
         }
     }
 

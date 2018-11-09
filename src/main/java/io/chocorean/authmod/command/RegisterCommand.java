@@ -1,5 +1,6 @@
 package io.chocorean.authmod.command;
 
+import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.authentication.AuthModule;
 import io.chocorean.authmod.authentication.datasource.IDataSourceStrategy;
 import io.chocorean.authmod.event.Handler;
@@ -40,7 +41,7 @@ public class RegisterCommand implements ICommand {
 
     @Override
     public String getUsage(ICommandSender sender) {
-        return "/register email password - Be careful when choosing it, you'll be asked to login each time you play..";
+        return AuthMod.getConfig().getRegisterUsageMsg();
     }
 
     @Override
@@ -52,10 +53,10 @@ public class RegisterCommand implements ICommand {
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
         EntityPlayer player = (EntityPlayer) sender;
         if(Handler.isLogged(player)) {
-            ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString("You are already logged.")));
+            ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getPlayerAlreadyLoggedMsg())));
         } else {
             if (args.length != 2) {
-                ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString("Invalid number of arguments expected: <email> <password>")));
+                ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getWrongNumberOfArgsMsg())));
             } else {
                 IPlayer playerToRegister = new Player();
                 playerToRegister.setEmail(args[0]);
@@ -63,7 +64,7 @@ public class RegisterCommand implements ICommand {
                 playerToRegister.setUsername(player.getDisplayNameString());
                 try {
                     this.auth.register(playerToRegister);
-                    ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString("You are registered as " + playerToRegister.getEmail() + ". Next time, please login to play!")));
+                    ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getSuccessMsg())));
                     Handler.authorizePlayer(player);
                 } catch (Exception e) {
                     LOGGER.error(e.getMessage());

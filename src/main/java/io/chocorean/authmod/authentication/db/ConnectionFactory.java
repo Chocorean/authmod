@@ -18,7 +18,7 @@ public class ConnectionFactory {
                     AuthMod.getConfig().getDatabaseConfig().getUser(),
                     AuthMod.getConfig().getDatabaseConfig().getPassword());
         } catch (SQLException ex) {
-            throw new RuntimeException("Error connecting to the database", ex);
+            throw new RuntimeException(AuthMod.getConfig().getDatabaseErrorMsg(), ex);
         }
     }
 

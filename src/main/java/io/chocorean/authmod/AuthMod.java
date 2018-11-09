@@ -40,17 +40,17 @@ public class AuthMod {
         switch (config.getAuthenticationStrategy().toUpperCase()) {
             case "DATABASE":
                 AuthMod.strategy = new DatabaseSourceStrategy(config.getDatabaseConfig());
-                LOGGER.info("Use DatabaseAuthenticationStrategy");
+                LOGGER.info("[AuthMod]: Now using DatabaseAuthenticationStrategy.");
                 break;
             case "FILE":
                 AuthMod.strategy = new FileDataSourceStrategy(Paths.get(
                         event.getModConfigurationDirectory().getAbsolutePath(),
                         MODID + "_players.csv").toFile());
-                LOGGER.info("Use FileAuthenticationStrategy");
+                LOGGER.info("[Authmod]: Now using FileAuthenticationStrategy.");
                 break;
             default:
                 AuthMod.strategy = null;
-                LOGGER.info("No Authentication strategy selected");
+                LOGGER.info("[AuthMod]: Unknown authentication strategy selected. Nothing will happen.");
         }
     }
 

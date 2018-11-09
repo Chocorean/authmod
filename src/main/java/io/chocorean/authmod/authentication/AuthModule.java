@@ -25,33 +25,33 @@ public class AuthModule implements IAuthenticationStrategy {
     @Override
     public IPlayer login(IPlayer player) throws AuthmodException {
         IPlayer saved = this.strategy.retrieve(player);
-        LOGGER.info(player + " trying to login");
+        LOGGER.info("[AuthMod]: " + player + " trying to login");
         if(saved == null)
-            throw new PlayerNotFoundException(String.format("%s doesn't exist", player.getEmail()));
+            throw new PlayerNotFoundException(AuthMod.getConfig().getPlayerNotFoundMsg());
         if(!saved.getUsername().equals(player.getUsername()))
-            throw new DifferentUsernameException(String.format("Your username should be %s instead of %s. Please change it to login.", saved.getUsername(), player.getUsername()));
+            throw new DifferentUsernameException(AuthMod.getConfig().getWrongUsernameMsg());
         if(saved.isBan())
-            throw new BanException(String.format("Your account is  banned (%s), please contact %s.", player.getEmail(), AuthMod.getConfig().getContact()));
+            throw new BanException(AuthMod.getConfig().getBannedMsg());
         boolean correctPassword = BCrypt.checkpw(player.getPassword(), saved.getPassword());
         if(!correctPassword) {
-            throw new WrongPasswordException("Wrong password, please retry");
+            throw new WrongPasswordException(AuthMod.getConfig().getWrongPasswordMsg());
         }
         return player;
     }
 
     @Override
     public IPlayer register(IPlayer player) throws AuthmodException {
-        LOGGER.info(player + " trying to register");
+        LOGGER.info("[AuthMod]: " + player + " trying to register");
         String hostedDomain = AuthMod.getConfig().getHostedDomain();
         Matcher matcher = VALID_EMAIL_ADDRESS_REGEX .matcher(player.getEmail());
         if(!matcher.find()) {
-            throw new InvalidEmailException(String.format("%s is not a valid email. Try again.", player.getEmail()));
+            throw new InvalidEmailException(AuthMod.getConfig().getNotValidEmailMsg());
         }
         if(hostedDomain.length() > 0 && !player.getEmail().endsWith(hostedDomain)) {
             throw new UnauthorizedHostedDomainException();
         }
         if(this.strategy.exist(player)) {
-            throw new PlayerAlreadyExistException(String.format("the email address (%s) or the username (%s) already exists!", player.getEmail(), player.getUsername()));
+            throw new PlayerAlreadyExistException(AuthMod.getConfig().getPlayerAlreadyExistsMsg());
         }
         player.setPassword(BCrypt.hashpw(player.getPassword(), BCrypt.gensalt()));
         this.strategy.add(player);
