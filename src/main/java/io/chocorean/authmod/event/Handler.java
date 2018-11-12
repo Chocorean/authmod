@@ -19,6 +19,7 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,11 +46,6 @@ public class Handler {
             if(descriptors.containsKey(entity)) {
                 descriptors.remove(entity);
                 logged.remove(entity);
-                entity.setPositionAndUpdate(
-                        dc.getPosition().getX(),
-                        dc.getPosition().getY(),
-                        dc.getPosition().getZ()
-                );
                 ((EntityPlayerMP) entity).connection.sendPacket(new SPacketDisconnect(new TextComponentString("Wake up! You only have " +  AuthMod.getConfig().getDelay() + " seconds to log in.")));
             }
         }, AuthMod.getConfig().getDelay(), TimeUnit.SECONDS);
@@ -58,6 +54,18 @@ public class Handler {
     @SubscribeEvent(priority= EventPriority.HIGHEST)
     public static void onLeave(PlayerLoggedOutEvent event){
         logged.remove(event.player);
+    }
+
+    @SubscribeEvent
+    public static void onPlayerTickEvent(TickEvent.PlayerTickEvent event) {
+        if (descriptors.containsKey(event.player)) {
+            BlockPos pos = descriptors.get(event.player).getPosition();
+            event.player.setPositionAndUpdate(
+                pos.getX(),
+                pos.getY(),
+                pos.getZ()
+            );
+        }
     }
 
     @SubscribeEvent(priority=EventPriority.HIGHEST)
