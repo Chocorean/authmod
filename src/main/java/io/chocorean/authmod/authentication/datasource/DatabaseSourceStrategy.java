@@ -22,7 +22,7 @@ public class DatabaseSourceStrategy implements IDataSourceStrategy {
     private static final Logger LOGGER = FMLLog.log;
 
     public DatabaseSourceStrategy(AuthModDatabaseConfig config) {
-        this.playersDAO = new PlayersDAO<Player>(ConnectionFactory.getConnection(), config.getTable());
+        this.playersDAO = new PlayersDAO<Player>(config.getTable());
     }
 
     @Override
