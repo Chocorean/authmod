@@ -14,7 +14,6 @@ import net.minecraft.network.play.server.SPacketChat;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.fml.common.FMLLog;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
@@ -23,7 +22,7 @@ import java.util.List;
 
 public class LoginCommand implements ICommand {
 
-    private static final Logger LOGGER = FMLLog.log;
+    private static final Logger LOGGER = AuthMod.LOGGER;
     private final List<String> aliases;
     private final AuthModule auth;
 
@@ -54,7 +53,7 @@ public class LoginCommand implements ICommand {
         EntityPlayer player = (EntityPlayer) sender;
         IPlayer loggedPlayer = new Player();
         if(Handler.isLogged(player)) {
-            AuthMod.LOGGER.info(String.format("[AuthMod]: User %s tried to sign in twice."), loggedPlayer.getUsername());
+            LOGGER.info("User %s tried to sign in twice.", loggedPlayer.getUsername());
             ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getPlayerAlreadyLoggedMsg())));
         } else {
             if(args.length == 2) {
@@ -65,7 +64,7 @@ public class LoginCommand implements ICommand {
                 try {
                     loggedPlayer = this.auth.login(loggedPlayer);
                     if (loggedPlayer != null) {
-                        AuthMod.LOGGER.info("[AuthMod]: "+sender.getName() + " authenticated");
+                        LOGGER.info(sender.getName() + " authenticated");
                         Handler.authorizePlayer(player);
                         ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getSuccessMsg())));
                         ((EntityPlayerMP) sender).setPositionAndUpdate(

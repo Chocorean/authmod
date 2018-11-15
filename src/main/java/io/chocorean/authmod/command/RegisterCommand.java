@@ -14,7 +14,6 @@ import net.minecraft.network.play.server.SPacketChat;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.fml.common.FMLLog;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
@@ -23,7 +22,7 @@ import java.util.List;
 
 public class RegisterCommand implements ICommand {
 
-    private static final Logger LOGGER = FMLLog.log;
+    private static final Logger LOGGER = AuthMod.LOGGER;
     private final List<String> aliases;
     private final AuthModule auth;
 

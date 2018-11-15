@@ -10,7 +10,6 @@ import io.chocorean.authmod.exception.LoginException;
 import io.chocorean.authmod.exception.PlayerAlreadyExistException;
 import io.chocorean.authmod.model.IPlayer;
 import io.chocorean.authmod.model.Player;
-import net.minecraftforge.fml.common.FMLLog;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 
@@ -19,16 +18,16 @@ import java.sql.SQLException;
 public class DatabaseSourceStrategy implements IDataSourceStrategy {
 
     private final IPlayersDAO<IPlayer> playersDAO;
-    private static final Logger LOGGER = FMLLog.log;
+    private static final Logger LOGGER = AuthMod.LOGGER;
 
     public DatabaseSourceStrategy(AuthModDatabaseConfig config) {
-        this.playersDAO = new PlayersDAO<Player>(config.getTable());
+        this.playersDAO = new PlayersDAO<Player>(config.getTable(), new ConnectionFactory(AuthMod.getConfig().getDatabaseConfig()));
     }
 
     @Override
     public IPlayer retrieve(IPlayer player) throws AuthmodException {
         IPlayer p;
-        LOGGER.info("[AuthMod]: Checking authentication for " + player.getEmail());
+        LOGGER.info("Checking authentication for " + player.getEmail());
         try {
             p = this.playersDAO.findFirst(player);
         } catch(SQLException e) {

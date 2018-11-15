@@ -6,199 +6,138 @@ import net.minecraftforge.common.config.Property;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 public class AuthModConfig {
 
     private final Configuration config;
-    private static final int MINIMUM_DELAY = 10;
     private static final String GEN_CATEGORY = "general";
-    private static final String MSG_CATEGORY = "message";
+    private static final String MSG_CATEGORY = "messages";
     private final AuthModDatabaseConfig databaseConfig;
 
-    // general properties
-    private boolean isLoginEnabled = true;
-    private boolean isRegisterEnabled = true;
-    private String strategy = "file";
-    private String website = "www.example-website.com";
-    private String hostedDomain = "";
-    private String contact = "";
-    private int delay = 60;
+    private boolean isLoginEnabled;
+    private boolean isRegisterEnabled;
+    private String strategy;
+    private String website;
+    private String hostedDomain;
+    private String contact;
+    private int delay;
 
-    // message properties
-    private String welcomeMsg = "";
-    private String successMsg = "";
-    private String wrongPasswordMsg = "";
-    private String wrongUsernameMsg = "";
-    private String notValidEmailMsg = "";
-    private String databaseErrorMsg = "";
-    private String bannedMsg = "";
-    private String playerNotFoundMsg = "";
-    private String playerAlreadyExistsMsg = "";
-    private String playerAlreadyLoggedMsg = "";
-    private String wrongNumberOfArgsMsg = "";
-    private String registerUsageMsg = "";
-    private String loginUsageMsg = "";
-
+    private String welcomeMsg;
+    private String successMsg;
+    private String wrongPasswordMsg;
+    private String wrongUsernameMsg;
+    private String notValidEmailMsg;
+    private String databaseErrorMsg;
+    private String bannedMsg;
+    private String playerNotFoundMsg;
+    private String playerAlreadyExistsMsg;
+    private String playerAlreadyLoggedMsg;
+    private String wrongNumberOfArgsMsg;
+    private String registerUsageMsg;
+    private String loginUsageMsg;
+    private Map<String, String> defaultValues;
+    private Map<String, String> comments;
+    private String emailOnLOgin;
 
     public AuthModConfig(File config) {
         this(new Configuration(config));
     }
 
     private AuthModConfig(Configuration config) {
+        this.defaultValues = new HashMap<>();
+        this.comments = new HashMap<>();
         this.config = config;
-        this.databaseConfig = new AuthModDatabaseConfig(config);
+        this.databaseConfig = new AuthModDatabaseConfig(this);
+        this.loadConfigurationData();
         this.config.load();
+        this.loadProperties();
+    }
 
-        config.addCustomCategoryComment(GEN_CATEGORY, " ______            __     __                                __\n" +
-                "/\\  _  \\          /\\ \\__ /\\ \\                              /\\ \\\n" +
-                "\\ \\ \\L\\ \\   __  __\\ \\ ,_\\\\ \\ \\___      ___ ___      ___    \\_\\ \\\n" +
-                " \\ \\  __ \\ /\\ \\/\\ \\\\ \\ \\/ \\ \\  _ `\\  /' __` __`\\   / __`\\  /'_` \\\n" +
-                "  \\ \\ \\/\\ \\\\ \\ \\_\\ \\\\ \\ \\_ \\ \\ \\ \\ \\ /\\ \\/\\ \\/\\ \\ /\\ \\L\\ \\/\\ \\L\\ \\\n" +
-                "   \\ \\_\\ \\_\\\\ \\____/ \\ \\__\\ \\ \\_\\ \\_\\\\ \\_\\ \\_\\ \\_\\\\ \\____/\\ \\___,_\\\n" +
-                "    \\/_/\\/_/ \\/___/   \\/__/  \\/_/\\/_/ \\/_/\\/_/\\/_/ \\/___/  \\/__,_ /\n" +
-                "                                                       version 2.3\n" +
-                " Github link\n" +
-                "  - https://github.com/Chocorean/authmod\n" +
-                " Authors\n" +
-                "   - Chocorean\n" +
-                "   - Mcdostone");
-
-        try { // Read props from config
-            /* general category */
-            Property isLoginEnabledProp = config.get(AuthModConfig.GEN_CATEGORY,
-                    "isLoginEnabled",
-                    "true",
-                    "Enable or disable authentication layer on the server");
-            isLoginEnabled = isLoginEnabledProp.getBoolean();
-
-            Property isRegisterEnabledProp = config.get(AuthModConfig.GEN_CATEGORY,
-                    "isRegisterEnabled",
-                    "true",
-                    "Enable or disable players to register themselves");
-            isRegisterEnabled = isRegisterEnabledProp.getBoolean();
-
-            Property strategyProp = config.get(AuthModConfig.GEN_CATEGORY,
-                    "strategy",
-                    "file",
-                    "Choose your authentication strategy between 'database' or 'file'.\nIf the strategy is unknown, the server will be open for everyone.");
-            strategy = strategyProp.getString();
-
-            Property websiteProp = config.get(AuthModConfig.GEN_CATEGORY,
-                    "website",
-                    "www.example-website.com",
-                    "Website to display if the player can't log in");
-            website = websiteProp.getString();
-
-            Property hostedDomainProp = config.get(AuthModConfig.GEN_CATEGORY,
-                    "hostedDomain",
-                    "",
-                    "Hosted domain");
-            hostedDomain = hostedDomainProp.getString();
-
-            Property contactProp = config.get(AuthModConfig.GEN_CATEGORY,
-                    "contact",
-                    "the admins",
-                    "People to contact if an issue is met.");
-            contact = contactProp.getString();
-
-            Property delayProp = config.get(AuthModConfig.GEN_CATEGORY,
-                    "delay",
-                    60, // Default value
-                    "If the player doesn't log in after this delay (the unit is the second), he will be kicked from the server.");
-            delay = delayProp.getInt();
-
-            /* message category */
-            Property welcomeMsgProp = config.get(AuthModConfig.MSG_CATEGORY,
-                    "welcomeMsg",
-                    isRegisterEnabled ? "Use /register to sign up or /login to sign in." : "Use /login to sign in.",
-                    "Message displayed to a player when he/she joins the server.\nMake sure it is clear enough to guide them.");
-            welcomeMsg = welcomeMsgProp.getString();
-
-            Property successMsgProp = config.get(AuthModConfig.MSG_CATEGORY,
-                    "successMsg",
-                    "You've successfully signed in.",
-                    "Message displayed to a player when he/she successfully signs in.");
-            successMsg = successMsgProp.getString();
-
-            Property wrongPasswordMsgProp = config.get(AuthModConfig.MSG_CATEGORY,
-                    "wrongPasswordMsg",
-                    "Wrong password. Please try again.",
-                    "Message displayed to a player when he/she typed a wrong password.");
-            wrongPasswordMsg = wrongPasswordMsgProp.getString();
-
-            Property wrongUsernameMsgProp = config.get(AuthModConfig.MSG_CATEGORY,
-                    "wrongUsernameMsg",
-                    "Your username does not correspond to your credentials.",
-                    "Message displayed to a player when he/she attemps to sign in with wrong username.");
-            wrongUsernameMsg = wrongUsernameMsgProp.getString();
-
-            Property notValidEmailMsgProp = config.get(AuthModConfig.MSG_CATEGORY,
-                    "notValidEmailMsg",
-                    "Your email is not valid.",
-                    "Message displayed to a player when he/she attemps to sign in with an incorrect email.");
-            notValidEmailMsg = notValidEmailMsgProp.getString();
-
-            Property databaseErrorMsgProp = config.get(AuthModConfig.MSG_CATEGORY,
-                    "databaseErrorMsg",
-                    "Something when wrong. Please contact " + this.getContact()+".",
-                    "Message displayed when an error with database occurs. Check your server logs.");
-            databaseErrorMsg = databaseErrorMsgProp.getString();
-
-            Property bannedMsgProp = config.get(AuthModConfig.MSG_CATEGORY,
-                    "bannedMsg",
-                    "You've been banned. Please contact " + this.getContact()+".",
-                    "Message displayed when a player tries to connect while being banned.");
-            bannedMsg = bannedMsgProp.getString();
-
-            Property playerNotFoundMsgProp = config.get(AuthModConfig.MSG_CATEGORY,
-                    "playerNotFoundMsg",
-                    "You've not registered yet. Please visit "+this.getWebsite(),
-                    "Message displayed when a player tries to connect without having registered.");
-            playerNotFoundMsg = playerNotFoundMsgProp.getString();
-
-            Property playerAlreadyExistsProp = config.get(AuthModConfig.MSG_CATEGORY,
-                    "playerAlreadyExistsMsg",
-                    "Someone has already registered with this username or email.",
-                    "Message displayed when a player tries to sign up with an already-registered account.");
-            playerAlreadyExistsMsg = playerAlreadyExistsProp.getString();
-
-            Property playerAlreadyLoggedProp = config.get(AuthModConfig.MSG_CATEGORY,
-                    "playerAlreadyLoggedMsg",
-                    "You are already logged in.",
-                    "Message displayed when an already-logged player tries to sign in.");
-            playerAlreadyLoggedMsg = playerAlreadyLoggedProp.getString();
-
-            Property wrongNumberOfArgsProp = config.get(AuthModConfig.MSG_CATEGORY,
-                    "wrongNumberOfArgsMsg",
-                    "You need to type /[register|login] <email> <password>",
-                    "Message displayed when a player do not use correctly /login or /register");
-            wrongNumberOfArgsMsg = wrongNumberOfArgsProp.getString();
-
-            Property registerUsageProp = config.get(AuthModConfig.MSG_CATEGORY,
-                    "registerUsageMsg",
-                    "/register <email> <password> - Be careful when choosing it, you'll be asked to login each time you play.",
-                    "Usage for /register");
-            registerUsageMsg = registerUsageProp.getString();
-
-            Property loginUsageProp = config.get(AuthModConfig.MSG_CATEGORY,
-                    "loginUsageMsg",
-                    "/login <email> <password> - Allows you to authenticate on the server",
-                    "Usage for /login");
-            loginUsageMsg = loginUsageProp.getString();
-
-        } catch (Exception e) {
-            // keep reading
-        } finally {
-            this.databaseConfig.loadProperties();
-            if (this.config.hasChanged()) this.config.save();
+    private void loadConfigurationData() {
+        Properties props = new Properties();
+        InputStream inputStream = getClass().getResourceAsStream("/authmod-configuration.properties");
+        try {
+            props.load(inputStream);
+            props.forEach((key, value) -> {
+                if(key.toString().endsWith(".comment")) {
+                    this.comments.put(key.toString(), value.toString());
+                }
+                if(key.toString().endsWith(".default")) {
+                    this.defaultValues.put(key.toString(), value.toString());
+                }
+            });
+        } catch (IOException e) {
+            AuthMod.LOGGER.catching(e);
         }
+    }
+
+    void loadProperties() {
+        this.config.addCustomCategoryComment("",
+                " ______            __     __                                __\n" +
+                        "/\\  _  \\          /\\ \\__ /\\ \\                              /\\ \\\n" +
+                        "\\ \\ \\L\\ \\   __  __\\ \\ ,_\\\\ \\ \\___      ___ ___      ___    \\_\\ \\\n" +
+                        " \\ \\  __ \\ /\\ \\/\\ \\\\ \\ \\/ \\ \\  _ `\\  /' __` __`\\   / __`\\  /'_` \\\n" +
+                        "  \\ \\ \\/\\ \\\\ \\ \\_\\ \\\\ \\ \\_ \\ \\ \\ \\ \\ /\\ \\/\\ \\/\\ \\ /\\ \\L\\ \\/\\ \\L\\ \\\n" +
+                        "   \\ \\_\\ \\_\\\\ \\____/ \\ \\__\\ \\ \\_\\ \\_\\\\ \\_\\ \\_\\ \\_\\\\ \\____/\\ \\___,_\\\n" +
+                        "    \\/_/\\/_/ \\/___/   \\/__/  \\/_/\\/_/ \\/_/\\/_/\\/_/ \\/___/  \\/__,_ /\n" +
+                        "                                                       version " + AuthMod.VERSION +"\n" +
+                        " Github link\n" +
+                        "  - https://github.com/Chocorean/authmod\n" +
+                        " Authors\n" +
+                        "   - Chocorean\n" +
+                        "   - Mcdostone");
+        this.isLoginEnabled = this.getProperty(AuthModConfig.GEN_CATEGORY, "isLoginEnabled").getBoolean();
+        this.isRegisterEnabled = this.getProperty(AuthModConfig.GEN_CATEGORY, "isRegisterEnabled").getBoolean();
+        this.strategy = this.getProperty(AuthModConfig.GEN_CATEGORY,"strategy").getString();
+        this.website = this.getProperty(AuthModConfig.GEN_CATEGORY,"website").getString();
+        this.hostedDomain = this.getProperty(AuthModConfig.GEN_CATEGORY,"hostedDomain").getString();
+        this.contact = this.getProperty(AuthModConfig.GEN_CATEGORY,"contact").getString();
+        this.delay = this.getProperty(AuthModConfig.GEN_CATEGORY,"delay").getInt();
+        this.emailOnLOgin = this.getProperty(AuthModConfig.GEN_CATEGORY,"emailOnLogin").getString();
+
+        this.welcomeMsg = this.getProperty(AuthModConfig.MSG_CATEGORY,"welcome").getString();
+        this.successMsg = this.getProperty(AuthModConfig.MSG_CATEGORY,"success").getString();
+        this.wrongPasswordMsg = this.getProperty(AuthModConfig.MSG_CATEGORY,"wrongPassword").getString();
+        this.wrongUsernameMsg = this.getProperty(AuthModConfig.MSG_CATEGORY,"wrongUsername").getString();
+        this.notValidEmailMsg = this.getProperty(AuthModConfig.MSG_CATEGORY,"notValidEmail").getString();
+        this.databaseErrorMsg = this.getProperty(AuthModConfig.MSG_CATEGORY,"databaseError").getString();
+        this.bannedMsg = this.getProperty(AuthModConfig.MSG_CATEGORY,"banned").getString();
+        this.playerNotFoundMsg = this.getProperty(AuthModConfig.MSG_CATEGORY,"playerNotFound").getString();
+        this.playerAlreadyExistsMsg = this.getProperty(AuthModConfig.MSG_CATEGORY,"playerAlreadyExists").getString();
+        this.playerAlreadyLoggedMsg = this.getProperty(AuthModConfig.MSG_CATEGORY,"playerAlreadyLogged").getString();
+        this.wrongNumberOfArgsMsg = this.getProperty(AuthModConfig.MSG_CATEGORY,"wrongNumberOfArgs").getString();
+        this.registerUsageMsg = this.getProperty(AuthModConfig.MSG_CATEGORY,"registerUsage").getString();
+        this.loginUsageMsg = this.getProperty(AuthModConfig.MSG_CATEGORY,"loginUsage").getString();
+
+        this.databaseConfig.loadProperties();
+        if (this.config.hasChanged())
+            this.config.save();
+    }
+
+
+    public Property getProperty(String category, String key) {
+        return this.config.get(category,
+                key,
+                this.getDefaultValue(category, key),
+                this.getComment(category, key));
+    }
+
+    private String getDefaultValue(String category, String key) {
+        return this.defaultValues.get(String.format("%s.%s.default", category.trim().toLowerCase(), key.trim()));
+    }
+
+    private String getComment(String category, String key) {
+        return this.comments.get(String.format("%s.%s.comment", category.trim().toLowerCase(), key.trim()));
     }
 
     public AuthModDatabaseConfig getDatabaseConfig() {
         return this.databaseConfig;
     }
 
-    // general getters
     public String getAuthenticationStrategy() {
         return this.strategy;
     }
@@ -209,6 +148,10 @@ public class AuthModConfig {
 
     public String getHostedDomain() {
         return this.hostedDomain;
+    }
+
+    public String getEmailOnLogin() {
+        return this.emailOnLOgin;
     }
 
     public String getWebsite() {
@@ -224,10 +167,9 @@ public class AuthModConfig {
     }
 
     public int getDelay() {
-        return this.delay < MINIMUM_DELAY ? MINIMUM_DELAY : this.delay;
+        return this.delay;
     }
 
-    // message getters
     public String getWelcomeMessage() {
         return this.welcomeMsg;
     }
@@ -279,4 +221,5 @@ public class AuthModConfig {
     public String getLoginUsageMsg() {
         return loginUsageMsg;
     }
+
 }

@@ -1,22 +1,27 @@
 package io.chocorean.authmod.authentication.db;
 
 import io.chocorean.authmod.AuthMod;
+import io.chocorean.authmod.config.AuthModDatabaseConfig;
+
 import java.sql.*;
 
-public class ConnectionFactory {
-    /**
-     * Get a connection to database
-     * @return Connection object
-     */
-    public static Connection getConnection() {
+public class ConnectionFactory implements IConnectionFactory{
+
+    private final AuthModDatabaseConfig config;
+
+    public ConnectionFactory(AuthModDatabaseConfig config) {
+        this.config = config;
+    }
+
+    public Connection getConnection() {
         try {
             return DriverManager.getConnection(String.format("jdbc:%s://%s:%s/%s",
-                    AuthMod.getConfig().getDatabaseConfig().getDialect(),
-                    AuthMod.getConfig().getDatabaseConfig().getHost(),
-                    AuthMod.getConfig().getDatabaseConfig().getPort(),
-                    AuthMod.getConfig().getDatabaseConfig().getDatabase()),
-                    AuthMod.getConfig().getDatabaseConfig().getUser(),
-                    AuthMod.getConfig().getDatabaseConfig().getPassword());
+                    this.config.getDialect(),
+                    this.config.getHost(),
+                    this.config.getPort(),
+                    this.config.getDatabase()),
+                    this.config.getUser(),
+                    this.config.getPassword());
         } catch (SQLException ex) {
             throw new RuntimeException(AuthMod.getConfig().getDatabaseErrorMsg(), ex);
         }

@@ -10,7 +10,6 @@ import io.chocorean.authmod.config.AuthModConfig;
 import io.chocorean.authmod.event.Handler;
 import io.chocorean.authmod.proxy.CommonProxy;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -25,10 +24,10 @@ public class AuthMod {
 
     static final String MODID = "authmod";
     static final String NAME = "AuthMod";
-    static final String VERSION = "2.5";
+    public static final String VERSION = "2.5";
     private static final String COMMON_PROXY = "io.chocorean.authmod.proxy.CommonProxy";
     private static final String CLIENT_PROXY = "io.chocorean.authmod.proxy.ClientProxy";
-    public static final Logger LOGGER = FMLLog.log;
+    public static Logger LOGGER;
     private static AuthModConfig config;
     private static IDataSourceStrategy strategy;
     @SidedProxy(clientSide = AuthMod.CLIENT_PROXY, serverSide = AuthMod.COMMON_PROXY)
@@ -36,21 +35,22 @@ public class AuthMod {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+        AuthMod.LOGGER = event.getModLog();
         config = new AuthModConfig(event.getSuggestedConfigurationFile());
         switch (config.getAuthenticationStrategy().toUpperCase()) {
             case "DATABASE":
                 AuthMod.strategy = new DatabaseSourceStrategy(config.getDatabaseConfig());
-                LOGGER.info("[AuthMod]: Now using DatabaseAuthenticationStrategy.");
+                LOGGER.info("Now using DatabaseAuthenticationStrategy.");
                 break;
             case "FILE":
                 AuthMod.strategy = new FileDataSourceStrategy(Paths.get(
                         event.getModConfigurationDirectory().getAbsolutePath(),
                         MODID + "_players.csv").toFile());
-                LOGGER.info("[Authmod]: Now using FileAuthenticationStrategy.");
+                LOGGER.info("Now using FileAuthenticationStrategy.");
                 break;
             default:
                 AuthMod.strategy = null;
-                LOGGER.info("[AuthMod]: Unknown authentication strategy selected. Nothing will happen.");
+                LOGGER.info("Unknown authentication strategy selected. Nothing will happen.");
         }
     }
 
