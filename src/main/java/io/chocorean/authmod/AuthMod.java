@@ -10,6 +10,7 @@ import io.chocorean.authmod.config.AuthModConfig;
 import io.chocorean.authmod.event.Handler;
 import io.chocorean.authmod.proxy.CommonProxy;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -27,7 +28,7 @@ public class AuthMod {
     public static final String VERSION = "2.5";
     private static final String COMMON_PROXY = "io.chocorean.authmod.proxy.CommonProxy";
     private static final String CLIENT_PROXY = "io.chocorean.authmod.proxy.ClientProxy";
-    public static Logger LOGGER;
+    public static Logger LOGGER = FMLLog.log;
     private static AuthModConfig config;
     private static IDataSourceStrategy strategy;
     @SidedProxy(clientSide = AuthMod.CLIENT_PROXY, serverSide = AuthMod.COMMON_PROXY)

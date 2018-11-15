@@ -56,9 +56,10 @@ public class LoginCommand implements ICommand {
             LOGGER.info("User %s tried to sign in twice.", loggedPlayer.getUsername());
             ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getPlayerAlreadyLoggedMsg())));
         } else {
-            if(args.length == 2) {
-                loggedPlayer.setEmail(args[0]);
-                loggedPlayer.setPassword(args[1]);
+            int numberOfArgs = AuthMod.getConfig().getEmailOnLogin() ? 2 : 1;
+            if(args.length == numberOfArgs) {
+                loggedPlayer.setEmail(numberOfArgs == 1 ? null : args[0]);
+                loggedPlayer.setPassword(args[numberOfArgs == 1 ? 0 : 1]);
                 loggedPlayer.setUsername(player.getDisplayNameString());
                 loggedPlayer.setUuid(EntityPlayer.getUUID(player.getGameProfile()).toString());
                 try {
@@ -105,7 +106,3 @@ public class LoginCommand implements ICommand {
     }
 
 }
-
-
-
-

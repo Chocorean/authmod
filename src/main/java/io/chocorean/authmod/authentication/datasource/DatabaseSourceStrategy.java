@@ -9,7 +9,6 @@ import io.chocorean.authmod.exception.AuthmodException;
 import io.chocorean.authmod.exception.LoginException;
 import io.chocorean.authmod.exception.PlayerAlreadyExistException;
 import io.chocorean.authmod.model.IPlayer;
-import io.chocorean.authmod.model.Player;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 
@@ -21,7 +20,7 @@ public class DatabaseSourceStrategy implements IDataSourceStrategy {
     private static final Logger LOGGER = AuthMod.LOGGER;
 
     public DatabaseSourceStrategy(AuthModDatabaseConfig config) {
-        this.playersDAO = new PlayersDAO<Player>(config.getTable(), new ConnectionFactory(AuthMod.getConfig().getDatabaseConfig()));
+        this.playersDAO = new PlayersDAO(config.getTable(), new ConnectionFactory(AuthMod.getConfig().getDatabaseConfig()));
     }
 
     @Override

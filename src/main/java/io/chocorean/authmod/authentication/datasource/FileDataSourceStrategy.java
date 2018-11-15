@@ -25,25 +25,22 @@ public class FileDataSourceStrategy implements IDataSourceStrategy {
 
     private void readFile() {
         this.players.clear();
-        boolean created;
         try {
-            created = this.authFile.createNewFile();
-            if(created) {
-                try(BufferedReader bf = new BufferedReader(new FileReader(this.authFile))) {
-                    String line;
-                    while((line = bf.readLine()) != null && line.trim().length() > 0) {
-                        if(!line.startsWith("#")) {
-                            String[] parts = line.trim().split(SEPARATOR);
-                            IPlayer p = new Player();
-                            p.setEmail(parts[0].trim());
-                            p.setUsername(parts[1].trim());
-                            p.setPassword(parts[2].trim());
-                            p.setBan(Boolean.parseBoolean(parts[3].trim()));
-                            this.players.put(p.getEmail(), p);
-                        }
+            this.authFile.createNewFile();
+            try(BufferedReader bf = new BufferedReader(new FileReader(this.authFile))) {
+                String line;
+                while((line = bf.readLine()) != null && line.trim().length() > 0) {
+                    if(!line.startsWith("#")) {
+                        String[] parts = line.trim().split(SEPARATOR);
+                        IPlayer p = new Player();
+                        p.setEmail(parts[0].trim());
+                        p.setUsername(parts[1].trim());
+                        p.setPassword(parts[2].trim());
+                        p.setBan(Boolean.parseBoolean(parts[3].trim()));
+                        this.players.put(p.getEmail(), p);
                     }
-                    this.lastModification = this.authFile.lastModified();
                 }
+                this.lastModification = this.authFile.lastModified();
             }
         } catch (IOException e) { LOGGER.catching(e); }
 
@@ -57,7 +54,13 @@ public class FileDataSourceStrategy implements IDataSourceStrategy {
     @Override
     public IPlayer retrieve(IPlayer player) {
         this.reloadFile();
-        return this.players.get(player.getEmail());
+        if(player.getEmail() != null) {
+            return this.players.get(player.getEmail());
+        }
+        else {
+            return this.players.values().stream().filter(tmp -> player.getUsername().equals(tmp.getUsername()))
+            .findFirst().orElse(null);
+        }
     }
 
     @Override

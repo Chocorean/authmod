@@ -25,6 +25,7 @@ public class AuthModConfig {
     private String hostedDomain;
     private String contact;
     private int delay;
+    private boolean emailOnLogin;
 
     private String welcomeMsg;
     private String successMsg;
@@ -41,7 +42,6 @@ public class AuthModConfig {
     private String loginUsageMsg;
     private Map<String, String> defaultValues;
     private Map<String, String> comments;
-    private String emailOnLOgin;
 
     public AuthModConfig(File config) {
         this(new Configuration(config));
@@ -76,7 +76,7 @@ public class AuthModConfig {
     }
 
     void loadProperties() {
-        this.config.addCustomCategoryComment("",
+        this.config.addCustomCategoryComment("database",
                 " ______            __     __                                __\n" +
                         "/\\  _  \\          /\\ \\__ /\\ \\                              /\\ \\\n" +
                         "\\ \\ \\L\\ \\   __  __\\ \\ ,_\\\\ \\ \\___      ___ ___      ___    \\_\\ \\\n" +
@@ -97,7 +97,7 @@ public class AuthModConfig {
         this.hostedDomain = this.getProperty(AuthModConfig.GEN_CATEGORY,"hostedDomain").getString();
         this.contact = this.getProperty(AuthModConfig.GEN_CATEGORY,"contact").getString();
         this.delay = this.getProperty(AuthModConfig.GEN_CATEGORY,"delay").getInt();
-        this.emailOnLOgin = this.getProperty(AuthModConfig.GEN_CATEGORY,"emailOnLogin").getString();
+        this.emailOnLogin = this.getProperty(AuthModConfig.GEN_CATEGORY,"emailOnLogin").getBoolean();
 
         this.welcomeMsg = this.getProperty(AuthModConfig.MSG_CATEGORY,"welcome").getString();
         this.successMsg = this.getProperty(AuthModConfig.MSG_CATEGORY,"success").getString();
@@ -150,8 +150,8 @@ public class AuthModConfig {
         return this.hostedDomain;
     }
 
-    public String getEmailOnLogin() {
-        return this.emailOnLOgin;
+    public boolean getEmailOnLogin() {
+        return this.emailOnLogin;
     }
 
     public String getWebsite() {

@@ -25,6 +25,7 @@ public class Player implements IPlayer {
 
     @Override
     public void setEmail(String email) {
+        if(email != null)
         this.email = email.trim();
     }
 

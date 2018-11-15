@@ -7,7 +7,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlayersDAO<P> implements IPlayersDAO<IPlayer> {
+public class PlayersDAO implements IPlayersDAO<IPlayer> {
 
     private final String table;
     private final IConnectionFactory connectionFactory;
