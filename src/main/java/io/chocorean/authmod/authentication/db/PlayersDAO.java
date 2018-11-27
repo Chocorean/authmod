@@ -19,13 +19,16 @@ public class PlayersDAO implements IPlayersDAO<IPlayer> {
 
     @Override
     public void create(IPlayer player) throws SQLException {
-        String query = String.format("INSERT INTO %s(email, password, uuid, username) VALUES(?,?)", this.table);
+        String query = String.format("INSERT INTO %s(email, password, username, uuid) VALUES(?, ?, ?, ?)", this.table);
         try(Connection conn = this.connectionFactory.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, player.getEmail());
             stmt.setString(2, player.getPassword());
-            stmt.setString(3, player.getUuid());
-            stmt.setString(4, player.getUsername());
+            stmt.setString(3, player.getUsername());
+            if(player.getUuid() == null)
+                stmt.setNull(4, Types.VARCHAR);
+            else
+                stmt.setString(4, player.getUuid());
             stmt.executeUpdate();
         }
     }
