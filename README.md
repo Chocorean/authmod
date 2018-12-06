@@ -199,7 +199,7 @@ curl -s https://api.github.com/repos/chocorean/authmod/releases/latest \
   | wget -qi -
 ```
 
-3. Now, we configure the authmod. Go under the `config` folder and download the cfg template file:
+3. Now, we configure authmod. Go under the `config` folder and download the cfg template file (you can also run the server once and the file will be generated):
 ```bash
 # in the config/ folder
 wget https://raw.githubusercontent.com/Chocorean/authmod/master/src/main/resources/authmod.cfg
