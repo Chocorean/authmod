@@ -188,9 +188,10 @@ INSERT INTO minecraft.players (id, email, password, uuid, username, isBan) VALUE
 
 
 1. stop your minecraft server.
-2. Add the latest version of the authmod jar in the `mods` directory:
+2. Add `authmod-X.X.jar` in the `mods/` directory:
 ```bash
-# execute this in the mods folder
+# This command downloads the latest version of authmod
+# Execute it in the mods/ folder
 curl -s https://api.github.com/repos/chocorean/authmod/releases/latest \
   | grep "browser_download_url.*jar" \
   | cut -d : -f 2,3 \
