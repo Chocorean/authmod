@@ -67,7 +67,7 @@
 
 ## What is authmod?
 
-*We are 2 students from TELECOM Nancy wanted to create a minecraft server for our school. At the beginning, the server was opened to everyone. We wanted to  accept only students from our school while accepting students that didn't buy the game. We were to lazy to build a custom launcher to do that. So we came up with this idea to build a mod adding a authentication layer that replaces the classic [mojang one](https://wiki.vg/Authentication).*
+*We are 2 students from TELECOM Nancy wanted to create a minecraft server for our school. At the beginning, the server was opened to everyone. We wanted to  accept only students from our school while accepting students that didn't buy the game. We were lazy to build a custom launcher to do that. So we came up with this idea to build a mod adding a authentication layer that replaces the classic [mojang one](https://wiki.vg/Authentication).*
 
 
 AuthMod is a server side minecraft mod allowing you to accept premium or demo minecraft accounts safely. What is important to remind with this mod is **the mojang authentication cannot be used**. So if you rely on this, this mod is maybe not a good solution for you. Authmod proposes a set of interesting features:
@@ -99,7 +99,7 @@ The mod provides to the users a set of commands that can be used once connected 
 /logged
 ```
 
-For the `/login` command, once this command is entered by the user, the mod will check whether **the email address, the password and the username**  correspond to data stored in the database or in the file (it depends on the strategy you choose).
+For the `/login` command, once this command is entered by the user, the mod will check whether **the email address, the password and the username**  correspond to data stored in a database or a CSV file (it depends on the strategy you choose).
 
 ## Getting started for developers
 
@@ -188,9 +188,10 @@ INSERT INTO minecraft.players (id, email, password, uuid, username, isBan) VALUE
 
 
 1. stop your minecraft server.
-2. Add the latest version of the authmod jar in the `mods` directory:
+2. Add `authmod-X.X.jar` in the `mods/` directory:
 ```bash
-# execute this in the mods folder
+# This command downloads the latest version of authmod
+# Execute it in the mods/ folder
 curl -s https://api.github.com/repos/chocorean/authmod/releases/latest \
   | grep "browser_download_url.*jar" \
   | cut -d : -f 2,3 \
@@ -198,7 +199,7 @@ curl -s https://api.github.com/repos/chocorean/authmod/releases/latest \
   | wget -qi -
 ```
 
-3. Now, we configure the authmod. Go under the `config` folder and download the cfg template file:
+3. Now, we configure authmod. Go under the `config` folder and download the cfg template file (you can also run the server once and the file will be generated):
 ```bash
 # in the config/ folder
 wget https://raw.githubusercontent.com/Chocorean/authmod/master/src/main/resources/authmod.cfg
