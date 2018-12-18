@@ -7,12 +7,10 @@
   />
   <br/>
   <h1>Authmod</h1>
-  <strong>Server side mod that allow to safely accept demo versions on your minecraft server</strong>
+  <strong>Server side mod which allows to safely accept demo versions on your minecraft server.</strong>
 </div>
 <br/>
 <p align="center">
-
-
   <a href="https://travis-ci.com/Chocorean/authmod">
     <img src="https://travis-ci.com/Chocorean/authmod.svg?branch=master" alt="build status"/>
   </a>
@@ -40,7 +38,6 @@
   <a href="https://img.shields.io/badge/java-1.8-blue.svg">
     <img src="https://img.shields.io/badge/java-1.8-blue.svg" />
   </a>
-
 </p>
 
 
@@ -48,7 +45,7 @@
 
 ## Table of contents
 
-- [What is authmod?](#what-is-authmod)
+- [What is Authmod?](#what-is-authmod)
 - [How it works](#how-it-works)
 - [Getting started for developers](#getting-started-for-developers)
   - [Requirements](#requirements)
@@ -56,21 +53,19 @@
   - [Using the file strategy](#using-the-file-strategy)
   - [Using the database strategy](#using-the-database-strategy)
 - [Getting started for administrators](#getting-started-for-administrators)
-
-- [Contact](#contact)
-- [License](#license)
-- [Curse project page](#curse-project-page)
-- [Install](#install)
-- [resources](#resources)
 - [Issues](#issues)
+- [Website](#website)
+- [Resources](#resources)
+- [Contact](#contact)
+- [Contributors](#contributors)
 
 
-## What is authmod?
+## What is Authmod?
 
 *We are 2 students from TELECOM Nancy wanted to create a minecraft server for our school. At the beginning, the server was opened to everyone. We wanted to  accept only students from our school while accepting students that didn't buy the game. We were lazy to build a custom launcher to do that. So we came up with this idea to build a mod adding a authentication layer that replaces the classic [mojang one](https://wiki.vg/Authentication).*
 
 
-AuthMod is a server side minecraft mod allowing you to accept premium or demo minecraft accounts safely. What is important to remind with this mod is **the mojang authentication cannot be used**. So if you rely on this, this mod is maybe not a good solution for you. Authmod proposes a set of interesting features:
+AuthMod is a server side Minecraft mod allowing you to accept premium or demo minecraft accounts safely. What is important to remind with this mod is **the mojang authentication cannot be used**. So if you rely on this, this mod is maybe not a good solution for you. Authmod proposes a set of interesting features:
 
  - Possibility to enable or disable the registration on the minecraft server. 
  - Possibility to enable or disable the authentication on the minecraft server.
@@ -81,8 +76,8 @@ AuthMod is a server side minecraft mod allowing you to accept premium or demo mi
 
 Features            | File strategy         | Database strategy        |
 | ----------------- |:---------------------:|:------------------------:| 
-| Registration      | **✔**                 | **✔**                   |
-| authentication    | **✔**                 | **✔**                   |
+| Registration      | **✔**                 | **✔**                    |
+| Authentication    | **✔**                 | **✔**                    |
 
 
 ### How it works
@@ -104,7 +99,7 @@ For the `/login` command, once this command is entered by the user, the mod will
 ## Getting started for developers
 
 ### Requirements
- - [gradle](https://gradle.org/): build tool used by the forge community
+ - [Gradle](https://gradle.org/): build tool used by the forge community
  - [JDK](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) installed 
  - Your prefered java IDE
 
@@ -118,13 +113,10 @@ git clone https://github.com/Chocorean/authmod
 ```
 2. For this step, you just have to follow [this documentation](https://mcforge.readthedocs.io/en/latest/gettingstarted/) in order to setup you developer environment.
 
-4. Run once the minecraft server in order to generate all the necessary files.
-5. Accept the EULA agreement by modifing the file `run/eula.txt`.
+3. Run once the minecraft server in order to generate all the necessary files.
+4. Accept the EULA agreement by modifing the file `run/eula.txt`.
 5. Modify the `run/server.properties` and switch `online-mode` to `false`.
-3. The Last step is simply configure the `authmod.cfg`. an example is available [here](https://github.com/Chocorean/authmod/blob/master/src/main/resources/authmod.cfg). In a development environment,
-this file is located in `run/authmod.cfg`.
-
-
+6. The last step is simply configure the `authmod.cfg`. An example is available [here](https://github.com/Chocorean/authmod/blob/master/src/main/resources/authmod.cfg). In a development environment, this file is located in `run/authmod.cfg`.
 
 ### Using the file strategy
 
@@ -132,8 +124,8 @@ The only thing to do is to modify the `authmod.cfg` file:
 ```bash
 general {
   # ...
-  # S:strategy=database
-  S:strategy=file
+  # S:strategy=DATABASE
+  S:strategy=FILE
 }
 ```
 And that's it! There is nothing particular to do. When using this strategy, the `authmod_players.csv` file will be created in the `config/` folder.
@@ -152,8 +144,8 @@ Change the `authmod.cfg` configuration by modifying this:
 ```bash
 general {
   # ...
-  # S:strategy=file
-  S:strategy=database
+  # S:strategy=FILE
+  S:strategy=DATABASE
 }
 ```
 Don't forget to configure in this file all information related to the database (under the `database {...}` key).
@@ -186,7 +178,6 @@ INSERT INTO minecraft.players (id, email, password, uuid, username, isBan) VALUE
 
 ## Getting started for administrators
 
-
 1. stop your minecraft server.
 2. Add `authmod-X.X.jar` in the `mods/` directory:
 ```bash
@@ -198,43 +189,34 @@ curl -s https://api.github.com/repos/chocorean/authmod/releases/latest \
   | tr -d \" \
   | wget -qi -
 ```
-
 3. Now, we configure authmod. Go under the `config` folder and download the cfg template file (you can also run the server once and the file will be generated):
 ```bash
 # in the config/ folder
 wget https://raw.githubusercontent.com/Chocorean/authmod/master/src/main/resources/authmod.cfg
 ```
-
 4. Edit the `config/authmod.cfg` file depending on your needs.
-
 5. Restart the server and everything should be ok!
-
-
-## Resources
-
- - [bcrypt calculator](https://www.dailycred.com/article/bcrypt-calculator): useful to generate a hashed password using the bcrypt algorithm (this is the same used in the mod)
-
-
-## Contact
-
-[Mail](mailto:baptiste.chocot@gmail.com)
-
-
-## License
-
-[GNU v3.0](https://www.gnu.org/licenses/gpl-3.0.fr.html)
-
-
-## Curse project page
-
-Further informations and downloads links are available on the [Curse project page](https://minecraft.curseforge.com/projects/authmod).
-
-
-## Install
-
-First make sure you have Forge installed on your server. Then, put AuthMod in the server's mods/ directory. Reload the server.
-
 
 ## Issues
 
 [Right here](https://github.com/Chocorean/authmod/issues).
+
+## Website
+
+Further informations and downloads links are available on the [Curse project page](https://minecraft.curseforge.com/projects/authmod).
+
+
+## Resources
+
+ - [bcrypt calculator](https://www.dailycred.com/article/bcrypt-calculator): useful to generate a hashed password using the bcrypt algorithm.
+
+
+## Contact
+
+- [Mail](mailto:baptiste.chocot@gmail.com)
+- Discord: `Sunser#7808`
+
+## Contributors
+
+- Baptiste Chocot ([@Chocorean](https://www.github.com/Chocorean/))
+- Yann Prono ([@Mcdostone](https://www.github.com/Mcdostone/))
