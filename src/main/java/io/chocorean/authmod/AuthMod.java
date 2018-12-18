@@ -64,15 +64,15 @@ public class AuthMod {
     public void serverStarting(FMLServerStartingEvent event) {
         if(strategy != null) {
             if(config.isLoginEnabled()) {
-                LOGGER.info("Registering AuthMod Event Handler");
+                LOGGER.info("Registering AuthMod event handler");
                 MinecraftForge.EVENT_BUS.register(new Handler());
-                LOGGER.info("Registering AuthMod Login Handler");
+                LOGGER.info("Registering AuthMod /login command");
                 event.registerServerCommand(new LoginCommand(AuthMod.strategy));
-                LOGGER.info("Registering AuthMod Logged Handler");
+                LOGGER.info("Registering AuthMod /logged command");
                 event.registerServerCommand(new LoggedCommand());
             }
             if(config.isRegisterEnabled()) {
-                LOGGER.info("Registering AuthMod Register Handler");
+                LOGGER.info("Registering AuthMod /register command");
                 event.registerServerCommand(new RegisterCommand(AuthMod.strategy));
             }
         }
