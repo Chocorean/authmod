@@ -1,6 +1,7 @@
 package io.chocorean.authmod.event;
 
 import io.chocorean.authmod.AuthMod;
+import io.chocorean.authmod.model.PlayerPos;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
@@ -40,7 +41,9 @@ public class Handler {
         ((EntityPlayerMP)entity).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getWelcomeMessage())));
         // initializing timer for kicking player if he/she hasn't logged in a minute
         BlockPos pos = entity.getPosition();
-        PlayerDescriptor dc = new PlayerDescriptor(entity, pos);
+        float yaw = entity.rotationYaw, pitch = entity.rotationPitch;
+        PlayerPos pp = new PlayerPos(pos, yaw, pitch);
+        PlayerDescriptor dc = new PlayerDescriptor(entity, pp);
         descriptors.put(entity, dc);
         scheduler.schedule(() -> {
             if(descriptors.containsKey(entity)) {
@@ -59,12 +62,9 @@ public class Handler {
     @SubscribeEvent
     public static void onPlayerTickEvent(TickEvent.PlayerTickEvent event) {
         if (descriptors.containsKey(event.player)) {
-            BlockPos pos = descriptors.get(event.player).getPosition();
-            event.player.setPositionAndUpdate(
-                pos.getX(),
-                pos.getY(),
-                pos.getZ()
-            );
+            PlayerPos pp = descriptors.get(event.player).getPosition();
+            BlockPos pos = pp.getPosition();
+            ((EntityPlayerMP)event.player).connection.setPlayerLocation(pos.getX(), pos.getY(), pos.getZ(), pp.getYaw(), pp.getPitch());
         }
     }
 
