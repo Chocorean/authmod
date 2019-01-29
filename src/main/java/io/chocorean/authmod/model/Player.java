@@ -4,7 +4,7 @@ public class Player implements IPlayer {
 
     private String password;
     private String email;
-    private boolean isBan;
+    private boolean isBanned;
     private String uuid;
     private String username;
 
@@ -30,13 +30,13 @@ public class Player implements IPlayer {
     }
 
     @Override
-    public boolean isBan() {
-        return isBan;
+    public boolean isBanned() {
+        return isBanned;
     }
 
     @Override
-    public void setBan(boolean ban) {
-        isBan = ban;
+    public void setBanned(boolean ban) {
+        isBanned = ban;
     }
 
     @Override

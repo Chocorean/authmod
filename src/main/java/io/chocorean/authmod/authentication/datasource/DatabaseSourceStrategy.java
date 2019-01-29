@@ -20,7 +20,7 @@ public class DatabaseSourceStrategy implements IDataSourceStrategy {
     private static final Logger LOGGER = AuthMod.LOGGER;
 
     public DatabaseSourceStrategy(AuthModDatabaseConfig config) {
-        this.playersDAO = new PlayersDAO(config.getTable(), new ConnectionFactory(AuthMod.getConfig().getDatabaseConfig()));
+        this.playersDAO = new PlayersDAO(config.getTable(), new ConnectionFactory(config), config.getColumns());
     }
 
     @Override

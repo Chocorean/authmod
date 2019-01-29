@@ -36,7 +36,7 @@ public class FileDataSourceStrategy implements IDataSourceStrategy {
                         p.setEmail(parts[0].trim());
                         p.setUsername(parts[1].trim());
                         p.setPassword(parts[2].trim());
-                        p.setBan(Boolean.parseBoolean(parts[3].trim()));
+                        p.setBanned(Boolean.parseBoolean(parts[3].trim()));
                         this.players.put(p.getEmail(), p);
                     }
                 }
@@ -93,7 +93,7 @@ public class FileDataSourceStrategy implements IDataSourceStrategy {
                         entry.getKey(),
                         entry.getValue().getUsername(),
                         entry.getValue().getPassword(),
-                        Boolean.toString(entry.getValue().isBan())));
+                        Boolean.toString(entry.getValue().isBanned())));
                 bw.newLine();
             }
         } catch (IOException e) { LOGGER.catching(e); }
