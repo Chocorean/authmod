@@ -19,7 +19,7 @@ public class DatabaseSourceStrategy implements IDataSourceStrategy {
     private final IPlayersDAO<IPlayer> playersDAO;
     private static final Logger LOGGER = AuthMod.LOGGER;
 
-    public DatabaseSourceStrategy(AuthModDatabaseConfig config) {
+    public DatabaseSourceStrategy(AuthModDatabaseConfig config) throws SQLException {
         this.playersDAO = new PlayersDAO(config.getTable(), new ConnectionFactory(config), config.getColumns());
     }
 

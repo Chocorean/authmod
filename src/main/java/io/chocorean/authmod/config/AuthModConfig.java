@@ -21,7 +21,6 @@ public class AuthModConfig {
     private boolean isLoginEnabled;
     private boolean isRegisterEnabled;
     private String strategy;
-    private String website;
     private String hostedDomain;
     private String contact;
     private int delay;
@@ -93,7 +92,6 @@ public class AuthModConfig {
         this.isLoginEnabled = this.getProperty(AuthModConfig.GEN_CATEGORY, "isLoginEnabled").getBoolean();
         this.isRegisterEnabled = this.getProperty(AuthModConfig.GEN_CATEGORY, "isRegisterEnabled").getBoolean();
         this.strategy = this.getProperty(AuthModConfig.GEN_CATEGORY,"strategy").getString();
-        this.website = this.getProperty(AuthModConfig.GEN_CATEGORY,"website").getString();
         this.hostedDomain = this.getProperty(AuthModConfig.GEN_CATEGORY,"hostedDomain").getString();
         this.contact = this.getProperty(AuthModConfig.GEN_CATEGORY,"contact").getString();
         this.delay = this.getProperty(AuthModConfig.GEN_CATEGORY,"delay").getInt();
@@ -152,10 +150,6 @@ public class AuthModConfig {
 
     public boolean getEmailOnLogin() {
         return this.emailOnLogin;
-    }
-
-    public String getWebsite() {
-        return this.website;
     }
 
     public boolean isLoginEnabled() {

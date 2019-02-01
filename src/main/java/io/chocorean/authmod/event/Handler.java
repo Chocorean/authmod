@@ -12,15 +12,20 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.ServerChatEvent;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent.ServerConnectionFromClientEvent;
+import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,14 +36,25 @@ import java.util.concurrent.TimeUnit;
 @Mod.EventBusSubscriber
 public class Handler {
 
+    private static final Logger LOGGER = AuthMod.LOGGER;
     private static final ScheduledExecutorService scheduler = new ScheduledThreadPoolExecutor(1);
     private static final Map<EntityPlayer, PlayerDescriptor> descriptors = new HashMap<>();
     private static final Map<EntityPlayer, Boolean> logged = new HashMap<>();
 
-    @SubscribeEvent(priority= EventPriority.HIGHEST)
-    public static void onJoin(PlayerLoggedInEvent event){
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onPlayerJoinServer(ServerConnectionFromClientEvent event) {
+        Object o = event;
+    }
+
+
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public static void onJoin(PlayerLoggedInEvent event) {
         EntityPlayer entity = event.player;
-        ((EntityPlayerMP)entity).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getWelcomeMessage())));
+        // Object o = logged.keySet().stream().filter(p -> p.getDisplayNameString().equals(entity.getDisplayNameString())).findFirst().orElse(null);
+        // if (logged.keySet().stream().filter(p -> p.getDisplayNameString().equals(entity.getDisplayNameString())).findFirst().orElse(null) == null) {
+        //     ((EntityPlayerMP) entity).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getWelcomeMessage())));
+        // }
         // initializing timer for kicking player if he/she hasn't logged in a minute
         BlockPos pos = entity.getPosition();
         float yaw = entity.rotationYaw, pitch = entity.rotationPitch;
@@ -46,18 +62,19 @@ public class Handler {
         PlayerDescriptor dc = new PlayerDescriptor(entity, pp);
         descriptors.put(entity, dc);
         scheduler.schedule(() -> {
-            if(descriptors.containsKey(entity)) {
+            if (descriptors.containsKey(entity)) {
                 descriptors.remove(entity);
                 logged.remove(entity);
-                ((EntityPlayerMP) entity).connection.sendPacket(new SPacketDisconnect(new TextComponentString("Wake up! You only have " +  AuthMod.getConfig().getDelay() + " seconds to log in.")));
+                ((EntityPlayerMP) entity).connection.sendPacket(new SPacketDisconnect(new TextComponentString("Wake up! You only have " + AuthMod.getConfig().getDelay() + " seconds to log in.")));
             }
         }, AuthMod.getConfig().getDelay(), TimeUnit.SECONDS);
     }
 
-    @SubscribeEvent(priority= EventPriority.HIGHEST)
-    public static void onLeave(PlayerLoggedOutEvent event){
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public static void onLeave(PlayerLoggedOutEvent event) {
         logged.remove(event.player);
     }
+
 
     @SubscribeEvent
     public static void onPlayerTickEvent(TickEvent.PlayerTickEvent event) {

@@ -14,10 +14,25 @@ public class PlayersDAO implements IPlayersDAO<IPlayer> {
     private final IConnectionFactory connectionFactory;
     private final Map<String, String> columns;
 
-    public PlayersDAO(String table, IConnectionFactory connectionFactory, Map<String, String> columns) {
+    public PlayersDAO(String table, IConnectionFactory connectionFactory, Map<String, String> columns) throws SQLException {
         this.table = table;
         this.columns = columns;
         this.connectionFactory = connectionFactory;
+        this.testTable();
+    }
+
+    private void testTable() throws SQLException {
+        Connection conn = this.connectionFactory.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(String.format("SELECT %s,%s,%s,%s,%s FROM %s",
+                this.columns.get("email"),
+                this.columns.get("banned"),
+                this.columns.get("password"),
+                this.columns.get("username"),
+                this.columns.get("uuid"),
+                this.table)
+        );
+        stmt.executeQuery();
+        stmt.close();
     }
 
     @Override
