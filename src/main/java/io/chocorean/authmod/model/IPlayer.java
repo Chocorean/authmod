@@ -2,9 +2,9 @@ package io.chocorean.authmod.model;
 
 public interface IPlayer {
 
-    boolean isBan();
+    boolean isBanned();
 
-    void setBan(boolean ban);
+    void setBanned(boolean ban);
 
     void setPassword(String password);
 

@@ -8,6 +8,7 @@ import io.chocorean.authmod.command.LoginCommand;
 import io.chocorean.authmod.command.RegisterCommand;
 import io.chocorean.authmod.config.AuthModConfig;
 import io.chocorean.authmod.event.Handler;
+import io.chocorean.authmod.exception.InvalidSQLTableException;
 import io.chocorean.authmod.proxy.CommonProxy;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLLog;
@@ -19,13 +20,14 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import org.apache.logging.log4j.Logger;
 
 import java.nio.file.Paths;
+import java.sql.SQLException;
 
 @Mod(modid = AuthMod.MODID, name = AuthMod.NAME, version = AuthMod.VERSION, serverSideOnly = true, acceptableRemoteVersions = "*")
 public class AuthMod {
 
     static final String MODID = "authmod";
     static final String NAME = "AuthMod";
-    public static final String VERSION = "2.6";
+    public static final String VERSION = "2.7";
     private static final String COMMON_PROXY = "io.chocorean.authmod.proxy.CommonProxy";
     private static final String CLIENT_PROXY = "io.chocorean.authmod.proxy.ClientProxy";
     public static Logger LOGGER = FMLLog.log;
@@ -35,12 +37,16 @@ public class AuthMod {
     private static CommonProxy proxy;
 
     @Mod.EventHandler
-    public void preInit(FMLPreInitializationEvent event) {
+    public void preInit(FMLPreInitializationEvent event) throws Exception {
         AuthMod.LOGGER = event.getModLog();
         config = new AuthModConfig(event.getSuggestedConfigurationFile());
         switch (config.getAuthenticationStrategy().toUpperCase()) {
             case "DATABASE":
-                AuthMod.strategy = new DatabaseSourceStrategy(config.getDatabaseConfig());
+                try {
+                    AuthMod.strategy = new DatabaseSourceStrategy(config.getDatabaseConfig());
+                } catch (SQLException e) {
+                    throw new InvalidSQLTableException("The SQL table is different from what's expected: " + e.getMessage());
+                }
                 LOGGER.info("Now using DatabaseAuthenticationStrategy.");
                 break;
             case "FILE":

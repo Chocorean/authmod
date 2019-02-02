@@ -15,7 +15,7 @@ plugins {
 
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "2.6"
+version = "2.7"
 group= "io.chocorean.authmod"
 archivesBaseName = "authmod"
 sourceCompatibility = targetCompatibility = "1.8"
