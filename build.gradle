@@ -11,22 +11,20 @@ buildscript {
 
 plugins {
     id "org.sonarqube" version "2.6"
+    id 'com.adarshr.test-logger' version '1.6.0'
 }
 
 apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'jacoco'
 
 version = "2.7"
-group= "io.chocorean.authmod"
+group = "io.chocorean.authmod"
 archivesBaseName = "authmod"
 sourceCompatibility = targetCompatibility = "1.8"
 
 compileJava {
     sourceCompatibility = targetCompatibility = "1.8"
     options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
-}
-
-ext{
-    junitVersion= '4.12'
 }
 
 configurations {
@@ -43,33 +41,47 @@ minecraft {
 dependencies {
     embed 'org.mariadb.jdbc:mariadb-java-client:2.2.5'
     embed group: 'org.mindrot', name: 'jbcrypt', version: '0.4'
-    testCompile "junit:junit:$junitVersion"
+    compile group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
+    compile group: 'org.hibernate', name: 'hibernate-validator', version: '6.0.14.Final'
+    compile group: 'javax.el', name: 'javax.el-api', version: '3.0.1-b06'
+    compile group: 'org.glassfish.web', name: 'javax.el', version: '2.2.6'
 }
 
-
-//Add dependencies to the JAR
 jar {
     from configurations.embed.collect { it.isDirectory() ? it : zipTree(it) }
 }
 
 processResources {
-    // this will ensure that this task is redone when the versions change.
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
-
-    // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
         expand 'version':project.version, 'mcversion':project.minecraft.version
     }
-
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
 }
 
+
+dependencies {
+    testCompile('org.junit.jupiter:junit-jupiter-api:5.3.2')
+    testCompile('org.junit.jupiter:junit-jupiter-params:5.3.2')
+    testRuntime('org.junit.jupiter:junit-jupiter-engine:5.3.2')
+}
+
 test {
+    useJUnitPlatform()
     testLogging {
-        events "passed", "skipped", "failed"
+        events "passed", "skipped", "failed", "standardOut", "standardError"
     }
 }
+
+
+jacocoTestReport {
+    reports {
+        html.enabled = true
+    }
+}
+
+check.dependsOn jacocoTestReport

@@ -1,0 +1,68 @@
+package io.chocorean.authmod.model;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+public class PlayerTest {
+
+    private Player player;
+    private String uuid = "7128022b-9195-490d-9bc8-9b42ebe2a8e3";
+
+    @BeforeEach
+    void init() {
+    this.player = new Player();
+    }
+
+    @Test
+    public void testSetEmail()  {
+        String email = "root@root.fr";
+        this.player.setEmail(email + ' ');
+        assertEquals(email, this.player.getEmail(), "The email should contain whitespace character at the beginning or the end");
+    }
+
+    @Test
+    public void testSetUsername()  {
+        String username = "mcdostone";
+        this.player.setUsername(username + ' ');
+        assertEquals(username, this.player.getUsername(), "The username should contain whitespace character at the beginning or the end");
+    }
+
+    @Test
+    public void testSetUuidNullParam()  {
+        this.player.setUuid(null);
+        assertNull(this.player.getUuid(), "The UUID should be null");
+    }
+
+    @Test
+    public void testSetEmailNullParam()  {
+        this.player.setEmail(null);
+        assertNull(this.player.getEmail(), "The email should be null");
+    }
+
+    @Test
+    public void testSetUuidShortFormat()  {
+        this.player.setUuid(this.uuid.replaceAll("-", ""));
+        assertEquals(this.uuid, this.player.getUuid(), "The UUID format should be X-X-X-X-X");
+    }
+
+    @Test
+    public void testSetUuidLongFormat()  {
+        this.player.setUuid(this.uuid);
+        assertEquals(this.uuid, this.player.getUuid(), "The UUID format should be X-X-X-X-X");
+    }
+
+    @Test
+    public void testSetUuidIncorrect()  {
+        this.player.setUuid("15");
+        assertNull(this.player.getUuid(), "The UUID should be null because it is incorrect");
+    }
+
+    @Test
+    public void testIsPremiun()  {
+        this.player.setUuid(null);
+        assertFalse(this.player.isPremium(), "The player should not be premium");
+    }
+
+}

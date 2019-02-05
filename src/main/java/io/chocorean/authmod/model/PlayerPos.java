@@ -7,9 +7,9 @@ public class PlayerPos {
     private float yaw, pitch;
 
     public PlayerPos(BlockPos pos, float yaw, float pitch) {
-        this.pos=pos;
-        this.yaw=yaw;
-        this.pitch=pitch;
+        this.pos = pos;
+        this.yaw = yaw;
+        this.pitch = pitch;
     }
 
     public BlockPos getPosition() {

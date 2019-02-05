@@ -12,19 +12,15 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.ServerChatEvent;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent.ServerConnectionFromClientEvent;
 import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
@@ -42,19 +38,8 @@ public class Handler {
     private static final Map<EntityPlayer, Boolean> logged = new HashMap<>();
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onPlayerJoinServer(ServerConnectionFromClientEvent event) {
-        Object o = event;
-    }
-
-
-
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onJoin(PlayerLoggedInEvent event) {
         EntityPlayer entity = event.player;
-        // Object o = logged.keySet().stream().filter(p -> p.getDisplayNameString().equals(entity.getDisplayNameString())).findFirst().orElse(null);
-        // if (logged.keySet().stream().filter(p -> p.getDisplayNameString().equals(entity.getDisplayNameString())).findFirst().orElse(null) == null) {
-        //     ((EntityPlayerMP) entity).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getWelcomeMessage())));
-        // }
         // initializing timer for kicking player if he/she hasn't logged in a minute
         BlockPos pos = entity.getPosition();
         float yaw = entity.rotationYaw, pitch = entity.rotationPitch;

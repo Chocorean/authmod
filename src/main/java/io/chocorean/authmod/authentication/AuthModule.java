@@ -30,7 +30,7 @@ public class AuthModule implements IAuthenticationStrategy {
         if(!saved.getUsername().equals(player.getUsername()))
             throw new DifferentUsernameException(AuthMod.getConfig().getWrongUsernameMsg());
         if(saved.isBanned())
-            throw new BanException(AuthMod.getConfig().getBannedMsg());
+            throw new BannedPlayerException(AuthMod.getConfig().getBannedMsg());
         boolean correctPassword = BCrypt.checkpw(player.getPassword(), saved.getPassword());
         if(!correctPassword) {
             throw new WrongPasswordException(AuthMod.getConfig().getWrongPasswordMsg());
