@@ -32,13 +32,13 @@ public class PlayerTest {
     @Test
     public void testSetUuidNullParam()  {
         this.player.setUuid(null);
-        assertNull(this.player.getUuid(), "The UUID should be null");
+        assertEquals(this.player.getUuid().length(),0, "The UUID should be empty");
     }
 
     @Test
     public void testSetEmailNullParam()  {
         this.player.setEmail(null);
-        assertNull(this.player.getEmail(), "The email should be null");
+        assertEquals(this.player.getEmail().length(),0, "The email should be null");
     }
 
     @Test
@@ -56,11 +56,11 @@ public class PlayerTest {
     @Test
     public void testSetUuidIncorrect()  {
         this.player.setUuid("15");
-        assertNull(this.player.getUuid(), "The UUID should be null because it is incorrect");
+        assertEquals(this.player.getUuid().length(),0, "The UUID should be empty because it is incorrect");
     }
 
     @Test
-    public void testIsPremiun()  {
+    public void testIsPremium()  {
         this.player.setUuid(null);
         assertFalse(this.player.isPremium(), "The player should not be premium");
     }

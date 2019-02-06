@@ -8,6 +8,7 @@ import io.chocorean.authmod.config.AuthModDatabaseConfig;
 import io.chocorean.authmod.exception.AuthmodException;
 import io.chocorean.authmod.exception.LoginException;
 import io.chocorean.authmod.exception.PlayerAlreadyExistException;
+import io.chocorean.authmod.exception.RegistrationException;
 import io.chocorean.authmod.model.IPlayer;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
@@ -24,8 +25,8 @@ public class DatabaseSourceStrategy implements IDataSourceStrategy {
     }
 
     @Override
-    public IPlayer retrieve(IPlayer player) throws AuthmodException {
-        IPlayer p;
+    public IPlayer find(String email, String username) {
+        /*IPlayer p;
         LOGGER.info("Checking authentication for " + player.getEmail());
         try {
             p = this.playersDAO.findFirst(player);
@@ -34,11 +35,13 @@ public class DatabaseSourceStrategy implements IDataSourceStrategy {
             throw new LoginException(AuthMod.getConfig().getDatabaseErrorMsg());
         }
         return p;
+        */
+        return null;
     }
 
     @Override
-    public IPlayer add(IPlayer player) throws AuthmodException {
-        try {
+    public boolean add(IPlayer player) throws RegistrationException {
+        /*try {
             IPlayer saved = this.playersDAO.findFirst(player);
             if(saved != null) {
                 throw new PlayerAlreadyExistException(AuthMod.getConfig().getPlayerAlreadyExistsMsg());
@@ -47,8 +50,8 @@ public class DatabaseSourceStrategy implements IDataSourceStrategy {
         } catch(SQLException e) {
             LOGGER.catching(Level.ERROR, e);
             throw new LoginException(AuthMod.getConfig().getDatabaseErrorMsg());
-        }
-        return player;
+        }*/
+        return false;
     }
 
     @Override

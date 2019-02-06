@@ -3,15 +3,24 @@ language: java
 jdk:
   - oraclejdk8
 
+
+
+env:
+  global:
+    - CC_TEST_REPORTER_ID=3f55d684ae78b29da1257e2c30c52752fe5d9e316fd97d2884907070fb2349b2
+
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
+
 script:
-  - |
-    ./gradlew sonarqube --stacktrace \
-    -Dsonar.projectKey=authmod \
-    -Dsonar.organization=chocorean \
-    -Dsonar.host.url=https://sonarcloud.io \
-    -Dsonar.login=${SONAR_TOKEN} \
-    -Dsonar.branch.name=${TRAVIS_BRANCH}
+  - ./gradlew test
   - ./gradlew build jacocoTestReport
+
+after_script:
+  - JACOCO_SOURCE_PATH=src/main/java ./cc-test-reporter format-coverage -d -t jacoco build/reports/jacoco/test/jacocoTestReport.xml
+  - ./cc-test-reporter upload-coverage -d
 
 #after_success:
 #  - bash <(curl -s https://codecov.io/bash)

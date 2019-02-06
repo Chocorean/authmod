@@ -23,7 +23,7 @@ public class AuthModule implements IAuthenticationStrategy {
 
     @Override
     public IPlayer login(IPlayer player) throws AuthmodException {
-        IPlayer saved = this.strategy.retrieve(player);
+        /*IPlayer saved = this.strategy.retrieve(player);
         LOGGER.info(player + " trying to login");
         if(saved == null)
             throw new PlayerNotFoundException(AuthMod.getConfig().getPlayerNotFoundMsg());
@@ -36,6 +36,8 @@ public class AuthModule implements IAuthenticationStrategy {
             throw new WrongPasswordException(AuthMod.getConfig().getWrongPasswordMsg());
         }
         return player;
+        */
+        return null;
     }
 
     @Override

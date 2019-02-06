@@ -38,7 +38,7 @@ public class Player implements IPlayer {
 
     @Override
     public void setEmail(String email) {
-        this.email = email == null ? null : email.trim();
+        this.email = email == null ? "" : email.trim();
     }
 
     @Override
@@ -59,7 +59,7 @@ public class Player implements IPlayer {
     @Override
     public void setUuid(String uuid) {
         if(uuid == null) {
-            this.uuid = null;
+            this.uuid = "";
         } else {
             if(uuid.length() == 32) {
                 uuid = String.format("%s-%s-%s-%s-%s",
@@ -70,7 +70,7 @@ public class Player implements IPlayer {
                         uuid.substring(20, 32)
                 );
             }
-            this.uuid = uuid.length() == 36 ? uuid : null;
+            this.uuid = uuid.length() == 36 ? uuid : "";
         }
     }
 
@@ -80,11 +80,11 @@ public class Player implements IPlayer {
     }
 
     @Override
-    public boolean isPremium() { return this.getUuid() != null; }
+    public boolean isPremium() { return this.getUuid().length() != 0; }
 
     @Override
     public void setUsername(String username) {
-        this.username = username == null ? null : username.trim();
+        this.username = username == null ? "" : username.trim();
     }
 
     public String toString() {

@@ -1,13 +1,14 @@
 package io.chocorean.authmod.authentication.datasource;
 
 import io.chocorean.authmod.exception.AuthmodException;
+import io.chocorean.authmod.exception.RegistrationException;
 import io.chocorean.authmod.model.IPlayer;
 
 public interface IDataSourceStrategy {
 
-    IPlayer retrieve(IPlayer player) throws AuthmodException;
+    IPlayer find(String email, String username);
 
-    IPlayer add(IPlayer player) throws AuthmodException;
+    boolean add(IPlayer player) throws RegistrationException;
     
     boolean exist(IPlayer player);
 

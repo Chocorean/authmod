@@ -1,25 +1,27 @@
 package io.chocorean.authmod.authentication.datasource;
 
 import io.chocorean.authmod.AuthMod;
+import io.chocorean.authmod.exception.PlayerAlreadyExistException;
+import io.chocorean.authmod.exception.RegistrationException;
 import io.chocorean.authmod.model.IPlayer;
 import io.chocorean.authmod.model.Player;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FileDataSourceStrategy implements IDataSourceStrategy {
 
     private final File authFile;
-    private final Map<String, IPlayer> players;
+    private final List<IPlayer> players;
     private long lastModification;
     private static final Logger LOGGER = AuthMod.LOGGER;
     private static final String SEPARATOR = ",";
 
     public FileDataSourceStrategy(File authFile) {
         this.authFile = authFile;
-        this.players = new HashMap<>();
+        this.players = new ArrayList<>();
         this.readFile();
     }
 
@@ -37,7 +39,7 @@ public class FileDataSourceStrategy implements IDataSourceStrategy {
                         p.setUsername(parts[1].trim());
                         p.setPassword(parts[2].trim());
                         p.setBanned(Boolean.parseBoolean(parts[3].trim()));
-                        this.players.put(p.getEmail(), p);
+                        this.players.add(p);
                     }
                 }
                 this.lastModification = this.authFile.lastModified();
@@ -52,29 +54,42 @@ public class FileDataSourceStrategy implements IDataSourceStrategy {
     }
 
     @Override
-    public IPlayer retrieve(IPlayer player) {
+    public IPlayer find(String email, String username) {
         this.reloadFile();
-        if(player.getEmail() != null) {
-            return this.players.get(player.getEmail());
+        if(email != null && username != null) {
+            return this.players.stream()
+                    .filter(tmp -> tmp.getUsername().equals(username) && tmp.getEmail().equals(email))
+                    .findFirst().orElse(null);
         }
-        else {
-            return this.players.values().stream().filter(tmp -> player.getUsername().equals(tmp.getUsername()))
-            .findFirst().orElse(null);
+        if(email != null) {
+            return this.players.stream()
+                    .filter(tmp -> tmp.getEmail().equals(email))
+                    .findFirst().orElse(null);
         }
+        if(username != null) {
+            return this.players.stream()
+                    .filter(tmp -> tmp.getUsername().equals(username))
+                    .findFirst().orElse(null);
+        }
+        return null;
     }
 
     @Override
-    public IPlayer add(IPlayer player) {
+    public boolean add(IPlayer player) throws RegistrationException {
         this.reloadFile();
-        this.players.put(player.getEmail(), player);
-        this.saveFile();
-        return player;
+        if(!this.exist(player)) {
+            this.players.add(player);
+            this.saveFile();
+            return true;
+        } else {
+            throw new PlayerAlreadyExistException();
+        }
     }
 
     @Override
     public boolean exist(IPlayer player) {
         this.reloadFile();
-        IPlayer p = this.players.values().stream()
+        IPlayer p = this.players.stream()
                 .filter(tmp -> player.getEmail().equals(tmp.getEmail()) || player.getUsername().equals(tmp.getUsername()))
                 .findFirst().orElse(null);
         return p != null;
@@ -88,12 +103,12 @@ public class FileDataSourceStrategy implements IDataSourceStrategy {
                     " hashed password",
                     " is banned ?"));
             bw.newLine();
-            for(Map.Entry<String, IPlayer> entry: this.players.entrySet()) {
+            for(IPlayer entry: this.players) {
                 bw.write(String.join(SEPARATOR,
-                        entry.getKey(),
-                        entry.getValue().getUsername(),
-                        entry.getValue().getPassword(),
-                        Boolean.toString(entry.getValue().isBanned())));
+                        entry.getEmail(),
+                        entry.getUsername(),
+                        entry.getPassword(),
+                        Boolean.toString(entry.isBanned())));
                 bw.newLine();
             }
         } catch (IOException e) { LOGGER.catching(e); }
