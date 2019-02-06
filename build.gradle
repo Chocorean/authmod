@@ -45,6 +45,7 @@ dependencies {
     compile group: 'org.hibernate', name: 'hibernate-validator', version: '6.0.14.Final'
     compile group: 'javax.el', name: 'javax.el-api', version: '3.0.1-b06'
     compile group: 'org.glassfish.web', name: 'javax.el', version: '2.2.6'
+    compile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.25.2'
 }
 
 jar {

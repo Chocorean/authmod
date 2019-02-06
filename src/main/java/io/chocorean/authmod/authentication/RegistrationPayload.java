@@ -54,7 +54,7 @@ public class RegistrationPayload implements IPayload {
     }
 
     @AssertTrue
-    private boolean isPasswordConfirmationMatchs() {
+    public boolean isPasswordConfirmationMatchs() {
         return this.passwordConfirmation.equals(this.payload.getPassword());
     }
 

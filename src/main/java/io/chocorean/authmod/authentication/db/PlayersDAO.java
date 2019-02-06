@@ -5,6 +5,7 @@ import io.chocorean.authmod.model.Player;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,21 +19,32 @@ public class PlayersDAO implements IPlayersDAO<IPlayer> {
         this.table = table;
         this.columns = columns;
         this.connectionFactory = connectionFactory;
-        this.testTable();
+        this.checkTable();
     }
 
-    private void testTable() throws SQLException {
-        Connection conn = this.connectionFactory.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(String.format("SELECT %s,%s,%s,%s,%s FROM %s",
+    public PlayersDAO(String table, IConnectionFactory connectionFactory) throws SQLException {
+        this(table, connectionFactory, new HashMap<String, String>() {{
+            put("email", "email");
+            put("banned", "banned");
+            put("password", "password");
+            put("username", "username");
+            put("uuid", "uuid");
+        }});
+    }
+
+    private void checkTable() throws SQLException {
+        try(
+                Connection connection = this.connectionFactory.getConnection();
+                PreparedStatement stmt = connection.prepareStatement(String.format("SELECT %s,%s,%s,%s,%s FROM %s",
                 this.columns.get("email"),
                 this.columns.get("banned"),
                 this.columns.get("password"),
                 this.columns.get("username"),
                 this.columns.get("uuid"),
-                this.table)
-        );
-        stmt.executeQuery();
-        stmt.close();
+                this.table))
+        ) {
+            stmt.executeQuery();
+        } catch(SQLException e){ throw e; }
     }
 
     @Override

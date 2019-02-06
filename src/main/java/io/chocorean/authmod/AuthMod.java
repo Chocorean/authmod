@@ -43,7 +43,7 @@ public class AuthMod {
         switch (config.getAuthenticationStrategy().toUpperCase()) {
             case "DATABASE":
                 try {
-                    AuthMod.strategy = new DatabaseSourceStrategy(config.getDatabaseConfig());
+                    AuthMod.strategy = new DatabaseSourceStrategy(null);
                 } catch (SQLException e) {
                     throw new InvalidSQLTableException("The SQL table is different from what's expected: " + e.getMessage());
                 }

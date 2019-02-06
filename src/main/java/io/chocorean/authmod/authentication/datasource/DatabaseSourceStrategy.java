@@ -2,6 +2,7 @@ package io.chocorean.authmod.authentication.datasource;
 
 import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.authentication.db.ConnectionFactory;
+import io.chocorean.authmod.authentication.db.IConnectionFactory;
 import io.chocorean.authmod.authentication.db.IPlayersDAO;
 import io.chocorean.authmod.authentication.db.PlayersDAO;
 import io.chocorean.authmod.config.AuthModDatabaseConfig;
@@ -13,6 +14,7 @@ import io.chocorean.authmod.model.IPlayer;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 
 public class DatabaseSourceStrategy implements IDataSourceStrategy {
@@ -20,8 +22,8 @@ public class DatabaseSourceStrategy implements IDataSourceStrategy {
     private final IPlayersDAO<IPlayer> playersDAO;
     private static final Logger LOGGER = AuthMod.LOGGER;
 
-    public DatabaseSourceStrategy(AuthModDatabaseConfig config) throws SQLException {
-        this.playersDAO = new PlayersDAO(config.getTable(), new ConnectionFactory(config), config.getColumns());
+    public DatabaseSourceStrategy(IConnectionFactory connectionFactory) throws SQLException {
+        this.playersDAO = new PlayersDAO("players", connectionFactory);
     }
 
     @Override

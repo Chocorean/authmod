@@ -7,21 +7,27 @@ import java.sql.*;
 
 public class ConnectionFactory implements IConnectionFactory{
 
-    private final AuthModDatabaseConfig config;
+    private String url;
+    private String user;
+    private String password;
 
-    public ConnectionFactory(AuthModDatabaseConfig config) {
-        this.config = config;
+    public ConnectionFactory(String url) {
+        this(url, null, null);
+    }
+
+    public ConnectionFactory(String url, String user, String password) {
+        this.url = url;
+        this.user = user;
+        this.password = password;
+    }
+
+    public ConnectionFactory(String dialect, String host, int port, String database, String user, String password) {
+        this(String.format("jdbc:%s://%s:%d/%s", dialect, host, port, database), user, password);
     }
 
     public Connection getConnection() {
         try {
-            return DriverManager.getConnection(String.format("jdbc:%s://%s:%s/%s",
-                    this.config.getDialect(),
-                    this.config.getHost(),
-                    this.config.getPort(),
-                    this.config.getDatabase()),
-                    this.config.getUser(),
-                    this.config.getPassword());
+            return user == null ? DriverManager.getConnection(this.url)  : DriverManager.getConnection(this.url, this.user, this.password);
         } catch (SQLException ex) {
             throw new RuntimeException(AuthMod.getConfig().getDatabaseErrorMsg(), ex);
         }
