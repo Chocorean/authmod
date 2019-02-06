@@ -56,11 +56,11 @@ public class FileDataSourceStrategy implements IDataSourceStrategy {
     @Override
     public IPlayer find(String email, String username) {
         this.reloadFile();
-        if(email != null && username != null) {
+        /*if(email != null && username != null) {
             return this.players.stream()
                     .filter(tmp -> tmp.getUsername().equals(username) && tmp.getEmail().equals(email))
                     .findFirst().orElse(null);
-        }
+        }*/
         if(email != null) {
             return this.players.stream()
                     .filter(tmp -> tmp.getEmail().equals(email))

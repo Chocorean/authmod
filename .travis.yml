@@ -3,11 +3,9 @@ language: java
 jdk:
   - oraclejdk8
 
-
-
 env:
   global:
-    - CC_TEST_REPORTER_ID=3f55d684ae78b29da1257e2c30c52752fe5d9e316fd97d2884907070fb2349b2
+    - CC_TEST_REPORTER_ID=
 
 before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter

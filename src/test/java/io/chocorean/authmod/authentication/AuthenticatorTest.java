@@ -3,7 +3,7 @@ package io.chocorean.authmod.authentication;
 import io.chocorean.authmod.authentication.datasource.FileDataSourceStrategy;
 import io.chocorean.authmod.authentication.datasource.IDataSourceStrategy;
 import io.chocorean.authmod.exception.*;
-import org.junit.jupiter.api.BeforeAll;
+import io.chocorean.authmod.model.IPlayer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,6 +19,7 @@ public class AuthenticatorTest {
     private LoginPayload payload;
     private File dataFile;
     private IDataSourceStrategy dataSource;
+    private IPlayer player;
 
     @BeforeEach
     void init() throws IOException, AuthmodException {
@@ -33,7 +34,12 @@ public class AuthenticatorTest {
         payload.setUsername("mcdostone");
         payload.setPassword("rootroot");
         this.authenticator = new Authenticator(this.dataSource);
-        this.dataSource.add(PlayerFactory.createFromLoginPayload(payload));
+        this.player = PlayerFactory.createFromLoginPayload(payload);
+        this.registerPlayer();
+    }
+
+    private boolean registerPlayer() throws RegistrationException {
+        return this.dataSource.add(PlayerFactory.createFromLoginPayload(payload));
     }
 
     @Test
@@ -50,36 +56,34 @@ public class AuthenticatorTest {
 
     @Test
     public void testLoginWrongPassword() {
-        assertThrows(WrongPasswordException.class, () -> {
-            this.authenticator.login(this.payload.setPassword("wrong"));
-        });
+        assertThrows(WrongPasswordException.class, () -> this.authenticator.login(this.payload.setPassword("wrong")));
     }
 
     @Test
     public void testLoginUnknownPlayer() {
-        assertThrows(PlayerNotFoundException.class, () -> {
-            this.authenticator.login(this.payload.setEmail("wrong"));
-        });
+        assertThrows(PlayerNotFoundException.class, () -> this.authenticator.login(this.payload.setEmail("freddie.wong@rocketjump.com")));
     }
 
     @Test
     public void testLoginDifferentUsername() {
-        assertThrows(DifferentUsernameException.class, () -> {
-            this.authenticator.login(this.payload.setUsername("wrong"));
-        });
+        assertThrows(DifferentUsernameException.class, () -> this.authenticator.login(this.payload.setUsername("wrong")));
     }
 
     @Test
-    public void testLoginBanned() {
-        assertThrows(BannedPlayerException.class, () -> {
-            this.authenticator.login(this.payload.setUsername("banned"));
-        });
+    public void testLoginBanned() throws RegistrationException {
+        this.player.setBanned(true);
+        this.player.setUsername("banner");
+        this.player.setEmail(null);
+        this.dataSource.add(player);
+        LoginPayload p = new LoginPayload();
+        p.setUsername("banner");
+        p.setPassword("korben");
+        assertThrows(BannedPlayerException.class, () -> this.authenticator.login(p));
     }
 
     @Test
     public void testLoginNullParams() throws LoginException {
-        this.authenticator.login(null);
-        boolean logged = this.authenticator.login(this.payload);
+        boolean logged = this.authenticator.login(null);
         assertFalse(logged, "Can't be logged, no payload provided");
     }
 
