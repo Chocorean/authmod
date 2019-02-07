@@ -16,7 +16,9 @@ import static org.junit.jupiter.api.Assertions.*;
 public class AuthenticatorTest {
 
     private Authenticator authenticator;
+    private Registrator registrator;
     private LoginPayload payload;
+    private RegistrationPayload registrationPayload;
     private File dataFile;
     private IDataSourceStrategy dataSource;
     private IPlayer player;
@@ -30,16 +32,22 @@ public class AuthenticatorTest {
         this.dataSource = new FileDataSourceStrategy(this.dataFile);
         this.dataFile.createNewFile();
         this.payload = new LoginPayload();
+        this.registrationPayload = new RegistrationPayload();
         payload.setEmail("test@test.test");
         payload.setUsername("mcdostone");
         payload.setPassword("rootroot");
+        registrationPayload.setEmail(payload.getEmail());
+        registrationPayload.setUsername(payload.getUsername());
+        registrationPayload.setPasswordConfirmation(payload.getPassword());
+        registrationPayload.setPassword(payload.getPassword());
         this.authenticator = new Authenticator(this.dataSource);
+        this.registrator = new Registrator(this.dataSource);
         this.player = PlayerFactory.createFromLoginPayload(payload);
         this.registerPlayer();
     }
 
-    private boolean registerPlayer() throws RegistrationException {
-        return this.dataSource.add(PlayerFactory.createFromLoginPayload(payload));
+    private boolean registerPlayer() throws AuthmodException {
+        return this.registrator.register(this.registrationPayload);
     }
 
     @Test
@@ -55,8 +63,9 @@ public class AuthenticatorTest {
     }
 
     @Test
-    public void testLoginWrongPassword() {
-        assertThrows(WrongPasswordException.class, () -> this.authenticator.login(this.payload.setPassword("wrong")));
+    public void testLoginWrongPassword() throws LoginException {
+        boolean logged = this.authenticator.login(this.payload.setPassword("wrong"));
+        assertFalse(logged, "Player should not be logged");
     }
 
     @Test

@@ -7,6 +7,7 @@ import javax.validation.ValidatorFactory;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.HashSet;
 import java.util.Set;
 
 public class LoginPayload implements IPayload {
@@ -24,6 +25,12 @@ public class LoginPayload implements IPayload {
     @Size(min = 32, max = 36)
     private String uuid;
 
+    private Set<ConstraintViolation<IPayload>> errors;
+
+    public LoginPayload() {
+        this.errors = new HashSet<>();
+    }
+
     public LoginPayload setPassword(String password) {
         this.password = password;
         return this;
@@ -33,8 +40,8 @@ public class LoginPayload implements IPayload {
     public boolean isValid() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
-        Set<ConstraintViolation<LoginPayload>> violations = validator.validate(this);
-        return violations.isEmpty();
+        this.errors = validator.validate(this);
+        return this.errors.isEmpty();
     }
 
     @Override
@@ -62,6 +69,11 @@ public class LoginPayload implements IPayload {
     @Override
     public String getPassword() {
         return this.password;
+    }
+
+    @Override
+    public Set<ConstraintViolation<IPayload>> getErrors() {
+        return this.errors;
     }
 
     @Override

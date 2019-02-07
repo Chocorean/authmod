@@ -1,6 +1,5 @@
 package io.chocorean.authmod.authentication;
 
-import io.chocorean.authmod.authentication.datasource.DatabaseSourceStrategy;
 import io.chocorean.authmod.authentication.datasource.FileDataSourceStrategy;
 import io.chocorean.authmod.authentication.datasource.IDataSourceStrategy;
 import io.chocorean.authmod.exception.*;
@@ -11,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,7 +21,7 @@ public class RegistratorTest {
     private File dataFile;
 
     @BeforeEach
-    void init() throws IOException, AuthmodException {
+    void init() throws IOException {
         this.dataFile = Paths.get(System.getProperty("java.io.tmpdir"), "authmod.csv").toFile();
         if(this.dataFile.exists()) {
             this.dataFile.delete();
@@ -34,6 +32,7 @@ public class RegistratorTest {
         payload.setEmail("test@test.test");
         payload.setUsername("mcdostone");
         payload.setPassword("rootroot");
+        payload.setPasswordConfirmation("rootroot");
         this.registrator = new Registrator(this.dataSource);
     }
 
@@ -44,19 +43,13 @@ public class RegistratorTest {
     }
 
     @Test
-    public void testConstructor() throws SQLException {
-        Registrator registrator = new Registrator(new DatabaseSourceStrategy(null));
-        assertTrue(registrator.getDataSourceStrategy().getClass().equals(DatabaseSourceStrategy.class), "Data source strategy should be DatatabaseSourceStrategy");
-    }
-
-    @Test
-    public void testRegister() throws RegistrationException {
+    public void testRegister() throws AuthmodException {
         boolean registered = this.registrator.register(this.payload);
         assertTrue(registered, "Player should be logged");
     }
 
     @Test
-    public void testHashedPassword() throws RegistrationException {
+    public void testHashedPassword() throws AuthmodException {
         this.registrator.register(this.payload);
         IPlayer player = this.dataSource.find(this.payload.getEmail(), null);
         assertNotEquals(player.getPassword(), this.payload.getPassword(), "Passwords should be hashed");
@@ -70,21 +63,22 @@ public class RegistratorTest {
     }
 
     @Test
-    public void testRegisterPlayerAlreadyExist() {
+    public void testRegisterPlayerAlreadyExist() throws AuthmodException {
+        this.registrator.register(this.payload);
         assertThrows(PlayerAlreadyExistException.class, () -> {
             this.registrator.register(this.payload.setEmail("root@root.root"));
         });
     }
 
-    @Test
+    /*@Test
     public void testRegisterUnauthorizedHostedDomain() {
         assertThrows(UnauthorizedHostedDomainException.class, () -> {
             this.registrator.register(this.payload.setEmail("root@root.fr"));
         });
-    }
+    } */
 
     @Test
-    public void testLoginNullParams() throws RegistrationException {
+    public void testLoginNullParams() throws AuthmodException {
         boolean registered = this.registrator.register(null);
         assertFalse(registered, "Can't register the player, no payload provided");
     }

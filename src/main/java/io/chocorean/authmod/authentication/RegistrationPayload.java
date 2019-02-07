@@ -5,14 +5,21 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import javax.validation.constraints.AssertTrue;
+import javax.validation.constraints.NotNull;
+import java.util.HashSet;
 import java.util.Set;
 
 public class RegistrationPayload implements IPayload {
+    @NotNull
     private LoginPayload payload;
+
+    @NotNull
     private String passwordConfirmation;
+    private Set<ConstraintViolation<IPayload>> errors;
 
     public RegistrationPayload() {
         this.payload = new LoginPayload();
+        this.errors = new HashSet<>();
     }
 
     @Override
@@ -25,9 +32,9 @@ public class RegistrationPayload implements IPayload {
     public boolean isValid() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
-        Set<ConstraintViolation<LoginPayload>> violationsLogin = validator.validate(this.payload);
-        Set<ConstraintViolation<RegistrationPayload>> violationsRegistration = validator.validate(this);
-        return violationsLogin.isEmpty() && violationsRegistration.isEmpty();
+        this.errors = validator.validate(this.payload);
+        this.errors.addAll(validator.validate(this));
+        return this.errors.isEmpty();
     }
 
     @Override
@@ -54,8 +61,8 @@ public class RegistrationPayload implements IPayload {
     }
 
     @AssertTrue
-    public boolean isPasswordConfirmationMatchs() {
-        return this.passwordConfirmation.equals(this.payload.getPassword());
+    private boolean isPasswordConfirmationMatchs() {
+        return this.getPasswordConfirmation().equals(this.payload.getPassword());
     }
 
     @Override
@@ -71,6 +78,11 @@ public class RegistrationPayload implements IPayload {
     @Override
     public String getPassword() {
         return this.payload.getPassword();
+    }
+
+    @Override
+    public Set<ConstraintViolation<IPayload>> getErrors() {
+        return this.errors;
     }
 
     public String getPasswordConfirmation() {

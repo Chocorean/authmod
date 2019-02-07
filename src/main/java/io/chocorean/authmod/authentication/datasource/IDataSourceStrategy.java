@@ -1,6 +1,5 @@
 package io.chocorean.authmod.authentication.datasource;
 
-import io.chocorean.authmod.exception.AuthmodException;
 import io.chocorean.authmod.exception.RegistrationException;
 import io.chocorean.authmod.model.IPlayer;
 

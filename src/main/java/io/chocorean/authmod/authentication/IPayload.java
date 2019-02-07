@@ -1,5 +1,8 @@
 package io.chocorean.authmod.authentication;
 
+import javax.validation.ConstraintViolation;
+import java.util.Set;
+
 public interface IPayload {
     public IPayload setPassword(String password);
     public boolean isValid();
@@ -10,4 +13,5 @@ public interface IPayload {
     public String getEmail();
     public String getUsername();
     public String getPassword();
+    public Set<ConstraintViolation<IPayload>> getErrors();
 }

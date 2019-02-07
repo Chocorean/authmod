@@ -1,15 +1,18 @@
 package io.chocorean.authmod.authentication;
 
+import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.authentication.datasource.IDataSourceStrategy;
 import io.chocorean.authmod.exception.BannedPlayerException;
 import io.chocorean.authmod.exception.DifferentUsernameException;
 import io.chocorean.authmod.exception.LoginException;
 import io.chocorean.authmod.exception.PlayerNotFoundException;
 import io.chocorean.authmod.model.IPlayer;
+import org.apache.logging.log4j.Logger;
 import org.mindrot.jbcrypt.BCrypt;
 
 public class Authenticator {
 
+    private static final Logger LOGGER = AuthMod.LOGGER;
     private final IDataSourceStrategy dataSource;
 
     public Authenticator(IDataSourceStrategy dataSourceStrategy) {
@@ -26,8 +29,8 @@ public class Authenticator {
                     throw new DifferentUsernameException();
                 if(player.isBanned())
                     throw new BannedPlayerException();
-                boolean correctPassword = BCrypt.checkpw(player.getPassword(), payload.getPassword());
-                return correctPassword;
+                LOGGER.info(payload.getUsername() + " is signin in");
+                return BCrypt.checkpw(payload.getPassword(), player.getPassword());
             }
         }
         return false;
