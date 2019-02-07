@@ -22,34 +22,32 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class DatabaseSourceStrategyTest {
 
-    private File dataFile;
+    private static File dataFile;
     private IPlayer player;
     private IDataSourceStrategy dataSource;
     private static IConnectionFactory connectionFactory;
 
-    @BeforeAll
-    static void setupConnection() throws SQLException {
-        File dbFile = Paths.get(System.getProperty("java.io.tmpdir"), "authmod.db").toFile();
-        if(dbFile.exists()) {
-            dbFile.delete();
+    @BeforeEach
+    void setupConnection() throws SQLException {
+        dataFile = Paths.get(System.getProperty("java.io.tmpdir"), "authmod.db").toFile();
+        if(dataFile.exists()) {
+            dataFile.delete();
         }
-        connectionFactory = new ConnectionFactory("jdbc:sqlite:" + dbFile.getAbsolutePath());
+        connectionFactory = new ConnectionFactory("jdbc:sqlite:" + dataFile.getAbsolutePath());
         Connection connection = connectionFactory.getConnection();
         if(connection != null) {
-            DatabaseMetaData meta = connection.getMetaData();
             Statement stmt = connection.createStatement();
             stmt.executeUpdate("CREATE TABLE players (" +
-                    "    id integer PRIMARY KEY, \n" +
-                    "    email varchar(255) NOT NULL, \n" +
-                    "    password varchar(255), \n" +
-                    "    uuid varchar(255), \n" +
-                    "    username varchar(255) NOT NULL, \n" +
-                    "    banned INTEGER DEFAULT 0, \n" +
-                    "    UNIQUE (email),\n" +
-                    "    UNIQUE (uuid), \n" +
-                    "    UNIQUE (username)\n" +
+                    "id integer PRIMARY KEY," +
+                    "email varchar(255) NOT NULL," +
+                    "password varchar(255)," +
+                    "uuid varchar(255), \n" +
+                    "username varchar(255) NOT NULL," +
+                    "banned INTEGER DEFAULT 0," +
+                    "UNIQUE (email)," +
+                    "UNIQUE (uuid)," +
+                    "UNIQUE (username)" +
                     ");");
-            System.out.println("The driver name is " + meta.getDriverName());
         }
     }
 
@@ -65,7 +63,13 @@ public class DatabaseSourceStrategyTest {
     }
 
     @Test
-    public void testConstructorTableIsDifferent()  {
+    public void testConstructorTableIsDifferent() throws SQLException {
+        dataFile.delete();
+        Statement stmt = connectionFactory.getConnection().createStatement();
+        stmt.executeUpdate("CREATE TABLE players (" +
+                "id integer PRIMARY KEY," +
+                "email varchar(255) NOT NULL" +
+                ");");
         assertThrows(SQLException.class, () -> new DatabaseSourceStrategy(connectionFactory));
     }
 

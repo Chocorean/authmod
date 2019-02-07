@@ -4,23 +4,23 @@ public interface IPlayer {
 
     boolean isBanned();
 
-    void setBanned(boolean ban);
+    IPlayer setBanned(boolean ban);
 
-    void setPassword(String password);
+    IPlayer setPassword(String password);
 
     String getPassword();
 
-    void setEmail(String email);
+    IPlayer setEmail(String email);
 
     String getEmail();
 
-    void setUsername(String username);
+    IPlayer setUsername(String username);
 
     String getUsername();
 
     boolean isPremium();
 
-    void setUuid(String uuid);
+    IPlayer setUuid(String uuid);
 
     String getUuid();
 }

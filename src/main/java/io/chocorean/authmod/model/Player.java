@@ -1,7 +1,5 @@
 package io.chocorean.authmod.model;
 
-import io.chocorean.authmod.AuthMod;
-
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -27,8 +25,9 @@ public class Player implements IPlayer {
     }
 
     @Override
-    public void setPassword(String password) {
+    public IPlayer setPassword(String password) {
         this.password = password;
+        return this;
     }
 
     @Override
@@ -37,8 +36,9 @@ public class Player implements IPlayer {
     }
 
     @Override
-    public void setEmail(String email) {
+    public IPlayer setEmail(String email) {
         this.email = email == null ? "" : email.trim();
+        return this;
     }
 
     @Override
@@ -47,8 +47,9 @@ public class Player implements IPlayer {
     }
 
     @Override
-    public void setBanned(boolean ban) {
+    public IPlayer setBanned(boolean ban) {
         banned = ban;
+        return this;
     }
 
     @Override
@@ -57,7 +58,7 @@ public class Player implements IPlayer {
     }
 
     @Override
-    public void setUuid(String uuid) {
+    public IPlayer setUuid(String uuid) {
         if(uuid == null) {
             this.uuid = "";
         } else {
@@ -72,6 +73,7 @@ public class Player implements IPlayer {
             }
             this.uuid = uuid.length() == 36 ? uuid : "";
         }
+        return this;
     }
 
     @Override
@@ -83,8 +85,9 @@ public class Player implements IPlayer {
     public boolean isPremium() { return this.getUuid().length() != 0; }
 
     @Override
-    public void setUsername(String username) {
+    public IPlayer setUsername(String username) {
         this.username = username == null ? "" : username.trim();
+        return this;
     }
 
     public String toString() {
