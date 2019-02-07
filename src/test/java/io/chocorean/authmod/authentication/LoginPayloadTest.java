@@ -8,23 +8,19 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LoginPayloadTest {
 
-    private String username;
-    private String email;
-    private String uuid;
-    private String password;
     private LoginPayload payload;
 
     @BeforeEach
     void init() {
-        this.username = "mcdostone";
-        this.email = "mcdostone@gmail.com";
-        this.uuid = "7128022b-9195-490d-9bc8-9b42ebe2a8e3";
-        this.password = "korben";
+        String username = "mcdostone";
+        String email = "mcdostone@gmail.com";
+        String uuid = "7128022b-9195-490d-9bc8-9b42ebe2a8e3";
+        String password = "korben";
         this.payload = new LoginPayload();
-        this.payload.setPassword(this.password);
-        this.payload.setUsername(this.username);
-        this.payload.setEmail(this.email);
-        this.payload.setUuid(this.uuid);
+        this.payload.setPassword(password);
+        this.payload.setUsername(username);
+        this.payload.setEmail(email);
+        this.payload.setUuid(uuid);
     }
 
     @Test

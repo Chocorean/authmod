@@ -12,7 +12,6 @@ public class PlayerFactoryTest {
     private String email;
     private String uuid;
     private String password;
-    private String passwordConfirmation;
     private RegistrationPayload payload;
 
     @BeforeEach
@@ -21,9 +20,8 @@ public class PlayerFactoryTest {
         this.email = "mcdostone@gmail.com";
         this.uuid = "7128022b-9195-490d-9bc8-9b42ebe2a8e3";
         this.password = "korben";
-        this.passwordConfirmation = "korben";
         this.payload = new RegistrationPayload();
-        this.payload.setPasswordConfirmation(this.passwordConfirmation);
+        this.payload.setPasswordConfirmation(this.password);
         this.payload.setPassword(this.password);
         this.payload.setUsername(this.username);
         this.payload.setEmail(this.email);

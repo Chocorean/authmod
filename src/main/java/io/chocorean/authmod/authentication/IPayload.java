@@ -4,14 +4,14 @@ import javax.validation.ConstraintViolation;
 import java.util.Set;
 
 public interface IPayload {
-    public IPayload setPassword(String password);
-    public boolean isValid();
-    public IPayload setUsername(String username);
-    public IPayload setUuid(String uuid);
-    public String getUuid();
-    public IPayload setEmail(String email);
-    public String getEmail();
-    public String getUsername();
-    public String getPassword();
-    public Set<ConstraintViolation<IPayload>> getErrors();
+    IPayload setPassword(String password);
+    boolean isValid();
+    IPayload setUsername(String username);
+    IPayload setUuid(String uuid);
+    String getUuid();
+    IPayload setEmail(String email);
+    String getEmail();
+    String getUsername();
+    String getPassword();
+    Set<ConstraintViolation<IPayload>> getErrors();
 }

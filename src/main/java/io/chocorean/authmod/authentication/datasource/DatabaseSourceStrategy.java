@@ -1,13 +1,9 @@
 package io.chocorean.authmod.authentication.datasource;
 
 import io.chocorean.authmod.AuthMod;
-import io.chocorean.authmod.authentication.db.ConnectionFactory;
 import io.chocorean.authmod.authentication.db.IConnectionFactory;
 import io.chocorean.authmod.authentication.db.IPlayersDAO;
 import io.chocorean.authmod.authentication.db.PlayersDAO;
-import io.chocorean.authmod.config.AuthModDatabaseConfig;
-import io.chocorean.authmod.exception.AuthmodException;
-import io.chocorean.authmod.exception.LoginException;
 import io.chocorean.authmod.exception.PlayerAlreadyExistException;
 import io.chocorean.authmod.exception.RegistrationException;
 import io.chocorean.authmod.model.IPlayer;
@@ -15,7 +11,6 @@ import io.chocorean.authmod.model.Player;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 
 public class DatabaseSourceStrategy implements IDataSourceStrategy {

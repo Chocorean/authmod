@@ -39,7 +39,7 @@ public class Registrator {
                 }
             } else {
                 Set<ConstraintViolation<IPayload>> errors = payload.getErrors();
-                for(ConstraintViolation c: errors) {
+                for(ConstraintViolation<IPayload> c: errors) {
                     MappingConstraintViolationsToExceptions.throwException(c);
                 }
             }

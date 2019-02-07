@@ -51,9 +51,7 @@ public class FileDataSourceStrategyTest {
     public void testAddDoublon() throws AuthmodException {
         boolean added = this.registerPlayer();
         assertTrue(added, "The player should be registered");
-        assertThrows(PlayerAlreadyExistException.class, () -> {
-            this.registerPlayer();
-        });
+        assertThrows(PlayerAlreadyExistException.class, this::registerPlayer);
     }
 
     @Test

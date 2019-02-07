@@ -1,9 +1,10 @@
 package io.chocorean.authmod.authentication.db;
 
 import io.chocorean.authmod.AuthMod;
-import io.chocorean.authmod.config.AuthModDatabaseConfig;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class ConnectionFactory implements IConnectionFactory{
 

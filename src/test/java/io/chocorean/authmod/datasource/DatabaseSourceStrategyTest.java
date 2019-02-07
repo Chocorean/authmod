@@ -2,7 +2,6 @@ package io.chocorean.authmod.datasource;
 
 import io.chocorean.authmod.PlayerFactory;
 import io.chocorean.authmod.authentication.datasource.DatabaseSourceStrategy;
-import io.chocorean.authmod.authentication.datasource.FileDataSourceStrategy;
 import io.chocorean.authmod.authentication.datasource.IDataSourceStrategy;
 import io.chocorean.authmod.authentication.db.ConnectionFactory;
 import io.chocorean.authmod.authentication.db.IConnectionFactory;
@@ -10,13 +9,14 @@ import io.chocorean.authmod.exception.AuthmodException;
 import io.chocorean.authmod.exception.PlayerAlreadyExistException;
 import io.chocorean.authmod.exception.RegistrationException;
 import io.chocorean.authmod.model.IPlayer;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.nio.file.Paths;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -83,9 +83,7 @@ public class DatabaseSourceStrategyTest {
     public void testAddDoublon() throws AuthmodException, SQLException {
         boolean added = this.registerPlayer();
         assertTrue(added, "The player should be registered");
-        assertThrows(PlayerAlreadyExistException.class, () -> {
-            this.registerPlayer();
-        });
+        assertThrows(PlayerAlreadyExistException.class, this::registerPlayer);
     }
 
     @Test

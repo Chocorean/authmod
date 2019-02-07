@@ -2,7 +2,6 @@ package io.chocorean.authmod.event;
 
 import io.chocorean.authmod.model.PlayerPos;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.math.BlockPos;
 
 public class PlayerDescriptor {
 

@@ -18,16 +18,15 @@ public class RegistratorTest {
     private Registrator registrator;
     private RegistrationPayload payload;
     private IDataSourceStrategy dataSource;
-    private File dataFile;
 
     @BeforeEach
     void init() throws IOException {
-        this.dataFile = Paths.get(System.getProperty("java.io.tmpdir"), "authmod.csv").toFile();
-        if(this.dataFile.exists()) {
-            this.dataFile.delete();
+        File dataFile = Paths.get(System.getProperty("java.io.tmpdir"), "authmod.csv").toFile();
+        if(dataFile.exists()) {
+            dataFile.delete();
         }
-        this.dataSource = new FileDataSourceStrategy(this.dataFile);
-        this.dataFile.createNewFile();
+        this.dataSource = new FileDataSourceStrategy(dataFile);
+        dataFile.createNewFile();
         this.payload = new RegistrationPayload();
         payload.setEmail("test@test.test");
         payload.setUsername("mcdostone");
@@ -39,7 +38,7 @@ public class RegistratorTest {
     @Test
     public void testDefaultConstructor() {
         Registrator registrator = new Registrator();
-        assertTrue(registrator.getDataSourceStrategy().getClass().equals(FileDataSourceStrategy.class), "Default data source strategy should be FileDataSourceStrategy");
+        assertEquals(registrator.getDataSourceStrategy().getClass(), FileDataSourceStrategy.class, "Default data source strategy should be FileDataSourceStrategy");
     }
 
     @Test
@@ -57,25 +56,14 @@ public class RegistratorTest {
 
     @Test
     public void testRegisterInvalidEmail() {
-        assertThrows(InvalidEmailException.class, () -> {
-            this.registrator.register(this.payload.setEmail("wrong"));
-        });
+        assertThrows(InvalidEmailException.class, () -> this.registrator.register(this.payload.setEmail("wrong")));
     }
 
     @Test
     public void testRegisterPlayerAlreadyExist() throws AuthmodException {
         this.registrator.register(this.payload);
-        assertThrows(PlayerAlreadyExistException.class, () -> {
-            this.registrator.register(this.payload.setEmail("root@root.root"));
-        });
+        assertThrows(PlayerAlreadyExistException.class, () -> this.registrator.register(this.payload.setEmail("root@root.root")));
     }
-
-    /*@Test
-    public void testRegisterUnauthorizedHostedDomain() {
-        assertThrows(UnauthorizedHostedDomainException.class, () -> {
-            this.registrator.register(this.payload.setEmail("root@root.fr"));
-        });
-    } */
 
     @Test
     public void testLoginNullParams() throws AuthmodException {

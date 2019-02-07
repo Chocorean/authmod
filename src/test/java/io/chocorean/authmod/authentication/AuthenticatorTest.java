@@ -53,7 +53,7 @@ public class AuthenticatorTest {
     @Test
     public void testConstructor() {
         Authenticator authenticator = new Authenticator(new FileDataSourceStrategy(this.dataFile));
-        assertTrue(authenticator.getDataSourceStrategy().getClass().equals(FileDataSourceStrategy.class), "Data source strategy should be FileDataSourceStrategy");
+        assertEquals(authenticator.getDataSourceStrategy().getClass(), FileDataSourceStrategy.class, "Data source strategy should be FileDataSourceStrategy");
     }
 
     @Test

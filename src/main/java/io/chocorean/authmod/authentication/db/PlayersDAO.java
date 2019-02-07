@@ -44,7 +44,7 @@ public class PlayersDAO implements IPlayersDAO<IPlayer> {
                 this.table))
         ) {
             stmt.executeQuery();
-        } catch(SQLException e){ throw e; }
+        }
     }
 
     @Override
