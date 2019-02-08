@@ -1,4 +1,4 @@
-package io.chocorean.authmod.authentication.datasource;
+package io.chocorean.authmod.guard.datasource;
 
 import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.exception.PlayerAlreadyExistException;

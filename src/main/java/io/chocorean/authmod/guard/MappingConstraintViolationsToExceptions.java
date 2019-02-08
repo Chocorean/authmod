@@ -1,4 +1,4 @@
-package io.chocorean.authmod.authentication;
+package io.chocorean.authmod.guard;
 
 import io.chocorean.authmod.exception.InvalidEmailException;
 

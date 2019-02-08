@@ -1,5 +1,6 @@
-package io.chocorean.authmod.authentication;
+package io.chocorean.authmod.guard;
 
+import io.chocorean.authmod.guard.registration.RegistrationPayload;
 import io.chocorean.authmod.model.IPlayer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

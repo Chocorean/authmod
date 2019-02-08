@@ -1,4 +1,4 @@
-package io.chocorean.authmod.authentication;
+package io.chocorean.authmod.guard.authentication;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -6,9 +6,9 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class RegistrationPayloadTest {
+public class LoginPayloadTest {
 
-    private RegistrationPayload payload;
+    private LoginPayload payload;
 
     @BeforeEach
     void init() {
@@ -16,9 +16,7 @@ public class RegistrationPayloadTest {
         String email = "mcdostone@gmail.com";
         String uuid = "7128022b-9195-490d-9bc8-9b42ebe2a8e3";
         String password = "korben";
-        String passwordConfirmation = "korben";
-        this.payload = new RegistrationPayload();
-        this.payload.setPasswordConfirmation(passwordConfirmation);
+        this.payload = new LoginPayload();
         this.payload.setPassword(password);
         this.payload.setUsername(username);
         this.payload.setEmail(email);
@@ -28,6 +26,12 @@ public class RegistrationPayloadTest {
     @Test
     public void testIsValid() {
         assertTrue(this.payload.isValid(), "Payload should be valid");
+    }
+
+    @Test
+    public void testIsValidEmailRequired() {
+        this.payload.setEmail(null);
+        assertFalse(this.payload.isValid(true), "Payload should not be valid");
     }
 
     @Test
@@ -43,12 +47,6 @@ public class RegistrationPayloadTest {
     @Test
     public void testIsValidNullUuid() {
         assertTrue(this.payload.setUuid(null).isValid(), "payload should be valid");
-    }
-
-    @Test
-    public void testIsValidPasswordsAreDifferent() {
-        this.payload.setPasswordConfirmation("root");
-        assertFalse(this.payload.isValid(), "Payload should not be valid because of password confirmation");
     }
 
 }

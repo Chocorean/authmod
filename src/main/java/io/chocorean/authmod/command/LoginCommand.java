@@ -1,8 +1,8 @@
 package io.chocorean.authmod.command;
 
 import io.chocorean.authmod.AuthMod;
-import io.chocorean.authmod.authentication.AuthModule;
-import io.chocorean.authmod.authentication.datasource.IDataSourceStrategy;
+import io.chocorean.authmod.guard.authentication.Authenticator;
+import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
 import io.chocorean.authmod.event.Handler;
 import io.chocorean.authmod.model.IPlayer;
 import io.chocorean.authmod.model.Player;
@@ -24,13 +24,13 @@ public class LoginCommand implements ICommand {
 
     private static final Logger LOGGER = AuthMod.LOGGER;
     private final List<String> aliases;
-    private final AuthModule auth;
+    private final Authenticator authenticator;
 
     public LoginCommand(IDataSourceStrategy strategy){
         this.aliases = new ArrayList<>();
         this.aliases.add("login");
         this.aliases.add("log");
-        this.auth = new AuthModule(strategy);
+        this.authenticator = new Authenticator(strategy);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class LoginCommand implements ICommand {
                 loggedPlayer.setUsername(player.getDisplayNameString());
                 loggedPlayer.setUuid(EntityPlayer.getUUID(player.getGameProfile()).toString());
                 try {
-                    loggedPlayer = this.auth.login(loggedPlayer);
+                    this.authenticator.login(null);
                     if (loggedPlayer != null) {
                         LOGGER.info(sender.getName() + " authenticated");
                         Handler.authorizePlayer(player);

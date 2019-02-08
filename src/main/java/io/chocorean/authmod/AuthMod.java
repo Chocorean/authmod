@@ -1,8 +1,8 @@
 package io.chocorean.authmod;
 
-import io.chocorean.authmod.authentication.datasource.DatabaseSourceStrategy;
-import io.chocorean.authmod.authentication.datasource.FileDataSourceStrategy;
-import io.chocorean.authmod.authentication.datasource.IDataSourceStrategy;
+import io.chocorean.authmod.guard.datasource.DatabaseSourceStrategy;
+import io.chocorean.authmod.guard.datasource.FileDataSourceStrategy;
+import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
 import io.chocorean.authmod.command.LoggedCommand;
 import io.chocorean.authmod.command.LoginCommand;
 import io.chocorean.authmod.command.RegisterCommand;
@@ -57,7 +57,7 @@ public class AuthMod {
                 break;
             default:
                 AuthMod.strategy = null;
-                LOGGER.info("Unknown authentication strategy selected. Nothing will happen.");
+                LOGGER.info("Unknown guard strategy selected. Nothing will happen.");
         }
     }
 

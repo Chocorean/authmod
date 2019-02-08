@@ -1,8 +1,8 @@
 package io.chocorean.authmod.command;
 
 import io.chocorean.authmod.AuthMod;
-import io.chocorean.authmod.authentication.AuthModule;
-import io.chocorean.authmod.authentication.datasource.IDataSourceStrategy;
+import io.chocorean.authmod.guard.registration.Registrator;
+import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
 import io.chocorean.authmod.event.Handler;
 import io.chocorean.authmod.model.IPlayer;
 import io.chocorean.authmod.model.Player;
@@ -24,13 +24,13 @@ public class RegisterCommand implements ICommand {
 
     private static final Logger LOGGER = AuthMod.LOGGER;
     private final List<String> aliases;
-    private final AuthModule auth;
+    private final Registrator registrator;
 
     public RegisterCommand(IDataSourceStrategy strategy){
         aliases = new ArrayList<>();
         aliases.add("register");
         aliases.add("reg");
-        this.auth = new AuthModule(strategy);
+        this.registrator = new Registrator(strategy);
     }
 
     @Override
@@ -62,7 +62,7 @@ public class RegisterCommand implements ICommand {
                 playerToRegister.setPassword(args[1]);
                 playerToRegister.setUsername(player.getDisplayNameString());
                 try {
-                    this.auth.register(playerToRegister);
+                    this.registrator.register(null);
                     ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getSuccessMsg())));
                     Handler.authorizePlayer(player);
                 } catch (Exception e) {

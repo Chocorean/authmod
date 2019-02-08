@@ -1,7 +1,7 @@
-package io.chocorean.authmod.authentication;
+package io.chocorean.authmod.guard.authentication;
 
 import io.chocorean.authmod.AuthMod;
-import io.chocorean.authmod.authentication.datasource.IDataSourceStrategy;
+import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
 import io.chocorean.authmod.exception.BannedPlayerException;
 import io.chocorean.authmod.exception.DifferentUsernameException;
 import io.chocorean.authmod.exception.LoginException;

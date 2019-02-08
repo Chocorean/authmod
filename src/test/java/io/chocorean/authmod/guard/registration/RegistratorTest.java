@@ -1,8 +1,10 @@
-package io.chocorean.authmod.authentication;
+package io.chocorean.authmod.guard.registration;
 
-import io.chocorean.authmod.authentication.datasource.FileDataSourceStrategy;
-import io.chocorean.authmod.authentication.datasource.IDataSourceStrategy;
-import io.chocorean.authmod.exception.*;
+import io.chocorean.authmod.exception.AuthmodException;
+import io.chocorean.authmod.exception.InvalidEmailException;
+import io.chocorean.authmod.exception.PlayerAlreadyExistException;
+import io.chocorean.authmod.guard.datasource.FileDataSourceStrategy;
+import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
 import io.chocorean.authmod.model.IPlayer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

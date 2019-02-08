@@ -1,4 +1,4 @@
-package io.chocorean.authmod.authentication.db;
+package io.chocorean.authmod.guard.datasource.db;
 
 import java.sql.Connection;
 

@@ -1,4 +1,4 @@
-package io.chocorean.authmod.authentication.db;
+package io.chocorean.authmod.guard.datasource.db;
 
 import io.chocorean.authmod.AuthMod;
 

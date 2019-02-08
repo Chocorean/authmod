@@ -1,5 +1,7 @@
-package io.chocorean.authmod.authentication;
+package io.chocorean.authmod.guard;
 
+import io.chocorean.authmod.guard.authentication.LoginPayload;
+import io.chocorean.authmod.guard.registration.RegistrationPayload;
 import io.chocorean.authmod.model.IPlayer;
 import io.chocorean.authmod.model.Player;
 

@@ -1,10 +1,10 @@
 package io.chocorean.authmod.datasource;
 
 import io.chocorean.authmod.PlayerFactory;
-import io.chocorean.authmod.authentication.datasource.DatabaseSourceStrategy;
-import io.chocorean.authmod.authentication.datasource.IDataSourceStrategy;
-import io.chocorean.authmod.authentication.db.ConnectionFactory;
-import io.chocorean.authmod.authentication.db.IConnectionFactory;
+import io.chocorean.authmod.guard.datasource.DatabaseSourceStrategy;
+import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
+import io.chocorean.authmod.guard.datasource.db.ConnectionFactory;
+import io.chocorean.authmod.guard.datasource.db.IConnectionFactory;
 import io.chocorean.authmod.exception.AuthmodException;
 import io.chocorean.authmod.exception.PlayerAlreadyExistException;
 import io.chocorean.authmod.exception.RegistrationException;

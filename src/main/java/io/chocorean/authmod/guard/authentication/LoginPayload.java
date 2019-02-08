@@ -1,4 +1,7 @@
-package io.chocorean.authmod.authentication;
+package io.chocorean.authmod.guard.authentication;
+
+import io.chocorean.authmod.guard.IPayload;
+import io.chocorean.authmod.guard.validator.EmailValidator;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -27,6 +30,7 @@ public class LoginPayload implements IPayload {
 
     private Set<ConstraintViolation<IPayload>> errors;
 
+
     public LoginPayload() {
         this.errors = new HashSet<>();
     }
@@ -38,9 +42,17 @@ public class LoginPayload implements IPayload {
 
     @Override
     public boolean isValid() {
+        return this.isValid(false);
+    }
+
+    @Override
+    public boolean isValid(boolean emailRequired) {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
         this.errors = validator.validate(this);
+        if(emailRequired && (this.getEmail() == null)) {
+            this.errors.add(new EmailValidator());
+        }
         return this.errors.isEmpty();
     }
 
@@ -52,6 +64,8 @@ public class LoginPayload implements IPayload {
 
     @Override
     public LoginPayload setEmail(String email) {
+        if(email != null)
+            email = email.length() < 3 ? null : email;
         this.email = email;
         return this;
     }
