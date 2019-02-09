@@ -1,7 +1,5 @@
 package io.chocorean.authmod.guard.payload;
 
-import io.chocorean.authmod.guard.validator.EmailValidator;
-
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
