@@ -65,4 +65,9 @@ public class PlayerTest {
         assertFalse(this.player.isPremium(), "The player should not be premium");
     }
 
+    @Test
+    public void testToString()  {
+        assertEquals("{email, username}", player.toString(), "Player is described by an optional email and a username");
+    }
+
 }

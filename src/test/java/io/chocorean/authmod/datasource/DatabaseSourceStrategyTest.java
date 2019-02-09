@@ -87,9 +87,26 @@ public class DatabaseSourceStrategyTest {
     }
 
     @Test
+    public void testAddSQLError() throws AuthmodException, SQLException {
+        this.dataSource = new DatabaseSourceStrategy(connectionFactory);
+        this.player = PlayerFactory.create();
+        dataFile.delete();
+        boolean added = dataSource.add(this.player);
+        assertFalse(added, "The player should not be registered");
+    }
+
+    @Test
     public void testFindByEmail() throws RegistrationException, SQLException {
         this.registerPlayer();
             assertNotNull(dataSource.find(this.player.getEmail(), null), "The player should exist and be found");
+    }
+
+    @Test
+    public void testFindByEmailSQLError() throws RegistrationException, SQLException {
+        this.dataSource = new DatabaseSourceStrategy(connectionFactory);
+        this.player = PlayerFactory.create();
+        dataFile.delete();
+        assertNull(dataSource.find(this.player.getEmail(), null), "The player should not exist");
     }
 
     @Test

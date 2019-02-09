@@ -1,6 +1,9 @@
 package io.chocorean.authmod.command;
 
 import io.chocorean.authmod.AuthMod;
+import io.chocorean.authmod.exception.AuthmodException;
+import io.chocorean.authmod.guard.authentication.LoginPayload;
+import io.chocorean.authmod.guard.registration.RegistrationPayload;
 import io.chocorean.authmod.guard.registration.Registrator;
 import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
 import io.chocorean.authmod.event.Handler;
@@ -51,25 +54,28 @@ public class RegisterCommand implements ICommand {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
         EntityPlayer player = (EntityPlayer) sender;
-        if(Handler.isLogged(player)) {
-            ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getPlayerAlreadyLoggedMsg())));
-        } else {
-            if (args.length != 2) {
-                ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getWrongNumberOfArgsMsg())));
+        LOGGER.info(player.getDisplayNameString() + " is registering");
+        if(args.length == 2 || args.length == 3) {
+            if(Handler.isLogged(player)) {
+                ((EntityPlayerMP) sender).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getPlayerAlreadyLoggedMsg())));
             } else {
-                IPlayer playerToRegister = new Player();
-                playerToRegister.setEmail(args[0]);
-                playerToRegister.setPassword(args[1]);
-                playerToRegister.setUsername(player.getDisplayNameString());
+                RegistrationPayload payload = new RegistrationPayload();
+                payload.setEmail(args.length == 3 ? args[0] : null);
+                payload.setPassword(args.length == 3 ? args[1] : args[0]);
+                payload.setPasswordConfirmation(args.length == 3 ? args[2] : args[1]);
+                payload.setUsername(player.getDisplayNameString());
+                payload.setUuid(EntityPlayer.getUUID(player.getGameProfile()).toString());
                 try {
-                    this.registrator.register(null);
-                    ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getSuccessMsg())));
+                    this.registrator.register(payload);
                     Handler.authorizePlayer(player);
-                } catch (Exception e) {
+                } catch (AuthmodException e) {
                     LOGGER.error(e.getMessage());
                     ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString(e.getMessage())));
                 }
             }
+        }
+        else {
+            ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString(this.getUsage(sender))));
         }
     }
 

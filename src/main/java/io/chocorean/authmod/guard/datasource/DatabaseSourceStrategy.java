@@ -26,7 +26,7 @@ public class DatabaseSourceStrategy implements IDataSourceStrategy {
     public IPlayer find(String email, String username) {
         IPlayer p;
         try {
-            p = this.playersDAO.findFirst(new Player().setEmail(email).setUsername(username));
+            p = this.playersDAO.find(new Player().setEmail(email).setUsername(username));
             return p;
         } catch(SQLException e) {
             LOGGER.catching(Level.ERROR, e);
@@ -53,7 +53,7 @@ public class DatabaseSourceStrategy implements IDataSourceStrategy {
     @Override
     public boolean exist(IPlayer player) {
         try {
-            return this.playersDAO.findFirst(player) != null;
+            return this.playersDAO.find(player) != null;
         } catch (SQLException e) {
             LOGGER.catching(Level.ERROR, e);
         }

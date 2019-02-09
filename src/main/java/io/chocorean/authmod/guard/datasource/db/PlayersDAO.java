@@ -70,39 +70,7 @@ public class PlayersDAO implements IPlayersDAO<IPlayer> {
     }
 
     @Override
-    public Player findById(int id) throws SQLException {
-        try(Connection conn = this.connectionFactory.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(String.format("SELECT * FROM %s WHERE id = ?", this.table));
-            ResultSet rs = stmt.executeQuery()) {
-            stmt.setInt(1, id);
-            return createPlayer(rs);
-        }
-    }
-
-    @Override
-    public List<IPlayer> findAll() throws SQLException {
-        List<IPlayer> players = new ArrayList<>();
-        try(Connection conn = this.connectionFactory.getConnection();
-            Statement stmt = conn.createStatement();
-            ResultSet rs  = stmt.executeQuery(String.format("SELECT * FROM %s", this.table))) {
-            while(rs.next())
-                players.add(this.createPlayer(rs, false));
-        }
-        return players;
-    }
-
-    @Override
-    public Player findByEmail(String email) throws SQLException {
-        try(Connection conn = this.connectionFactory.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(String.format("SELECT * FROM %s WHERE %s = ?", this.table, this.columns.get("email")))) {
-            stmt.setString(1, email);
-            ResultSet rs = stmt.executeQuery();
-            return createPlayer(rs);
-        }
-    }
-
-    @Override
-    public IPlayer findFirst(IPlayer player) throws SQLException {
+    public IPlayer find(IPlayer player) throws SQLException {
         try(Connection conn = this.connectionFactory.getConnection();
             PreparedStatement stmt = conn.prepareStatement(String.format("SELECT * FROM %s WHERE %s = ? OR %s = ?",
                     this.table,

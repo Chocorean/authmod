@@ -1,7 +1,9 @@
 package io.chocorean.authmod.command;
 
 import io.chocorean.authmod.AuthMod;
+import io.chocorean.authmod.exception.LoginException;
 import io.chocorean.authmod.guard.authentication.Authenticator;
+import io.chocorean.authmod.guard.authentication.LoginPayload;
 import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
 import io.chocorean.authmod.event.Handler;
 import io.chocorean.authmod.model.IPlayer;
@@ -51,38 +53,33 @@ public class LoginCommand implements ICommand {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
         EntityPlayer player = (EntityPlayer) sender;
-        IPlayer loggedPlayer = new Player();
-        if(Handler.isLogged(player)) {
-            LOGGER.info("User %s tried to sign in twice.", loggedPlayer.getUsername());
-            ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getPlayerAlreadyLoggedMsg())));
-        } else {
-            int numberOfArgs = AuthMod.getConfig().getEmailOnLogin() ? 2 : 1;
-            if(args.length == numberOfArgs) {
-                loggedPlayer.setEmail(numberOfArgs == 1 ? null : args[0]);
-                loggedPlayer.setPassword(args[numberOfArgs == 1 ? 0 : 1]);
-                loggedPlayer.setUsername(player.getDisplayNameString());
-                loggedPlayer.setUuid(EntityPlayer.getUUID(player.getGameProfile()).toString());
+        LOGGER.info(player.getDisplayNameString() + " is signin in");
+        if(args.length == 1 || args.length == 2) {
+            if(Handler.isLogged(player)) {
+                LOGGER.info("User %s tried to sign in twice.", player.getDisplayNameString());
+                ((EntityPlayerMP) sender).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getPlayerAlreadyLoggedMsg())));
+            } else {
+                LoginPayload payload = new LoginPayload();
+                payload.setEmail(args.length == 2 ? args[0] : null);
+                payload.setPassword(args.length == 2 ? args[1] : args[0]);
+                payload.setUsername(player.getDisplayNameString());
+                payload.setUuid(EntityPlayer.getUUID(player.getGameProfile()).toString());
                 try {
-                    this.authenticator.login(null);
-                    if (loggedPlayer != null) {
-                        LOGGER.info(sender.getName() + " authenticated");
+                    boolean correct = this.authenticator.login(payload);
+                    if(correct) {
                         Handler.authorizePlayer(player);
-                        ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getSuccessMsg())));
-                        ((EntityPlayerMP) sender).setPositionAndUpdate(
-                                player.getPosition().getX(),
-                                player.getPosition().getY(),
-                                player.getPosition().getZ()
-                        );
+                    } else {
+                        ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString("wrong")));
                     }
-                } catch (Exception e) {
+                } catch (LoginException e) {
                     LOGGER.error(e.getMessage());
                     ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString(e.getMessage())));
                 }
             }
-            else {
-                ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getWrongNumberOfArgsMsg())));
-            }
+        } else {
+            ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString(this.getUsage(sender))));
         }
+
     }
 
     @Override

@@ -10,11 +10,14 @@ import net.minecraft.network.play.server.SPacketChat;
 import net.minecraft.network.play.server.SPacketDisconnect;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.common.config.Config;
+import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -158,5 +161,13 @@ public class Handler {
 
     public static boolean isLogged(EntityPlayer player) {
         return logged.getOrDefault(player, false);
+    }
+
+
+    @SubscribeEvent
+    public static void onConfigChanged(final ConfigChangedEvent.OnConfigChangedEvent event) {
+        if (event.getModID().equals(AuthMod.MODID)) {
+            ConfigManager.sync(AuthMod.MODID, Config.Type.INSTANCE);
+        }
     }
 }

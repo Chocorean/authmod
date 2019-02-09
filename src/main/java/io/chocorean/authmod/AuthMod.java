@@ -25,7 +25,7 @@ import java.sql.SQLException;
 @Mod(modid = AuthMod.MODID, name = AuthMod.NAME, version = AuthMod.VERSION, serverSideOnly = true, acceptableRemoteVersions = "*")
 public class AuthMod {
 
-    static final String MODID = "authmod";
+    public static final String MODID = "authmod";
     static final String NAME = "AuthMod";
     public static final String VERSION = "2.7";
     private static final String COMMON_PROXY = "io.chocorean.authmod.proxy.CommonProxy";
@@ -39,8 +39,8 @@ public class AuthMod {
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) throws Exception {
         AuthMod.LOGGER = event.getModLog();
-        config = new AuthModConfig(event.getSuggestedConfigurationFile());
-        switch (config.getAuthenticationStrategy().toUpperCase()) {
+        // config = new AuthModConfig(event.getSuggestedConfigurationFile());
+        /*switch (config.getAuthenticationStrategy().toUpperCase()) {
             case "DATABASE":
                 try {
                     AuthMod.strategy = new DatabaseSourceStrategy(null);
@@ -58,7 +58,7 @@ public class AuthMod {
             default:
                 AuthMod.strategy = null;
                 LOGGER.info("Unknown guard strategy selected. Nothing will happen.");
-        }
+        }*/
     }
 
     @Mod.EventHandler
@@ -68,7 +68,7 @@ public class AuthMod {
 
     @Mod.EventHandler
     public void serverStarting(FMLServerStartingEvent event) {
-        if(strategy != null) {
+        /*if(strategy != null) {
             if(config.isLoginEnabled()) {
                 LOGGER.info("Registering AuthMod event handler");
                 MinecraftForge.EVENT_BUS.register(new Handler());
@@ -81,7 +81,7 @@ public class AuthMod {
                 LOGGER.info("Registering AuthMod /register command");
                 event.registerServerCommand(new RegisterCommand(AuthMod.strategy));
             }
-        }
+        }*/
     }
 
     public static AuthModConfig getConfig() {
