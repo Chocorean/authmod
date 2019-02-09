@@ -1,17 +1,21 @@
 package io.chocorean.authmod.datasource;
 
 import io.chocorean.authmod.PlayerFactory;
-import io.chocorean.authmod.guard.datasource.FileDataSourceStrategy;
-import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
 import io.chocorean.authmod.exception.AuthmodException;
 import io.chocorean.authmod.exception.PlayerAlreadyExistException;
 import io.chocorean.authmod.exception.RegistrationException;
+import io.chocorean.authmod.guard.datasource.FileDataSourceStrategy;
+import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
 import io.chocorean.authmod.model.IPlayer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -52,6 +56,17 @@ public class FileDataSourceStrategyTest {
         boolean added = this.registerPlayer();
         assertTrue(added, "The player should be registered");
         assertThrows(PlayerAlreadyExistException.class, this::registerPlayer);
+    }
+
+    @Test
+    public void testFileModified() throws RegistrationException, IOException, InterruptedException {
+        this.registerPlayer();
+        Thread.sleep(1000);
+        BufferedWriter writer = new BufferedWriter(new FileWriter(this.dataFile, true));
+        writer.append("test@test.fr, mcdostone, password, false");
+        writer.flush();
+        writer.close();
+        assertNotNull(this.dataSource.find(null, "mcdostone"),"The player should exist, even if the file is modified by something external");
     }
 
     @Test

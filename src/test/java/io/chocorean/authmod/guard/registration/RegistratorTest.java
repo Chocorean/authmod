@@ -5,6 +5,7 @@ import io.chocorean.authmod.exception.InvalidEmailException;
 import io.chocorean.authmod.exception.PlayerAlreadyExistException;
 import io.chocorean.authmod.guard.datasource.FileDataSourceStrategy;
 import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
+import io.chocorean.authmod.guard.payload.RegistrationPayload;
 import io.chocorean.authmod.model.IPlayer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -68,9 +69,15 @@ public class RegistratorTest {
     }
 
     @Test
-    public void testLoginNullParams() throws AuthmodException {
+    public void testRegisterNullParams() throws AuthmodException {
         boolean registered = this.registrator.register(null);
         assertFalse(registered, "Can't register the player, no payload provided");
+    }
+
+    @Test
+    public void testRegisterEmailRequired() throws AuthmodException {
+        this.registrator = new Registrator(this.dataSource);
+        assertFalse(this.registrator.register(this.payload.setEmail(null).setEmailRequired(true)), "Can't register the player, email is required");
     }
 
 }

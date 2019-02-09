@@ -1,4 +1,4 @@
-package io.chocorean.authmod.guard.authentication;
+package io.chocorean.authmod.guard.payload;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,21 +31,23 @@ public class LoginPayloadTest {
 
     @Test
     public void testIsValidEmailRequired() {
+        this.payload.setEmailRequired(true);
         this.payload.setEmail(null);
-        assertFalse(this.payload.isValid(true), "Payload should not be valid");
-        assertTrue(this.payload.getErrors().size() == 1, "payload shoud have only 1 error");
+        assertFalse(this.payload.isValid(), "Payload should not be valid");
+        assertTrue(this.payload.isEmailRequired(), "payload must have email");
+        assertTrue(this.payload.getErrors().size() == 1, "payload should have only 1 error");
     }
 
     @Test
     public void testIsValidShortPassword() {
         assertFalse(this.payload.setPassword("u").isValid(), "Payload should not be valid, password is too short");
-        assertTrue(this.payload.getErrors().size() == 1, "payload shoud have only 1 error");
+        assertTrue(this.payload.getErrors().size() == 1, "payload should have only 1 error");
     }
 
     @Test
     public void testIsValidIncorrectUuid() {
         assertFalse(this.payload.setUuid("uuid").isValid(), "payload should not be valid because of UUID");
-        assertTrue(this.payload.getErrors().size() == 1, "payload shoud have only 1 error");
+        assertTrue(this.payload.getErrors().size() == 1, "payload should have only 1 error");
     }
 
     @Test

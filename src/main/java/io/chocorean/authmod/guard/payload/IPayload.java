@@ -1,4 +1,4 @@
-package io.chocorean.authmod.guard;
+package io.chocorean.authmod.guard.payload;
 
 import javax.validation.ConstraintViolation;
 import java.util.Set;
@@ -7,11 +7,12 @@ public interface IPayload {
 
     IPayload setPassword(String password);
     boolean isValid();
-    boolean isValid(boolean emailRequired);
     IPayload setUsername(String username);
     IPayload setUuid(String uuid);
     String getUuid();
     IPayload setEmail(String email);
+    boolean isEmailRequired();
+    IPayload setEmailRequired(boolean emailRequired);
     String getEmail();
     String getUsername();
     String getPassword();

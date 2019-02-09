@@ -8,6 +8,8 @@ import io.chocorean.authmod.model.Player;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +20,12 @@ public class FileDataSourceStrategy implements IDataSourceStrategy {
     private long lastModification;
     private static final Logger LOGGER = AuthMod.LOGGER;
     private static final String SEPARATOR = ",";
+
+    public FileDataSourceStrategy() {
+        this.authFile = Paths.get(System.getProperty("java.io.tmpdir"), "authmod.csv").toFile();;
+        this.players = new ArrayList<>();
+        this.readFile();
+    }
 
     public FileDataSourceStrategy(File authFile) {
         this.authFile = authFile;
@@ -56,11 +64,6 @@ public class FileDataSourceStrategy implements IDataSourceStrategy {
     @Override
     public IPlayer find(String email, String username) {
         this.reloadFile();
-        /*if(email != null && username != null) {
-            return this.players.stream()
-                    .filter(tmp -> tmp.getUsername().equals(username) && tmp.getEmail().equals(email))
-                    .findFirst().orElse(null);
-        }*/
         if(email != null) {
             return this.players.stream()
                     .filter(tmp -> tmp.getEmail().equals(email))
@@ -111,6 +114,7 @@ public class FileDataSourceStrategy implements IDataSourceStrategy {
                         Boolean.toString(entry.isBanned())));
                 bw.newLine();
             }
+            this.lastModification = Files.getLastModifiedTime(this.authFile.toPath()).toMillis();
         } catch (IOException e) { LOGGER.catching(e); }
     }
 

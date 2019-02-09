@@ -1,16 +1,8 @@
 package io.chocorean.authmod;
 
-import io.chocorean.authmod.guard.datasource.DatabaseSourceStrategy;
-import io.chocorean.authmod.guard.datasource.FileDataSourceStrategy;
-import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
-import io.chocorean.authmod.command.LoggedCommand;
-import io.chocorean.authmod.command.LoginCommand;
-import io.chocorean.authmod.command.RegisterCommand;
 import io.chocorean.authmod.config.AuthModConfig;
-import io.chocorean.authmod.event.Handler;
-import io.chocorean.authmod.exception.InvalidSQLTableException;
+import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
 import io.chocorean.authmod.proxy.CommonProxy;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -18,9 +10,6 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import org.apache.logging.log4j.Logger;
-
-import java.nio.file.Paths;
-import java.sql.SQLException;
 
 @Mod(modid = AuthMod.MODID, name = AuthMod.NAME, version = AuthMod.VERSION, serverSideOnly = true, acceptableRemoteVersions = "*")
 public class AuthMod {

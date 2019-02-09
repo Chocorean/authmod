@@ -1,4 +1,4 @@
-package io.chocorean.authmod.guard.registration;
+package io.chocorean.authmod.guard.payload;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,8 +33,10 @@ public class RegistrationPayloadTest {
 
     @Test
     public void testIsValidEmailRequired() {
+        this.payload.setEmailRequired(true);
         this.payload.setEmail(null);
-        assertFalse(this.payload.isValid(true), "Payload should not be valid");
+        assertTrue(this.payload.isEmailRequired(), "payload must have email");
+        assertFalse(this.payload.isValid(), "Payload should not be valid, email is missing");
     }
 
     @Test

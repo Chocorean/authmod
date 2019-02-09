@@ -1,12 +1,12 @@
-package io.chocorean.authmod.guard.authentication;
+package io.chocorean.authmod.guard.payload;
 
-import io.chocorean.authmod.guard.IPayload;
 import io.chocorean.authmod.guard.validator.EmailValidator;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -30,8 +30,13 @@ public class LoginPayload implements IPayload {
 
     private Set<ConstraintViolation<IPayload>> errors;
 
+    private boolean emailRequired;
 
     public LoginPayload() {
+        this(false);
+    }
+
+    public LoginPayload(boolean emailRequired) {
         this.errors = new HashSet<>();
     }
 
@@ -42,17 +47,9 @@ public class LoginPayload implements IPayload {
 
     @Override
     public boolean isValid() {
-        return this.isValid(false);
-    }
-
-    @Override
-    public boolean isValid(boolean emailRequired) {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
         this.errors = validator.validate(this);
-        if(emailRequired && (this.getEmail() == null)) {
-            this.errors.add(new EmailValidator());
-        }
         return this.errors.isEmpty();
     }
 
@@ -67,6 +64,17 @@ public class LoginPayload implements IPayload {
         if(email != null)
             email = email.length() < 3 ? null : email;
         this.email = email;
+        return this;
+    }
+
+    @Override
+    public boolean isEmailRequired() {
+        return this.emailRequired;
+    }
+
+    @Override
+    public IPayload setEmailRequired(boolean emailRequired) {
+        this.emailRequired = emailRequired;
         return this;
     }
 
@@ -88,6 +96,11 @@ public class LoginPayload implements IPayload {
     @Override
     public Set<ConstraintViolation<IPayload>> getErrors() {
         return this.errors;
+    }
+
+    @AssertTrue
+    private boolean isEmailDefined() {
+        return !this.emailRequired || this.getEmail() != null;
     }
 
     @Override

@@ -6,6 +6,7 @@ import io.chocorean.authmod.exception.BannedPlayerException;
 import io.chocorean.authmod.exception.DifferentUsernameException;
 import io.chocorean.authmod.exception.LoginException;
 import io.chocorean.authmod.exception.PlayerNotFoundException;
+import io.chocorean.authmod.guard.payload.LoginPayload;
 import io.chocorean.authmod.model.IPlayer;
 import org.apache.logging.log4j.Logger;
 import org.mindrot.jbcrypt.BCrypt;

@@ -67,7 +67,9 @@ public class PlayerTest {
 
     @Test
     public void testToString()  {
-        assertEquals("{email, username}", player.toString(), "Player is described by an optional email and a username");
+        player.setUsername("korben");
+        player.setEmail("korben.dallas@gmail.com");
+        assertEquals("{korben.dallas@gmail.com, korben}", player.toString(), "Player is described by an optional email and a username");
     }
 
 }

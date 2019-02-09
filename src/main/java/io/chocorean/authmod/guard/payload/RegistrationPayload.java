@@ -1,8 +1,4 @@
-package io.chocorean.authmod.guard.registration;
-
-import io.chocorean.authmod.guard.IPayload;
-import io.chocorean.authmod.guard.authentication.LoginPayload;
-import io.chocorean.authmod.guard.validator.EmailValidator;
+package io.chocorean.authmod.guard.payload;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -15,6 +11,7 @@ import java.util.Set;
 
 public class RegistrationPayload implements IPayload {
 
+    private final boolean emailRequired;
     @NotNull
     private LoginPayload payload;
 
@@ -23,7 +20,12 @@ public class RegistrationPayload implements IPayload {
     private Set<ConstraintViolation<IPayload>> errors;
 
     public RegistrationPayload() {
+        this(false);
+    }
+
+    public RegistrationPayload(boolean emailRequired) {
         this.payload = new LoginPayload();
+        this.emailRequired = true;
         this.errors = new HashSet<>();
     }
 
@@ -35,18 +37,10 @@ public class RegistrationPayload implements IPayload {
 
     @Override
     public boolean isValid() {
-        return this.isValid(false);
-    }
-
-    @Override
-    public boolean isValid(boolean emailRequired) {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
-        this.errors = validator.validate(this.payload);
+        this.errors = validator.validate(this.payload);;
         this.errors.addAll(validator.validate(this));
-        if(emailRequired && (this.getEmail() == null)) {
-            this.errors.add(new EmailValidator());
-        }
         return this.errors.isEmpty();
     }
 
@@ -70,6 +64,17 @@ public class RegistrationPayload implements IPayload {
     @Override
     public RegistrationPayload setEmail(String email) {
         this.payload.setEmail(email);
+        return this;
+    }
+
+    @Override
+    public boolean isEmailRequired() {
+        return this.payload.isEmailRequired();
+    }
+
+    @Override
+    public RegistrationPayload setEmailRequired(boolean emailRequired) {
+        this.payload.setEmailRequired(emailRequired);
         return this;
     }
 

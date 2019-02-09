@@ -1,12 +1,11 @@
 package io.chocorean.authmod.guard.authentication;
 
 import io.chocorean.authmod.guard.PlayerFactory;
-import io.chocorean.authmod.guard.authentication.Authenticator;
-import io.chocorean.authmod.guard.authentication.LoginPayload;
 import io.chocorean.authmod.guard.datasource.FileDataSourceStrategy;
 import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
 import io.chocorean.authmod.exception.*;
-import io.chocorean.authmod.guard.registration.RegistrationPayload;
+import io.chocorean.authmod.guard.payload.LoginPayload;
+import io.chocorean.authmod.guard.payload.RegistrationPayload;
 import io.chocorean.authmod.guard.registration.Registrator;
 import io.chocorean.authmod.model.IPlayer;
 import org.junit.jupiter.api.BeforeEach;

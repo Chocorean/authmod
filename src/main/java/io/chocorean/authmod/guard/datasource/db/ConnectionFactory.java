@@ -1,6 +1,7 @@
 package io.chocorean.authmod.guard.datasource.db;
 
 import io.chocorean.authmod.AuthMod;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -8,6 +9,7 @@ import java.sql.SQLException;
 
 public class ConnectionFactory implements IConnectionFactory{
 
+    private static final Logger LOGGER = AuthMod.LOGGER;
     private String url;
     private String user;
     private String password;
@@ -23,15 +25,34 @@ public class ConnectionFactory implements IConnectionFactory{
     }
 
     public ConnectionFactory(String dialect, String host, int port, String database, String user, String password) {
-        this(String.format("jdbc:%s://%s:%d/%s", dialect, host, port, database), user, password);
+        StringBuilder urlBuilder = new StringBuilder();
+        urlBuilder.append("jdbc:");
+        urlBuilder.append(dialect);
+        if(host != null) {
+            urlBuilder.append("://" + host);
+            urlBuilder.append(":" + port);
+            urlBuilder.append("/" + database);
+        } else {
+            urlBuilder.append(":" + database);
+        }
+        this.url = urlBuilder.toString();
+        this.user = user;
+        this.password = password;
     }
 
-    public Connection getConnection() {
+    @Override
+    public Connection getConnection() throws SQLException {
         try {
             return user == null ? DriverManager.getConnection(this.url)  : DriverManager.getConnection(this.url, this.user, this.password);
         } catch (SQLException ex) {
-            throw new RuntimeException(AuthMod.getConfig().getDatabaseErrorMsg(), ex);
+            LOGGER.error(ex.getStackTrace());
+            throw new SQLException(ex);
         }
+    }
+
+    @Override
+    public String getURL() {
+        return this.url;
     }
 
 }

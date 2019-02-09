@@ -1,13 +1,14 @@
 package io.chocorean.authmod.guard.registration;
 
 import io.chocorean.authmod.AuthMod;
-import io.chocorean.authmod.guard.IPayload;
+import io.chocorean.authmod.guard.payload.IPayload;
 import io.chocorean.authmod.guard.MappingConstraintViolationsToExceptions;
 import io.chocorean.authmod.guard.PlayerFactory;
 import io.chocorean.authmod.guard.datasource.FileDataSourceStrategy;
 import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
 import io.chocorean.authmod.exception.AuthmodException;
 import io.chocorean.authmod.exception.PlayerAlreadyExistException;
+import io.chocorean.authmod.guard.payload.RegistrationPayload;
 import io.chocorean.authmod.model.IPlayer;
 import org.apache.logging.log4j.Logger;
 import org.mindrot.jbcrypt.BCrypt;

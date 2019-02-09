@@ -1,14 +1,12 @@
 package io.chocorean.authmod.command;
 
 import io.chocorean.authmod.AuthMod;
+import io.chocorean.authmod.config.ModConfig;
 import io.chocorean.authmod.exception.AuthmodException;
-import io.chocorean.authmod.guard.authentication.LoginPayload;
-import io.chocorean.authmod.guard.registration.RegistrationPayload;
+import io.chocorean.authmod.guard.payload.RegistrationPayload;
 import io.chocorean.authmod.guard.registration.Registrator;
 import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
 import io.chocorean.authmod.event.Handler;
-import io.chocorean.authmod.model.IPlayer;
-import io.chocorean.authmod.model.Player;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -59,7 +57,7 @@ public class RegisterCommand implements ICommand {
             if(Handler.isLogged(player)) {
                 ((EntityPlayerMP) sender).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getPlayerAlreadyLoggedMsg())));
             } else {
-                RegistrationPayload payload = new RegistrationPayload();
+                RegistrationPayload payload = new RegistrationPayload(ModConfig.emailRequired);
                 payload.setEmail(args.length == 3 ? args[0] : null);
                 payload.setPassword(args.length == 3 ? args[1] : args[0]);
                 payload.setPasswordConfirmation(args.length == 3 ? args[2] : args[1]);

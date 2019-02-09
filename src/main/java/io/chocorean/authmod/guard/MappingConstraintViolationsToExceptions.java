@@ -1,13 +1,14 @@
 package io.chocorean.authmod.guard;
 
 import io.chocorean.authmod.exception.InvalidEmailException;
+import io.chocorean.authmod.guard.payload.IPayload;
 
 import javax.validation.ConstraintViolation;
 
 public class MappingConstraintViolationsToExceptions {
 
     public static void throwException(ConstraintViolation<IPayload> c) throws InvalidEmailException {
-        if(getPropery(c).equals("email") && getAnnotationType(c).equals(javax.validation.constraints.Email.class)) {
+        if(getProperty(c).equals("email") && getAnnotationType(c).equals(javax.validation.constraints.Email.class)) {
             throw new InvalidEmailException("test");
         }
     }
@@ -16,7 +17,7 @@ public class MappingConstraintViolationsToExceptions {
         return c.getConstraintDescriptor().getAnnotation().annotationType();
     }
 
-    private static String getPropery(ConstraintViolation<IPayload> c) {
+    private static String getProperty(ConstraintViolation<IPayload> c) {
         return c.getPropertyPath().toString();
     }
 }
