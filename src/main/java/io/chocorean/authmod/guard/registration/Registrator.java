@@ -10,64 +10,48 @@ import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
 import io.chocorean.authmod.guard.payload.IPayload;
 import io.chocorean.authmod.guard.payload.RegistrationPayload;
 import io.chocorean.authmod.model.IPlayer;
-
 import java.nio.file.Paths;
 import java.util.Set;
-
 import javax.validation.ConstraintViolation;
-
 import org.apache.logging.log4j.Logger;
 import org.mindrot.jbcrypt.BCrypt;
 
 public class Registrator {
-    private static final Logger LOGGER = AuthMod.LOGGER;
-    private final IDataSourceStrategy dataSource;
+  private static final Logger LOGGER = AuthMod.LOGGER;
+  private final IDataSourceStrategy dataSource;
 
-    public Registrator() {
-        this(
-            new FileDataSourceStrategy(
-                Paths.get(
-                    System.getProperty("java.io.tmpdir"),
-                    "authmod.csv"
-                ).toFile()
-            )
-        );
-    }
+  public Registrator() {
+    this(
+        new FileDataSourceStrategy(
+            Paths.get(System.getProperty("java.io.tmpdir"), "authmod.csv").toFile()));
+  }
 
-    public Registrator(IDataSourceStrategy dataSourceStrategy) {
-        this.dataSource = dataSourceStrategy;
-    }
+  public Registrator(IDataSourceStrategy dataSourceStrategy) {
+    this.dataSource = dataSourceStrategy;
+  }
 
-    public boolean register(RegistrationPayload payload)
-        throws
-            AuthmodException {
-        if (payload != null) {
-            if (payload.isValid()) {
-                IPlayer player = PlayerFactory.createFromRegistrationPayload(
-                    payload
-                );
-                if (this.dataSource.exist(player)) {
-                    throw new PlayerAlreadyExistException();
-                } else {
-                    LOGGER.info(payload.getUsername() + " is registering");
-                    player.setPassword(
-                        BCrypt.hashpw(player.getPassword(), BCrypt.gensalt())
-                    );
-                    return this.dataSource.add(player);
-                }
-            } else {
-                Set<ConstraintViolation<IPayload>> errors = payload.getErrors();
-                for (ConstraintViolation<IPayload> c : errors) {
-                    MappingConstraintViolationsToExceptions.throwException(c);
-                }
-            }
+  public boolean register(RegistrationPayload payload) throws AuthmodException {
+    if (payload != null) {
+      if (payload.isValid()) {
+        IPlayer player = PlayerFactory.createFromRegistrationPayload(payload);
+        if (this.dataSource.exist(player)) {
+          throw new PlayerAlreadyExistException();
+        } else {
+          LOGGER.info(payload.getUsername() + " is registering");
+          player.setPassword(BCrypt.hashpw(player.getPassword(), BCrypt.gensalt()));
+          return this.dataSource.add(player);
         }
-        return false;
+      } else {
+        Set<ConstraintViolation<IPayload>> errors = payload.getErrors();
+        for (ConstraintViolation<IPayload> c : errors) {
+          MappingConstraintViolationsToExceptions.throwException(c);
+        }
+      }
     }
+    return false;
+  }
 
-    public IDataSourceStrategy getDataSourceStrategy() {
-        return this.dataSource;
-    }
-
+  public IDataSourceStrategy getDataSourceStrategy() {
+    return this.dataSource;
+  }
 }
-

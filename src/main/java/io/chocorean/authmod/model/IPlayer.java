@@ -2,27 +2,25 @@ package io.chocorean.authmod.model;
 
 public interface IPlayer {
 
-    boolean isBanned();
+  boolean isBanned();
 
-    IPlayer setBanned(boolean ban);
+  IPlayer setBanned(boolean ban);
 
-    IPlayer setPassword(String password);
+  IPlayer setPassword(String password);
 
-    String getPassword();
+  String getPassword();
 
-    IPlayer setEmail(String email);
+  IPlayer setEmail(String email);
 
-    String getEmail();
+  String getEmail();
 
-    IPlayer setUsername(String username);
+  IPlayer setUsername(String username);
 
-    String getUsername();
+  String getUsername();
 
-    boolean isPremium();
+  boolean isPremium();
 
-    IPlayer setUuid(String uuid);
+  IPlayer setUuid(String uuid);
 
-    String getUuid();
-
+  String getUuid();
 }
-
