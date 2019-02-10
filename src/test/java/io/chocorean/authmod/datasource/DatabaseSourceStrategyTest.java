@@ -16,7 +16,7 @@ import java.sql.Statement;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class DatabaseSourceStrategyTest {
+class DatabaseSourceStrategyTest {
   private IPlayer player;
   private IDataSourceStrategy dataSource;
   private IConnectionFactory connectionFactory;
@@ -27,19 +27,19 @@ public class DatabaseSourceStrategyTest {
     DBHelpers.initTable(this.connectionFactory);
   }
 
-  private boolean registerPlayer() throws SQLException, RegistrationException {
+  boolean registerPlayer() throws SQLException, RegistrationException {
     this.dataSource = new DatabaseSourceStrategy(connectionFactory);
     this.player = PlayerFactory.create();
     return dataSource.add(this.player);
   }
 
   @Test
-  public void testConstructor() throws SQLException {
+  void testConstructor() throws SQLException {
     new DatabaseSourceStrategy(connectionFactory);
   }
 
   @Test
-  public void testConstructorTableIsDifferent() throws SQLException {
+  void testConstructorTableIsDifferent() throws SQLException {
     DBHelpers.dataFile.delete();
     Statement stmt = connectionFactory.getConnection().createStatement();
     stmt.executeUpdate(
@@ -51,20 +51,20 @@ public class DatabaseSourceStrategyTest {
   }
 
   @Test
-  public void testAdd() throws AuthmodException, SQLException {
+  void testAdd() throws AuthmodException, SQLException {
     boolean added = this.registerPlayer();
     assertTrue(added, "The player should be registered");
   }
 
   @Test
-  public void testAddDoublon() throws AuthmodException, SQLException {
+  void testAddDoublon() throws AuthmodException, SQLException {
     boolean added = this.registerPlayer();
     assertTrue(added, "The player should be registered");
     assertThrows(PlayerAlreadyExistException.class, this::registerPlayer);
   }
 
   @Test
-  public void testAddSQLError() throws AuthmodException, SQLException {
+  void testAddSQLError() throws AuthmodException, SQLException {
     this.dataSource = new DatabaseSourceStrategy(connectionFactory);
     this.player = PlayerFactory.create();
     DBHelpers.dataFile.delete();
@@ -73,14 +73,14 @@ public class DatabaseSourceStrategyTest {
   }
 
   @Test
-  public void testFindByEmail() throws RegistrationException, SQLException {
+  void testFindByEmail() throws RegistrationException, SQLException {
     this.registerPlayer();
     assertNotNull(
         dataSource.find(this.player.getEmail(), null), "The player should exist and be found");
   }
 
   @Test
-  public void testFindByEmailSQLError() throws SQLException {
+  void testFindByEmailSQLError() throws SQLException {
     this.dataSource = new DatabaseSourceStrategy(connectionFactory);
     this.player = PlayerFactory.create();
     DBHelpers.dataFile.delete();
@@ -88,20 +88,20 @@ public class DatabaseSourceStrategyTest {
   }
 
   @Test
-  public void testFindByUsername() throws RegistrationException, SQLException {
+  void testFindByUsername() throws RegistrationException, SQLException {
     this.registerPlayer();
     assertNotNull(
         dataSource.find(null, player.getUsername()), "The player should exist and be found");
   }
 
   @Test
-  public void testFindNotExist() throws RegistrationException, SQLException {
+  void testFindNotExist() throws RegistrationException, SQLException {
     this.registerPlayer();
     assertNull(dataSource.find("test@test.fr", "test"), "The player should not exist");
   }
 
   @Test
-  public void testFindByUsernameOrEmail() throws RegistrationException, SQLException {
+  void testFindByUsernameOrEmail() throws RegistrationException, SQLException {
     this.registerPlayer();
     assertNotNull(
         dataSource.find(player.getEmail(), player.getUsername()),
@@ -109,7 +109,7 @@ public class DatabaseSourceStrategyTest {
   }
 
   @Test
-  public void testFindNullParams() throws AuthmodException, SQLException {
+  void testFindNullParams() throws AuthmodException, SQLException {
     this.registerPlayer();
     assertNull(dataSource.find(null, null), "It should return null");
   }

@@ -5,6 +5,8 @@ import io.chocorean.authmod.model.Player;
 
 public class PlayerFactory {
 
+  private PlayerFactory() {}
+
   public static IPlayer create() {
     IPlayer player = new Player();
     player.setEmail("ronnie.james@dio.org");

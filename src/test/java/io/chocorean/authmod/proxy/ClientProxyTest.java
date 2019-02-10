@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class ClientProxyTest {
+class ClientProxyTest {
   private ClientProxy clientProxy;
 
   @BeforeEach
@@ -14,7 +14,7 @@ public class ClientProxyTest {
   }
 
   @Test
-  public void testRegisterRenderers() {
+  void testRegisterRenderers() {
     assertDoesNotThrow(() -> this.clientProxy.registerRenderers());
   }
 }

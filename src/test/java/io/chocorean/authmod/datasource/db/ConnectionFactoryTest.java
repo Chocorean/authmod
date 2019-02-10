@@ -9,17 +9,17 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import org.junit.jupiter.api.Test;
 
-public class ConnectionFactoryTest {
+class ConnectionFactoryTest {
 
   @Test
-  public void testConstructorUrl() throws SQLException {
+  void testConstructorUrl() throws SQLException {
     IConnectionFactory connectionFactory = DBHelpers.getConnectionFactory();
     Connection connection = connectionFactory.getConnection();
     assertNotNull(connection, "Connection should be configured correctly");
   }
 
   @Test
-  public void testConstructorParamsSqlite() throws SQLException {
+  void testConstructorParamsSqlite() throws SQLException {
     DBHelpers.initDatabaseFile();
     IConnectionFactory connectionFactory =
         DBHelpers.getConnectionFactory(
@@ -33,7 +33,7 @@ public class ConnectionFactoryTest {
   }
 
   @Test
-  public void testConstructorParamsMariadb() {
+  void testConstructorParamsMariadb() {
     IConnectionFactory connectionFactory =
         new ConnectionFactory("mariadb", "localhost", 3306, "minecraft", null, null);
     assertEquals(
@@ -43,7 +43,7 @@ public class ConnectionFactoryTest {
   }
 
   @Test
-  public void testGetConnectionSQLError() {
+  void testGetConnectionSQLError() {
     IConnectionFactory connectionFactory =
         new ConnectionFactory("mariadb", "localhost", 3306, "minecraft", null, null);
     assertThrows(SQLException.class, connectionFactory::getConnection);

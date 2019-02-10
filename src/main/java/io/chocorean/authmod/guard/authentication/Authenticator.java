@@ -26,7 +26,7 @@ public class Authenticator {
       if (!player.getUsername().equals(payload.getUsername()))
         throw new DifferentUsernameException();
       if (player.isBanned()) throw new BannedPlayerException();
-      LOGGER.info(payload.getUsername() + " is signin in");
+      LOGGER.info(payload.getUsername() + " logs in");
       return BCrypt.checkpw(payload.getPassword(), player.getPassword());
     }
     return false;

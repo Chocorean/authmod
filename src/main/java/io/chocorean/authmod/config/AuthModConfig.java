@@ -21,19 +21,19 @@ public class AuthModConfig {
   public static boolean enableRegistration = true;
 
   public enum Strategies {
-    file,
-    database
+    FILE,
+    DATABASE
   }
 
   @Comment({
     "The way you want to store player's data, choose between 'database' or 'file'.",
     "If the strategy is unknown, the server will be open for everyone."
   })
-  public static Strategies dataSourceStrategy = Strategies.file;
+  public static Strategies dataSourceStrategy = Strategies.FILE;
 
-  public static DatabaseConfig database = new DatabaseConfig();
+  public static final DatabaseConfig database = new DatabaseConfig();
 
-  public static class DatabaseConfig {
+  public static final class DatabaseConfig {
     @Comment("Column name for the email address")
     public String emailField = "email";
 

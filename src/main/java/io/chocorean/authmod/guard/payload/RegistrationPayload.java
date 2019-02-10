@@ -10,19 +10,13 @@ import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotNull;
 
 public class RegistrationPayload implements IPayload {
-  private final boolean emailRequired;
-  @NotNull private LoginPayload payload;
+  @NotNull private final LoginPayload payload;
 
   @NotNull private String passwordConfirmation;
   private Set<ConstraintViolation<IPayload>> errors;
 
   public RegistrationPayload() {
-    this(false);
-  }
-
-  public RegistrationPayload(boolean emailRequired) {
     this.payload = new LoginPayload();
-    this.emailRequired = true;
     this.errors = new HashSet<>();
   }
 
@@ -48,7 +42,7 @@ public class RegistrationPayload implements IPayload {
   }
 
   @Override
-  public IPayload setUuid(String uuid) {
+  public RegistrationPayload setUuid(String uuid) {
     this.payload.setUuid(uuid);
     return this;
   }
@@ -76,8 +70,8 @@ public class RegistrationPayload implements IPayload {
   }
 
   @AssertTrue
-  private boolean isPasswordConfirmationMatchs() {
-    return this.getPasswordConfirmation().equals(this.payload.getPassword());
+  private boolean isPasswordConfirmationMatches() {
+    return this.passwordConfirmation.equals(this.payload.getPassword());
   }
 
   @Override
@@ -98,10 +92,6 @@ public class RegistrationPayload implements IPayload {
   @Override
   public Set<ConstraintViolation<IPayload>> getErrors() {
     return this.errors;
-  }
-
-  public String getPasswordConfirmation() {
-    return this.passwordConfirmation;
   }
 
   public RegistrationPayload setPasswordConfirmation(String passwordConfirmation) {

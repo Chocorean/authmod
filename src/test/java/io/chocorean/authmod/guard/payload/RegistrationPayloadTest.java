@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class RegistrationPayloadTest {
+class RegistrationPayloadTest {
   private RegistrationPayload payload;
 
   @BeforeEach
@@ -25,12 +25,12 @@ public class RegistrationPayloadTest {
   }
 
   @Test
-  public void testIsValid() {
+  void testIsValid() {
     assertTrue(this.payload.isValid(), "Payload should be valid");
   }
 
   @Test
-  public void testIsValidEmailRequired() {
+  void testIsValidEmailRequired() {
     this.payload.setEmailRequired(true);
     this.payload.setEmail(null);
     assertTrue(this.payload.isEmailRequired(), "payload must have email");
@@ -38,25 +38,25 @@ public class RegistrationPayloadTest {
   }
 
   @Test
-  public void testIsValidShortPassword() {
+  void testIsValidShortPassword() {
     assertFalse(
         this.payload.setPassword("u").isValid(),
         "Payload should not be valid, password is too short");
   }
 
   @Test
-  public void testIsValidIncorrectUuid() {
+  void testIsValidIncorrectUuid() {
     assertFalse(
         this.payload.setUuid("uuid").isValid(), "payload should not be valid because of UUID");
   }
 
   @Test
-  public void testIsValidNullUuid() {
+  void testIsValidNullUuid() {
     assertTrue(this.payload.setUuid(null).isValid(), "payload should be valid");
   }
 
   @Test
-  public void testIsValidPasswordsAreDifferent() {
+  void testIsValidPasswordsAreDifferent() {
     this.payload.setPasswordConfirmation("root");
     assertFalse(
         this.payload.isValid(), "Payload should not be valid because of password confirmation");

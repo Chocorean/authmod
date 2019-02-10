@@ -17,7 +17,7 @@ import java.nio.file.Paths;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class FileDataSourceStrategyTest {
+class FileDataSourceStrategyTest {
   private File dataFile;
   private IPlayer player;
   private IDataSourceStrategy dataSource;
@@ -37,26 +37,26 @@ public class FileDataSourceStrategyTest {
   }
 
   @Test
-  public void testConstructor() {
+  void testConstructor() {
     new FileDataSourceStrategy(this.dataFile);
     assertTrue(this.dataFile.exists(), "The strategy should create a CSV file automatically");
   }
 
   @Test
-  public void testAdd() throws AuthmodException {
+  void testAdd() throws AuthmodException {
     boolean added = this.registerPlayer();
     assertTrue(added, "The player should be registered");
   }
 
   @Test
-  public void testAddDoublon() throws AuthmodException {
+  void testAddDoublon() throws AuthmodException {
     boolean added = this.registerPlayer();
     assertTrue(added, "The player should be registered");
     assertThrows(PlayerAlreadyExistException.class, this::registerPlayer);
   }
 
   @Test
-  public void testFileModified() throws RegistrationException, IOException, InterruptedException {
+  void testFileModified() throws RegistrationException, IOException, InterruptedException {
     this.registerPlayer();
     Thread.sleep(1000);
     BufferedWriter writer = new BufferedWriter(new FileWriter(this.dataFile, true));
@@ -69,27 +69,27 @@ public class FileDataSourceStrategyTest {
   }
 
   @Test
-  public void testFindByEmail() throws RegistrationException {
+  void testFindByEmail() throws RegistrationException {
     this.registerPlayer();
     assertNotNull(
         dataSource.find(this.player.getEmail(), null), "The player should exist and be found");
   }
 
   @Test
-  public void testFindByUsername() throws RegistrationException {
+  void testFindByUsername() throws RegistrationException {
     this.registerPlayer();
     assertNotNull(
         dataSource.find(null, player.getUsername()), "The player should exist and be found");
   }
 
   @Test
-  public void testFindNotExist() throws RegistrationException {
+  void testFindNotExist() throws RegistrationException {
     this.registerPlayer();
     assertNull(dataSource.find("test@test.fr", "test"), "The player should not exist");
   }
 
   @Test
-  public void testFindByUsernameOrEmail() throws RegistrationException {
+  void testFindByUsernameOrEmail() throws RegistrationException {
     this.registerPlayer();
     assertNotNull(
         dataSource.find(player.getEmail(), player.getUsername()),
@@ -97,7 +97,7 @@ public class FileDataSourceStrategyTest {
   }
 
   @Test
-  public void testFindNullParams() throws AuthmodException {
+  void testFindNullParams() throws AuthmodException {
     this.registerPlayer();
     assertNull(dataSource.find(null, null), "It should return null");
   }

@@ -33,7 +33,7 @@ import org.apache.logging.log4j.Logger;
 public class AuthMod {
   public static final String MODID = "authmod";
   static final String NAME = "AuthMod";
-  public static final String VERSION = "2.7";
+  static final String VERSION = "2.7";
   private static final String COMMON_PROXY = "io.chocorean.authmod.proxy.CommonProxy";
   private static final String CLIENT_PROXY = "io.chocorean.authmod.proxy.ClientProxy";
   public static Logger LOGGER = FMLLog.log;
@@ -48,9 +48,9 @@ public class AuthMod {
   public void preInit(FMLPreInitializationEvent event) throws Exception {
     AuthMod.LOGGER = event.getModLog();
     switch (AuthModConfig.dataSourceStrategy) {
-      case database:
+      case DATABASE:
         this.dataSourceStrategy =
-            new DatabaseSourceStrategy(
+            new DatabaseSourceStrategy(AuthModConfig.database.table,
                 new ConnectionFactory(
                     AuthModConfig.database.dialect,
                     AuthModConfig.database.host,
@@ -60,7 +60,7 @@ public class AuthMod {
                     AuthModConfig.database.password));
         LOGGER.info("Now using DatabaseSourceStrategy.");
         break;
-      case file:
+      case FILE:
         this.dataSourceStrategy =
             new FileDataSourceStrategy(
                 Paths.get(

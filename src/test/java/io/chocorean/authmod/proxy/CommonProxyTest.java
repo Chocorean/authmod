@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class CommonProxyTest {
+class CommonProxyTest {
   private CommonProxy commonProxyProxy;
 
   @BeforeEach
@@ -14,7 +14,7 @@ public class CommonProxyTest {
   }
 
   @Test
-  public void testRegisterRenderers() {
+  void testRegisterRenderers() {
     assertDoesNotThrow(() -> this.commonProxyProxy.registerRenderers());
   }
 }

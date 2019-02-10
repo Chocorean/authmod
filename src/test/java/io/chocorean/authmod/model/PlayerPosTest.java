@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class PlayerPosTest {
+class PlayerPosTest {
   private PlayerPos playerPos;
 
   @BeforeEach
@@ -14,22 +14,22 @@ public class PlayerPosTest {
   }
 
   @Test
-  public void testConstructor() {
+  void testConstructor() {
     assertNotNull(this.playerPos, "The position should not be null");
   }
 
   @Test
-  public void testGetPosition() {
+  void testGetPosition() {
     assertNull(this.playerPos.getPosition(), "The position is null in this case");
   }
 
   @Test
-  public void testYaw() {
+  void testYaw() {
     assertEquals(0, this.playerPos.getYaw(), "The Yaw should be 0");
   }
 
   @Test
-  public void testPitch() {
+  void testPitch() {
     assertEquals(1, this.playerPos.getPitch(), "The pitch should be 1");
   }
 }

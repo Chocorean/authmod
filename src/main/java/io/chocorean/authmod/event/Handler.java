@@ -172,9 +172,9 @@ public class Handler {
     }
   }
 
-  public PlayerDescriptor authorizePlayer(EntityPlayer player) {
+  public void authorizePlayer(EntityPlayer player) {
     logged.put(player, true);
-    return descriptors.remove(player);
+    descriptors.remove(player);
   }
 
   public boolean isLogged(EntityPlayer player) {

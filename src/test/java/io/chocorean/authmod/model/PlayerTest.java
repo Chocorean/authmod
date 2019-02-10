@@ -5,9 +5,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class PlayerTest {
+class PlayerTest {
   private Player player;
-  private String uuid = "7128022b-9195-490d-9bc8-9b42ebe2a8e3";
+  private final String uuid = "7128022b-9195-490d-9bc8-9b42ebe2a8e3";
 
   @BeforeEach
   void init() {
@@ -15,7 +15,7 @@ public class PlayerTest {
   }
 
   @Test
-  public void testSetEmail() {
+  void testSetEmail() {
     String email = "root@root.fr";
     this.player.setEmail(email + ' ');
     assertEquals(
@@ -25,7 +25,7 @@ public class PlayerTest {
   }
 
   @Test
-  public void testSetUsername() {
+  void testSetUsername() {
     String username = "mcdostone";
     this.player.setUsername(username + ' ');
     assertEquals(
@@ -35,44 +35,44 @@ public class PlayerTest {
   }
 
   @Test
-  public void testSetUuidNullParam() {
+  void testSetUuidNullParam() {
     this.player.setUuid(null);
     assertEquals(this.player.getUuid().length(), 0, "The UUID should be empty");
   }
 
   @Test
-  public void testSetEmailNullParam() {
+  void testSetEmailNullParam() {
     this.player.setEmail(null);
     assertEquals(this.player.getEmail().length(), 0, "The email should be null");
   }
 
   @Test
-  public void testSetUuidShortFormat() {
+  void testSetUuidShortFormat() {
     this.player.setUuid(this.uuid.replaceAll("-", ""));
     assertEquals(this.uuid, this.player.getUuid(), "The UUID format should be X-X-X-X-X");
   }
 
   @Test
-  public void testSetUuidLongFormat() {
+  void testSetUuidLongFormat() {
     this.player.setUuid(this.uuid);
     assertEquals(this.uuid, this.player.getUuid(), "The UUID format should be X-X-X-X-X");
   }
 
   @Test
-  public void testSetUuidIncorrect() {
+  void testSetUuidIncorrect() {
     this.player.setUuid("15");
     assertEquals(
         this.player.getUuid().length(), 0, "The UUID should be empty because it is incorrect");
   }
 
   @Test
-  public void testIsPremium() {
+  void testIsPremium() {
     this.player.setUuid(null);
     assertFalse(this.player.isPremium(), "The player should not be premium");
   }
 
   @Test
-  public void testToString() {
+  void testToString() {
     player.setUsername("korben");
     player.setEmail("korben.dallas@gmail.com");
     assertEquals(

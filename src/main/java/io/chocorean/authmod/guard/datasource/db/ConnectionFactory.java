@@ -8,18 +8,14 @@ import org.apache.logging.log4j.Logger;
 
 public class ConnectionFactory implements IConnectionFactory {
   private static final Logger LOGGER = AuthMod.LOGGER;
-  private String url;
-  private String user;
-  private String password;
+  private final String url;
+  private final String user;
+  private final String password;
 
   public ConnectionFactory(String url) {
-    this(url, null, null);
-  }
-
-  public ConnectionFactory(String url, String user, String password) {
     this.url = url;
-    this.user = user;
-    this.password = password;
+    this.password = null;
+    this.user = null;
   }
 
   public ConnectionFactory(
@@ -28,11 +24,11 @@ public class ConnectionFactory implements IConnectionFactory {
     urlBuilder.append("jdbc:");
     urlBuilder.append(dialect);
     if (host != null) {
-      urlBuilder.append("://" + host);
-      urlBuilder.append(":" + port);
-      urlBuilder.append("/" + database);
+      urlBuilder.append("://").append(host);
+      urlBuilder.append(":").append(port);
+      urlBuilder.append("/").append(database);
     } else {
-      urlBuilder.append(":" + database);
+      urlBuilder.append(":").append(database);
     }
     this.url = urlBuilder.toString();
     this.user = user;

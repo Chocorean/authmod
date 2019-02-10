@@ -1,81 +1,80 @@
 package io.chocorean.authmod.command;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-
 import io.chocorean.authmod.event.Handler;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetHandlerPlayServer;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class LoggedCommandTest {
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+
+class LoggedCommandTest {
   private LoggedCommand loggedCommand;
   private Handler handler;
+  private EntityPlayerMP sender;
 
   @BeforeEach
   void init() {
     this.handler = new Handler();
     this.loggedCommand = new LoggedCommand(handler);
+    this.sender = mock(EntityPlayerMP.class);
+    this.sender.connection = mock(NetHandlerPlayServer.class);
   }
 
   @Test
-  public void testConstructor() {
+  void testConstructor() {
     assertNotNull(this.loggedCommand);
   }
 
   @Test
-  public void testExecuteNotLogged() {
-    EntityPlayer sender = mock(EntityPlayerMP.class);
-    NetHandlerPlayServer conn = mock(NetHandlerPlayServer.class);
-    ((EntityPlayerMP) sender).connection = conn;
-    this.loggedCommand.execute(null, sender, null);
+  void testExecuteNotLogged() {
+    this.loggedCommand.execute(mock(MinecraftServer.class), sender, new String[]{});
     assertFalse(handler.isLogged(sender));
   }
 
   @Test
-  public void testExecute() {
-    EntityPlayer sender = mock(EntityPlayerMP.class);
-    NetHandlerPlayServer conn = mock(NetHandlerPlayServer.class);
-    ((EntityPlayerMP) sender).connection = conn;
+  void testExecute() {
     handler.authorizePlayer(sender);
-    this.loggedCommand.execute(null, sender, null);
+    this.loggedCommand.execute(mock(MinecraftServer.class), sender, new String[]{});
     assertTrue(handler.isLogged(sender));
   }
 
   @Test
-  public void testGetName() {
+  void testGetName() {
     assertNotNull(this.loggedCommand.getName());
   }
 
   @Test
-  public void testGetUsage() {
-    assertNotNull(this.loggedCommand.getUsage(null));
+  void testGetUsage() {
+    assertNotNull(this.loggedCommand.getUsage(mock(ICommandSender.class)));
   }
 
   @Test
-  public void testGetAliases() {
+  void testGetAliases() {
     assertNotNull(this.loggedCommand.getAliases());
   }
 
   @Test
-  public void testCheckPermissions() {
-    assertTrue(this.loggedCommand.checkPermission(null, null));
+  void testCheckPermissions() {
+    assertTrue(this.loggedCommand.checkPermission(mock(MinecraftServer.class), mock(ICommandSender.class)));
   }
 
   @Test
-  public void testGetTabCompletions() {
-    assertNotNull(this.loggedCommand.getTabCompletions(null, null, null, null));
+  void testGetTabCompletions() {
+    assertNotNull(this.loggedCommand.getTabCompletions(mock(MinecraftServer.class), mock(ICommandSender.class), new String[]{}, mock(BlockPos.class)));
   }
 
   @Test
-  public void testisUsernameIndex() {
-    assertTrue(this.loggedCommand.isUsernameIndex(null, 0));
+  void testisUsernameIndex() {
+    assertTrue(this.loggedCommand.isUsernameIndex(new String[]{}, 0));
   }
 
   @Test
-  public void testCompareTo() {
-    assertEquals(0, this.loggedCommand.compareTo(new LoggedCommand(null)));
+  void testCompareTo() {
+    assertEquals(0, this.loggedCommand.compareTo(new LoggedCommand(this.handler)));
   }
 }

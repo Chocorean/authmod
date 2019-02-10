@@ -16,7 +16,7 @@ import java.nio.file.Paths;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class AuthenticatorTest {
+class AuthenticatorTest {
   private Authenticator authenticator;
   private Registrator registrator;
   private LoginPayload payload;
@@ -48,12 +48,12 @@ public class AuthenticatorTest {
     this.registerPlayer();
   }
 
-  private boolean registerPlayer() throws AuthmodException {
-    return this.registrator.register(this.registrationPayload);
+  private void registerPlayer() throws AuthmodException {
+    this.registrator.register(this.registrationPayload);
   }
 
   @Test
-  public void testConstructor() {
+  void testConstructor() {
     Authenticator authenticator = new Authenticator(new FileDataSourceStrategy(this.dataFile));
     assertEquals(
         authenticator.getDataSourceStrategy().getClass(),
@@ -62,33 +62,33 @@ public class AuthenticatorTest {
   }
 
   @Test
-  public void testLogin() throws LoginException {
+  void testLogin() throws LoginException {
     boolean logged = this.authenticator.login(this.payload);
     assertTrue(logged, "Player should be logged");
   }
 
   @Test
-  public void testLoginWrongPassword() throws LoginException {
+  void testLoginWrongPassword() throws LoginException {
     boolean logged = this.authenticator.login(this.payload.setPassword("wrong"));
     assertFalse(logged, "Player should not be logged");
   }
 
   @Test
-  public void testLoginUnknownPlayer() {
+  void testLoginUnknownPlayer() {
     assertThrows(
         PlayerNotFoundException.class,
         () -> this.authenticator.login(this.payload.setEmail("freddie.wong@rocketjump.com")));
   }
 
   @Test
-  public void testLoginDifferentUsername() {
+  void testLoginDifferentUsername() {
     assertThrows(
         DifferentUsernameException.class,
         () -> this.authenticator.login(this.payload.setUsername("wrong")));
   }
 
   @Test
-  public void testLoginBanned() throws RegistrationException {
+  void testLoginBanned() throws RegistrationException {
     this.player.setBanned(true);
     this.player.setUsername("banner");
     this.player.setEmail(null);
@@ -100,7 +100,7 @@ public class AuthenticatorTest {
   }
 
   @Test
-  public void testLoginNullParams() throws LoginException {
+  void testLoginNullParams() throws LoginException {
     boolean logged = this.authenticator.login(null);
     assertFalse(logged, "Can't be logged, no payload provided");
   }

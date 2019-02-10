@@ -7,7 +7,7 @@ import io.chocorean.authmod.model.IPlayer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class PlayerFactoryTest {
+class PlayerFactoryTest {
   private String username;
   private String email;
   private String uuid;
@@ -29,7 +29,7 @@ public class PlayerFactoryTest {
   }
 
   @Test
-  public void testCreateFromRegistrationPayload() {
+  void testCreateFromRegistrationPayload() {
     IPlayer player = PlayerFactory.createFromRegistrationPayload(this.payload);
     assertEquals(this.username, player.getUsername(), "Username should not change");
     assertEquals(this.email, player.getEmail(), "Email should not change");

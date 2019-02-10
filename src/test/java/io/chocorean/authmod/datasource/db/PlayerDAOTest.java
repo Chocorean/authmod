@@ -14,7 +14,7 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class PlayerDAOTest {
+class PlayerDAOTest {
   private IConnectionFactory connectionFactory;
 
   @BeforeEach
@@ -24,12 +24,12 @@ public class PlayerDAOTest {
   }
 
   @Test
-  public void testConstructor() throws SQLException {
+  void testConstructor() throws SQLException {
     new PlayersDAO(this.connectionFactory);
   }
 
   @Test
-  public void testConstructorWrongTableStructure() {
+  void testConstructorWrongTableStructure() {
     assertThrows(
         SQLException.class,
         () -> {
@@ -40,7 +40,7 @@ public class PlayerDAOTest {
   }
 
   @Test
-  public void testConstructorCustomColumns() throws SQLException {
+  void testConstructorCustomColumns() throws SQLException {
     this.connectionFactory = DBHelpers.getConnectionFactory();
     String query = DBHelpers.getCreationTableQuery();
     query = query.replaceAll("username", "pseudo");
@@ -52,7 +52,7 @@ public class PlayerDAOTest {
   }
 
   @Test
-  public void testFind() throws SQLException {
+  void testFind() throws SQLException {
     PlayersDAO dao = new PlayersDAO(this.connectionFactory);
     IPlayer player = this.createPlayer();
     dao.create(player);
@@ -74,14 +74,14 @@ public class PlayerDAOTest {
   }
 
   @Test
-  public void testCreate() throws SQLException {
+  void testCreate() throws SQLException {
     PlayersDAO dao = new PlayersDAO(this.connectionFactory);
     IPlayer player = this.createPlayer();
     dao.create(player);
   }
 
   @Test
-  public void testCreateNoUUID() throws SQLException {
+  void testCreateNoUUID() throws SQLException {
     PlayersDAO dao = new PlayersDAO(this.connectionFactory);
     IPlayer player = this.createPlayer();
     player.setUuid(null);
@@ -90,7 +90,7 @@ public class PlayerDAOTest {
   }
 
   @Test
-  public void testCreateNoEmail() throws SQLException {
+  void testCreateNoEmail() throws SQLException {
     PlayersDAO dao = new PlayersDAO(this.connectionFactory);
     IPlayer player = this.createPlayer();
     player.setEmail(null);

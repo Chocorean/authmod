@@ -7,7 +7,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class PlayerDescriptorTest {
+class PlayerDescriptorTest {
   private PlayerDescriptor playerDescriptor;
 
   @BeforeEach
@@ -17,17 +17,17 @@ public class PlayerDescriptorTest {
   }
 
   @Test
-  public void testConstructor() {
+  void testConstructor() {
     assertNotNull(this.playerDescriptor);
   }
 
   @Test
-  public void testGetPlayer() {
+  void testGetPlayer() {
     assertNotNull(this.playerDescriptor.getPlayer());
   }
 
   @Test
-  public void testGetPosition() {
+  void testGetPosition() {
     assertNotNull(this.playerDescriptor.getPosition());
   }
 }

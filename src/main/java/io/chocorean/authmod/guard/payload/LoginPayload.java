@@ -28,10 +28,6 @@ public class LoginPayload implements IPayload {
   private boolean emailRequired;
 
   public LoginPayload() {
-    this(false);
-  }
-
-  public LoginPayload(boolean emailRequired) {
     this.errors = new HashSet<>();
   }
 

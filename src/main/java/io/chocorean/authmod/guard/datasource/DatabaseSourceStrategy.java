@@ -16,6 +16,10 @@ public class DatabaseSourceStrategy implements IDataSourceStrategy {
   private final IPlayersDAO<IPlayer> playersDAO;
   private static final Logger LOGGER = AuthMod.LOGGER;
 
+  public DatabaseSourceStrategy(String table, IConnectionFactory connectionFactory) throws SQLException {
+    this.playersDAO = new PlayersDAO(table, connectionFactory);
+  }
+
   public DatabaseSourceStrategy(IConnectionFactory connectionFactory) throws SQLException {
     this.playersDAO = new PlayersDAO("players", connectionFactory);
   }
@@ -42,7 +46,7 @@ public class DatabaseSourceStrategy implements IDataSourceStrategy {
       this.playersDAO.create(player);
       return true;
     } catch (SQLException e) {
-      e.printStackTrace();
+      LOGGER.catching(Level.ERROR, e);
       return false;
     }
   }
