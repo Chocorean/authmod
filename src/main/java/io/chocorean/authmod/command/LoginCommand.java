@@ -1,11 +1,11 @@
 package io.chocorean.authmod.command;
 
 import io.chocorean.authmod.AuthMod;
+import io.chocorean.authmod.event.Handler;
 import io.chocorean.authmod.exception.LoginException;
 import io.chocorean.authmod.guard.authentication.Authenticator;
-import io.chocorean.authmod.guard.payload.LoginPayload;
 import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
-import io.chocorean.authmod.event.Handler;
+import io.chocorean.authmod.guard.payload.LoginPayload;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,12 +25,20 @@ public class LoginCommand implements ICommand {
     private static final Logger LOGGER = AuthMod.LOGGER;
     private final List<String> aliases;
     private final Authenticator authenticator;
+    private final Handler handler;
+    private final boolean emailRequired;
 
-    public LoginCommand(IDataSourceStrategy strategy){
+    public LoginCommand(Handler handler, IDataSourceStrategy strategy){
+        this(handler, strategy, false);
+    }
+
+    public LoginCommand(Handler handler, IDataSourceStrategy strategy, boolean emailRequired){
+        this.handler = handler;
         this.aliases = new ArrayList<>();
         this.aliases.add("login");
         this.aliases.add("log");
         this.authenticator = new Authenticator(strategy);
+        this.emailRequired = emailRequired;
     }
 
     @Override
@@ -40,7 +48,7 @@ public class LoginCommand implements ICommand {
 
     @Override
     public String getUsage(ICommandSender sender) {
-        return AuthMod.getConfig().getLoginUsageMsg();
+        return "";
     }
 
     @Override
@@ -53,11 +61,12 @@ public class LoginCommand implements ICommand {
         EntityPlayer player = (EntityPlayer) sender;
         LOGGER.info(player.getDisplayNameString() + " is signin in");
         if(args.length == 1 || args.length == 2) {
-            if(Handler.isLogged(player)) {
+            if(this.handler.isLogged(player)) {
                 LOGGER.info("User %s tried to sign in twice.", player.getDisplayNameString());
-                ((EntityPlayerMP) sender).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getPlayerAlreadyLoggedMsg())));
+                ((EntityPlayerMP) sender).connection.sendPacket(new SPacketChat(new TextComponentString("")));
             } else {
                 LoginPayload payload = new LoginPayload();
+                payload.setEmailRequired(this.emailRequired);
                 payload.setEmail(args.length == 2 ? args[0] : null);
                 payload.setPassword(args.length == 2 ? args[1] : args[0]);
                 payload.setUsername(player.getDisplayNameString());
@@ -65,7 +74,7 @@ public class LoginCommand implements ICommand {
                 try {
                     boolean correct = this.authenticator.login(payload);
                     if(correct) {
-                        Handler.authorizePlayer(player);
+                        this.handler.authorizePlayer(player);
                     } else {
                         ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString("wrong")));
                     }

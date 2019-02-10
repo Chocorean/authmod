@@ -82,4 +82,22 @@ public class PlayerDAOTest {
         dao.create(player);
     }
 
+    @Test
+    public void testCreateNoUUID() throws SQLException {
+        IPlayersDAO dao = new PlayersDAO(this.connectionFactory);
+        IPlayer player = this.createPlayer();
+        player.setUuid(null);
+        dao.create(player);
+        assertNotNull(dao.find(player));
+    }
+
+    @Test
+    public void testCreateNoEmail() throws SQLException {
+        IPlayersDAO dao = new PlayersDAO(this.connectionFactory);
+        IPlayer player = this.createPlayer();
+        player.setEmail(null);
+        dao.create(player);
+        assertNotNull(dao.find(player));
+    }
+
 }

@@ -26,12 +26,20 @@ public class RegisterCommand implements ICommand {
     private static final Logger LOGGER = AuthMod.LOGGER;
     private final List<String> aliases;
     private final Registrator registrator;
+    private final Handler handler;
+    private final boolean emailRequired;
 
-    public RegisterCommand(IDataSourceStrategy strategy){
+    public RegisterCommand(Handler handler, IDataSourceStrategy strategy, boolean emailRequired){
+        this.handler = handler;
         aliases = new ArrayList<>();
         aliases.add("register");
         aliases.add("reg");
         this.registrator = new Registrator(strategy);
+        this.emailRequired = emailRequired;
+    }
+
+    public RegisterCommand(Handler handler, IDataSourceStrategy strategy){
+        this(handler, strategy, false);
     }
 
     @Override
@@ -41,7 +49,7 @@ public class RegisterCommand implements ICommand {
 
     @Override
     public String getUsage(ICommandSender sender) {
-        return AuthMod.getConfig().getRegisterUsageMsg();
+        return "";
     }
 
     @Override
@@ -54,18 +62,20 @@ public class RegisterCommand implements ICommand {
         EntityPlayer player = (EntityPlayer) sender;
         LOGGER.info(player.getDisplayNameString() + " is registering");
         if(args.length == 2 || args.length == 3) {
-            if(Handler.isLogged(player)) {
-                ((EntityPlayerMP) sender).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getPlayerAlreadyLoggedMsg())));
+            if(this.handler.isLogged(player)) {
+                ((EntityPlayerMP) sender).connection.sendPacket(new SPacketChat(new TextComponentString("")));
             } else {
                 RegistrationPayload payload = new RegistrationPayload(ModConfig.emailRequired);
+                payload.setEmailRequired(this.emailRequired);
                 payload.setEmail(args.length == 3 ? args[0] : null);
                 payload.setPassword(args.length == 3 ? args[1] : args[0]);
                 payload.setPasswordConfirmation(args.length == 3 ? args[2] : args[1]);
                 payload.setUsername(player.getDisplayNameString());
                 payload.setUuid(EntityPlayer.getUUID(player.getGameProfile()).toString());
                 try {
-                    this.registrator.register(payload);
-                    Handler.authorizePlayer(player);
+                    boolean registered = this.registrator.register(payload);
+                    if(registered)
+                        this.handler.authorizePlayer(player);
                 } catch (AuthmodException e) {
                     LOGGER.error(e.getMessage());
                     ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString(e.getMessage())));

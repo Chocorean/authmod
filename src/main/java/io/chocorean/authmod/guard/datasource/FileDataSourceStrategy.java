@@ -22,7 +22,7 @@ public class FileDataSourceStrategy implements IDataSourceStrategy {
     private static final String SEPARATOR = ",";
 
     public FileDataSourceStrategy() {
-        this.authFile = Paths.get(System.getProperty("java.io.tmpdir"), "authmod.csv").toFile();;
+        this.authFile = Paths.get(System.getProperty("java.io.tmpdir"), "authmod.csv").toFile();
         this.players = new ArrayList<>();
         this.readFile();
     }

@@ -1,6 +1,7 @@
 package io.chocorean.authmod;
 
 import io.chocorean.authmod.config.AuthModConfig;
+import io.chocorean.authmod.event.Handler;
 import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
 import io.chocorean.authmod.proxy.CommonProxy;
 import net.minecraftforge.fml.common.FMLLog;

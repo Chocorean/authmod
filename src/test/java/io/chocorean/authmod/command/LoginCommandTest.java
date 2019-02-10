@@ -1,32 +1,52 @@
 package io.chocorean.authmod.command;
 
-import io.chocorean.authmod.command.LoginCommand;
+import com.mojang.authlib.GameProfile;
+import io.chocorean.authmod.PlayerFactory;
 import io.chocorean.authmod.event.Handler;
+import io.chocorean.authmod.exception.AuthmodException;
 import io.chocorean.authmod.guard.datasource.FileDataSourceStrategy;
-import net.minecraft.command.ICommand;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayer;
+import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
+import io.chocorean.authmod.guard.registration.Registrator;
+import io.chocorean.authmod.model.IPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.play.server.SPacketChat;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.network.NetHandlerPlayServer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
+import java.nio.file.Paths;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class LoginCommandTest {
 
     private LoginCommand loginCommand;
+    private Handler handler;
+    private IDataSourceStrategy dataSourceStrategy;
+    private File dataFile;
+    private IPlayer player;
+    private EntityPlayerMP sender;
+    private Registrator registrator;
 
     @BeforeEach
     void init() {
-        this.loginCommand = new LoginCommand(new FileDataSourceStrategy());
+        this.dataFile = Paths.get(System.getProperty("java.io.tmpdir"), "authmod.csv").toFile();
+        if(dataFile.exists())
+            dataFile.delete();
+        this.handler = new Handler();
+        this.player = PlayerFactory.create();
+        this.sender = mock(EntityPlayerMP.class);
+
+        when(this.sender.getGameProfile()).thenReturn(new GameProfile(UUID.fromString(player.getUuid()), player.getUsername()));
+        when(this.sender.getDisplayNameString()).thenReturn(player.getUsername());
+        NetHandlerPlayServer conn = mock(NetHandlerPlayServer.class);
+        ((EntityPlayerMP) sender).connection = conn;
+        this.dataSourceStrategy = new FileDataSourceStrategy(this.dataFile);
+        this.registrator = new Registrator(this.dataSourceStrategy);
+        this.loginCommand = new LoginCommand(this.handler, this.dataSourceStrategy);
     }
 
     @Test
@@ -35,18 +55,59 @@ public class LoginCommandTest {
     }
 
     @Test
-    public void testPlayerAlreadyLogged() {
-        assertTrue(false);
+    public void testExecute() throws AuthmodException {
+        this.registrator.register(io.chocorean.authmod.guard.PlayerFactory.createRegistrationFactoryFromPlayer(this.player));
+        this.loginCommand.execute(null, sender, new String[]{ player.getPassword() });
+        assertTrue(this.handler.isLogged(this.sender));
     }
 
     @Test
-    public void testPlayerNotLogged() {
-        assertTrue(false);
+    public void testExecuteWrongPassword() throws AuthmodException {
+        this.registrator.register(io.chocorean.authmod.guard.PlayerFactory.createRegistrationFactoryFromPlayer(this.player));
+        this.loginCommand.execute(null, sender, new String[]{ "wrongpass" });
+        assertFalse(this.handler.isLogged(this.sender));
     }
 
     @Test
-    public void testLoginEmailRequired() {
-        assertTrue(false);
+    public void testExecuteWrongNumberOfArgs() {
+        this.loginCommand.execute(null, sender, new String[]{ "test", "test2", player.getEmail(), player.getPassword() });
+        assertFalse(this.handler.isLogged(this.sender));
+    }
+
+    @Test
+    public void testExecuteEmailRequiredCorrect() throws AuthmodException {
+        this.registrator = new Registrator(this.dataSourceStrategy);
+        this.registrator.register(io.chocorean.authmod.guard.PlayerFactory.createRegistrationFactoryFromPlayer(this.player));
+        this.loginCommand = new LoginCommand(this.handler, this.dataSourceStrategy, true);
+        this.loginCommand.execute(null, sender, new String[]{ player.getEmail(), player.getPassword() });
+        assertTrue(this.handler.isLogged(this.sender));
+    }
+
+    @Test
+    public void testExecuteWrongUsername() throws AuthmodException {
+        when(this.sender.getDisplayNameString()).thenReturn("hacker");
+        this.registrator.register(io.chocorean.authmod.guard.PlayerFactory.createRegistrationFactoryFromPlayer(this.player));
+        this.loginCommand = new LoginCommand(this.handler, this.dataSourceStrategy, false);
+        this.loginCommand.execute(null, sender, new String[]{ player.getPassword() });
+        assertFalse(this.handler.isLogged(this.sender));
+    }
+
+    @Test
+    public void testExecuteEmailRequiredIncorrect() throws AuthmodException {
+        this.registrator = new Registrator(this.dataSourceStrategy);
+        this.registrator.register(io.chocorean.authmod.guard.PlayerFactory.createRegistrationFactoryFromPlayer(this.player));
+        this.loginCommand = new LoginCommand(this.handler, this.dataSourceStrategy, true);
+        this.loginCommand.execute(null, sender, new String[]{ "wrongpass" });
+        assertFalse(this.handler.isLogged(this.sender));
+    }
+
+    @Test
+    public void testExecuteAlreadyLogged() throws AuthmodException {
+        this.registrator.register(io.chocorean.authmod.guard.PlayerFactory.createRegistrationFactoryFromPlayer(this.player));
+        handler.authorizePlayer(sender);
+        assertTrue(this.handler.isLogged(this.sender));
+        this.loginCommand.execute(null, sender, new String[]{ "wrongpass" });
+        assertTrue(this.handler.isLogged(this.sender));
     }
 
     @Test
@@ -81,7 +142,7 @@ public class LoginCommandTest {
 
     @Test
     public void testCompareTo() {
-        assertEquals(0, this.loginCommand.compareTo(new LoginCommand(new FileDataSourceStrategy())));
+        assertEquals(0, this.loginCommand.compareTo(new LoginCommand(null, null)));
     }
 
 }

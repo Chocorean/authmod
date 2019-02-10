@@ -16,6 +16,16 @@ public class PlayerFactory {
         return player;
     }
 
+    public static RegistrationPayload createRegistrationFactoryFromPlayer(IPlayer player) {
+        RegistrationPayload payload = new RegistrationPayload();
+        payload.setUsername(player.getUsername());
+        payload.setEmail(player.getEmail());
+        payload.setUuid(player.getUuid());
+        payload.setPassword(player.getPassword());
+        payload.setPasswordConfirmation(player.getPassword());
+        return payload;
+    }
+
     public static IPlayer createFromLoginPayload(LoginPayload payload) {
         IPlayer player = new Player();
         player.setUuid(payload.getUuid());

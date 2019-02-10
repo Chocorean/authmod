@@ -16,8 +16,10 @@ import java.util.List;
 
 public class LoggedCommand implements ICommand {
     private final List<String> aliases;
+    private final Handler handler;
 
-    public LoggedCommand(){
+    public LoggedCommand(Handler handler){
+        this.handler = handler;
         this.aliases = new ArrayList<>();
         this.aliases.add("logged");
         this.aliases.add("logged?");
@@ -41,7 +43,7 @@ public class LoggedCommand implements ICommand {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
         EntityPlayer player = (EntityPlayer) sender;
-        boolean logged = Handler.isLogged(player);
+        boolean logged = this.handler.isLogged(player);
         ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString(logged ? "Yes" : "No")));
     }
 

@@ -1,19 +1,24 @@
 package io.chocorean.authmod.command;
 
-import io.chocorean.authmod.command.LoggedCommand;
-import io.chocorean.authmod.guard.datasource.FileDataSourceStrategy;
+import io.chocorean.authmod.event.Handler;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.NetHandlerPlayServer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 public class LoggedCommandTest {
 
     private LoggedCommand loggedCommand;
+    private Handler handler;
 
     @BeforeEach
     void init() {
-        this.loggedCommand = new LoggedCommand();
+        this.handler = new Handler();
+        this.loggedCommand = new LoggedCommand(handler);
     }
 
     @Test
@@ -22,13 +27,22 @@ public class LoggedCommandTest {
     }
 
     @Test
-    public void testPlayerAlreadyLogged() {
-        assertTrue(false);
+    public void testExecuteNotLogged() {
+        EntityPlayer sender = mock(EntityPlayerMP.class);
+        NetHandlerPlayServer conn = mock(NetHandlerPlayServer.class);
+        ((EntityPlayerMP) sender).connection = conn;
+        this.loggedCommand.execute(null, sender, null);
+        assertFalse(handler.isLogged(sender));
     }
 
     @Test
-    public void testPlayerNotLogged() {
-        assertTrue(false);
+    public void testExecute() {
+        EntityPlayer sender = mock(EntityPlayerMP.class);
+        NetHandlerPlayServer conn = mock(NetHandlerPlayServer.class);
+        ((EntityPlayerMP) sender).connection = conn;
+        handler.authorizePlayer(sender);
+        this.loggedCommand.execute(null, sender, null);
+        assertTrue(handler.isLogged(sender));
     }
 
     @Test
@@ -63,7 +77,7 @@ public class LoggedCommandTest {
 
     @Test
     public void testCompareTo() {
-        assertEquals(0, this.loggedCommand.compareTo(new LoggedCommand()));
+        assertEquals(0, this.loggedCommand.compareTo(new LoggedCommand(null)));
     }
 
 }
