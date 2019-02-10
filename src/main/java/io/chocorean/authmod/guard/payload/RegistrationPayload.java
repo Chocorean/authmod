@@ -70,6 +70,16 @@ public class RegistrationPayload implements IPayload {
   }
 
   @AssertTrue
+  private boolean isEmailValid() {
+    return !this.isEmailRequired() || this.payload.getEmail() != null;
+  }
+
+  @AssertTrue
+  private boolean isEmailDefined() {
+    return !this.isEmailRequired() || this.payload.getEmail() != null;
+  }
+
+  @AssertTrue
   private boolean isPasswordConfirmationMatches() {
     return this.passwordConfirmation.equals(this.payload.getPassword());
   }

@@ -1,10 +1,7 @@
 package io.chocorean.authmod.guard.authentication;
 
 import io.chocorean.authmod.AuthMod;
-import io.chocorean.authmod.exception.BannedPlayerException;
-import io.chocorean.authmod.exception.DifferentUsernameException;
-import io.chocorean.authmod.exception.LoginException;
-import io.chocorean.authmod.exception.PlayerNotFoundException;
+import io.chocorean.authmod.exception.*;
 import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
 import io.chocorean.authmod.guard.payload.LoginPayload;
 import io.chocorean.authmod.model.IPlayer;
@@ -23,11 +20,14 @@ public class Authenticator {
     if (payload != null && payload.isValid()) {
       IPlayer player = this.dataSource.find(payload.getEmail(), payload.getUsername());
       if (player == null) throw new PlayerNotFoundException();
-      if (!player.getUsername().equals(payload.getUsername()))
-        throw new DifferentUsernameException();
+      if (!player.getUsername().equals(payload.getUsername())) throw new WrongUsernameException();
       if (player.isBanned()) throw new BannedPlayerException();
       LOGGER.info(payload.getUsername() + " logs in");
-      return BCrypt.checkpw(payload.getPassword(), player.getPassword());
+      boolean correct = BCrypt.checkpw(payload.getPassword(), player.getPassword());
+      if (!correct) {
+        throw new WrongPasswordException();
+      }
+      return true;
     }
     return false;
   }

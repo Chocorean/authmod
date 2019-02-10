@@ -15,6 +15,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.play.server.SPacketDisconnect;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.config.Config;
@@ -181,5 +182,10 @@ public class Handler {
     if (event.getModID().equals(AuthMod.MODID)) {
       ConfigManager.sync(AuthMod.MODID, Config.Type.INSTANCE);
     }
+  }
+
+  public ITextComponent getMessage(String key, Object... args) {
+    return new TextComponentString(
+        new TextComponentTranslation(key, args).getUnformattedComponentText());
   }
 }

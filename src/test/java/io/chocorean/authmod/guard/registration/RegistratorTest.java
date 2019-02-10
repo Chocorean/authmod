@@ -2,9 +2,7 @@ package io.chocorean.authmod.guard.registration;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import io.chocorean.authmod.exception.AuthmodException;
-import io.chocorean.authmod.exception.InvalidEmailException;
-import io.chocorean.authmod.exception.PlayerAlreadyExistException;
+import io.chocorean.authmod.exception.*;
 import io.chocorean.authmod.guard.datasource.FileDataSourceStrategy;
 import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
 import io.chocorean.authmod.guard.payload.RegistrationPayload;
@@ -85,5 +83,13 @@ class RegistratorTest {
     assertFalse(
         this.registrator.register(this.payload.setEmail(null).setEmailRequired(true)),
         "Can't register the player, email is required");
+  }
+
+  @Test
+  void testIncorrectPasswordConfirmation() {
+    this.registrator = new Registrator(this.dataSource);
+    assertThrows(
+        WrongPasswordConfirmation.class,
+        () -> this.registrator.register(this.payload.setPasswordConfirmation("nope")));
   }
 }

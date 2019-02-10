@@ -68,9 +68,10 @@ class AuthenticatorTest {
   }
 
   @Test
-  void testLoginWrongPassword() throws LoginException {
-    boolean logged = this.authenticator.login(this.payload.setPassword("wrong"));
-    assertFalse(logged, "Player should not be logged");
+  void testLoginWrongPassword() {
+    assertThrows(
+        WrongPasswordException.class,
+        () -> this.authenticator.login(this.payload.setPassword("wrong")));
   }
 
   @Test
@@ -83,7 +84,7 @@ class AuthenticatorTest {
   @Test
   void testLoginDifferentUsername() {
     assertThrows(
-        DifferentUsernameException.class,
+        WrongUsernameException.class,
         () -> this.authenticator.login(this.payload.setUsername("wrong")));
   }
 

@@ -1,17 +1,16 @@
 package io.chocorean.authmod.guard.registration;
 
 import io.chocorean.authmod.AuthMod;
-import io.chocorean.authmod.exception.AuthmodException;
+import io.chocorean.authmod.exception.InvalidEmailException;
 import io.chocorean.authmod.exception.PlayerAlreadyExistException;
-import io.chocorean.authmod.guard.MappingConstraintViolationsToExceptions;
+import io.chocorean.authmod.exception.RegistrationException;
+import io.chocorean.authmod.exception.WrongPasswordConfirmation;
 import io.chocorean.authmod.guard.PlayerFactory;
 import io.chocorean.authmod.guard.datasource.FileDataSourceStrategy;
 import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
-import io.chocorean.authmod.guard.payload.IPayload;
 import io.chocorean.authmod.guard.payload.RegistrationPayload;
 import io.chocorean.authmod.model.IPlayer;
 import java.nio.file.Paths;
-import java.util.Set;
 import javax.validation.ConstraintViolation;
 import org.apache.logging.log4j.Logger;
 import org.mindrot.jbcrypt.BCrypt;
@@ -30,7 +29,7 @@ public class Registrator {
     this.dataSource = dataSourceStrategy;
   }
 
-  public boolean register(RegistrationPayload payload) throws AuthmodException {
+  public boolean register(RegistrationPayload payload) throws RegistrationException {
     if (payload != null) {
       if (payload.isValid()) {
         IPlayer player = PlayerFactory.createFromRegistrationPayload(payload);
@@ -42,9 +41,10 @@ public class Registrator {
           return this.dataSource.add(player);
         }
       } else {
-        Set<ConstraintViolation<IPayload>> errors = payload.getErrors();
-        for (ConstraintViolation<IPayload> c : errors) {
-          MappingConstraintViolationsToExceptions.throwException(c);
+        for (ConstraintViolation c : payload.getErrors()) {
+          if (c.getPropertyPath().toString().equals("email")) throw new InvalidEmailException();
+          if (c.getPropertyPath().toString().equals("passwordConfirmationMatches"))
+            throw new WrongPasswordConfirmation();
         }
       }
     }

@@ -2,7 +2,9 @@ package io.chocorean.authmod.command;
 
 import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.event.Handler;
-import io.chocorean.authmod.exception.AuthmodException;
+import io.chocorean.authmod.exception.InvalidEmailException;
+import io.chocorean.authmod.exception.PlayerAlreadyExistException;
+import io.chocorean.authmod.exception.RegistrationException;
 import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
 import io.chocorean.authmod.guard.payload.RegistrationPayload;
 import io.chocorean.authmod.guard.registration.Registrator;
@@ -12,8 +14,6 @@ import javax.annotation.Nullable;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.play.server.SPacketChat;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
@@ -29,7 +29,6 @@ public class RegisterCommand implements ICommand {
   public RegisterCommand(Handler handler, IDataSourceStrategy strategy, boolean emailRequired) {
     this.handler = handler;
     aliases = new ArrayList<>();
-    aliases.add("register");
     aliases.add("reg");
     this.registrator = new Registrator(strategy);
     this.emailRequired = emailRequired;
@@ -46,7 +45,7 @@ public class RegisterCommand implements ICommand {
 
   @Override
   public String getUsage(ICommandSender sender) {
-    return "";
+    return this.handler.getMessage(this.getName() + ".usage").getUnformattedComponentText();
   }
 
   @Override
@@ -56,26 +55,26 @@ public class RegisterCommand implements ICommand {
 
   @Override
   public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
-    try {
-      EntityPlayer player = (EntityPlayer) sender;
-      LOGGER.info(player.getDisplayNameString() + " is registering");
-      if (this.emailRequired && args.length == 3 || !this.emailRequired && args.length == 2) {
-        if (this.handler.isLogged(player)) {
-          ((EntityPlayerMP) sender)
-              .connection.sendPacket(new SPacketChat(new TextComponentString("")));
-        } else {
-          RegistrationPayload payload = this.createPayload(player, args);
-          boolean registered = this.registrator.register(payload);
-          if (registered) this.handler.authorizePlayer(player);
+    EntityPlayer player = (EntityPlayer) sender;
+    LOGGER.info(player.getDisplayNameString() + " is registering");
+    if (args.length == (this.emailRequired ? 3 : 2)) {
+      if (!this.handler.isLogged(player)) {
+        RegistrationPayload payload = this.createPayload(player, args);
+        try {
+          this.registrator.register(payload);
+          this.handler.authorizePlayer(player);
+          sender.sendMessage(this.handler.getMessage(this.getName() + ".success"));
+        } catch (InvalidEmailException e) {
+          sender.sendMessage(this.handler.getMessage(this.getName() + ".invalidEmail"));
+        } catch (PlayerAlreadyExistException e) {
+          sender.sendMessage(this.handler.getMessage(this.getName() + ".exist"));
+        } catch (RegistrationException e) {
+          LOGGER.error(e.getMessage());
+          sender.sendMessage(this.handler.getMessage("error"));
         }
       } else {
-        ((EntityPlayerMP) sender)
-            .connection.sendPacket(new SPacketChat(new TextComponentString(this.getUsage(sender))));
+        sender.sendMessage(new TextComponentString(this.getUsage(sender)));
       }
-    } catch (AuthmodException e) {
-      LOGGER.error(e.getMessage());
-      ((EntityPlayerMP) sender)
-          .connection.sendPacket(new SPacketChat(new TextComponentString(e.getMessage())));
     }
   }
 

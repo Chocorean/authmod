@@ -2,7 +2,7 @@ package io.chocorean.authmod.command;
 
 import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.event.Handler;
-import io.chocorean.authmod.exception.LoginException;
+import io.chocorean.authmod.exception.*;
 import io.chocorean.authmod.guard.authentication.Authenticator;
 import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
 import io.chocorean.authmod.guard.payload.LoginPayload;
@@ -12,8 +12,6 @@ import javax.annotation.Nullable;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.play.server.SPacketChat;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
@@ -34,7 +32,6 @@ public class LoginCommand implements ICommand {
   public LoginCommand(Handler handler, IDataSourceStrategy strategy, boolean emailRequired) {
     this.handler = handler;
     this.aliases = new ArrayList<>();
-    this.aliases.add("login");
     this.aliases.add("log");
     this.authenticator = new Authenticator(strategy);
     this.emailRequired = emailRequired;
@@ -59,42 +56,46 @@ public class LoginCommand implements ICommand {
   @Override
   public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
     EntityPlayer player = (EntityPlayer) sender;
-    LOGGER.info(player.getDisplayNameString() + " is signin in");
-    if (args.length == 1 || args.length == 2) {
-      if (this.handler.isLogged(player)) {
-        LOGGER.info("User %s tried to sign in twice.", player.getDisplayNameString());
-        ((EntityPlayerMP) sender)
-            .connection.sendPacket(new SPacketChat(new TextComponentString("")));
-      } else {
-        LoginPayload payload = new LoginPayload();
-        payload.setEmailRequired(this.emailRequired);
-        payload.setEmail(args.length == 2 ? args[0] : null);
-        payload.setPassword(args.length == 2 ? args[1] : args[0]);
-        payload.setUsername(player.getDisplayNameString());
-        payload.setUuid(EntityPlayer.getUUID(player.getGameProfile()).toString());
+    LOGGER.info(player.getDisplayNameString() + " is going to log in");
+    if (args.length == (this.emailRequired ? 2 : 1)) {
+      if (!this.handler.isLogged(player)) {
+        LoginPayload payload = this.createPayload(player, args);
         try {
-          boolean correct = this.authenticator.login(payload);
-          if (correct) {
-            this.handler.authorizePlayer(player);
-          } else {
-            ((EntityPlayerMP) sender)
-                .connection.sendPacket(new SPacketChat(new TextComponentString("wrong")));
-          }
+          this.authenticator.login(payload);
+          this.handler.authorizePlayer(player);
+          LOGGER.info(player.getDisplayNameString() + " authenticated");
+          sender.sendMessage(this.handler.getMessage(this.getName() + ".success"));
+        } catch (WrongUsernameException e) {
+          sender.sendMessage(this.handler.getMessage(this.getName() + ".wrongUsername"));
+        } catch (WrongPasswordException e) {
+          sender.sendMessage(this.handler.getMessage(this.getName() + ".wrongPassword"));
+        } catch (BannedPlayerException e) {
+          sender.sendMessage(this.handler.getMessage(this.getName() + ".banned"));
+        } catch (PlayerNotFoundException e) {
+          sender.sendMessage(
+              this.handler.getMessage(this.getName() + ".unknown", payload.getUsername()));
         } catch (LoginException e) {
+          sender.sendMessage(this.handler.getMessage("error"));
           LOGGER.error(e.getMessage());
-          ((EntityPlayerMP) sender)
-              .connection.sendPacket(new SPacketChat(new TextComponentString(e.getMessage())));
         }
       }
     } else {
-      ((EntityPlayerMP) sender)
-          .connection.sendPacket(new SPacketChat(new TextComponentString(this.getUsage(sender))));
+      sender.sendMessage(new TextComponentString(this.getUsage(sender)));
     }
   }
 
   @Override
   public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
     return true;
+  }
+
+  private LoginPayload createPayload(EntityPlayer player, String[] args) {
+    LoginPayload payload = new LoginPayload();
+    payload.setEmailRequired(this.emailRequired);
+    payload.setEmail(this.emailRequired ? args[0] : null);
+    payload.setPassword(this.emailRequired ? args[1] : args[0]);
+    payload.setUsername(player.getDisplayNameString());
+    return payload.setUuid(EntityPlayer.getUUID(player.getGameProfile()).toString());
   }
 
   @Override
