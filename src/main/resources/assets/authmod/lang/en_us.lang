@@ -2,7 +2,7 @@
 error=Something was wrong. Please contact the admins.
 
 # Message displayed to a player when he/she joins the server.
-welcome=grosse merde
+welcome=Use /register to sign up or /login to sign in.
 
 delay=Wake up, you have only %s seconds to log in.
 
@@ -37,6 +37,9 @@ register.usage=/register <email> <password> - Be careful when choosing it, you'l
 
 # Message displayed to a player when he/she successfully registered.
 register.success=You are registered and authenticated, have fun!
+
+# Message displayed to a player when he/she successfully registered.
+register.wrongPasswordConfirmation=The password confirmation doesn't match. Please retry.
 
 
 # Message displayed to a player when he/she attempts to sign in with wrong username

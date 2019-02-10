@@ -5,6 +5,7 @@ import io.chocorean.authmod.event.Handler;
 import io.chocorean.authmod.exception.InvalidEmailException;
 import io.chocorean.authmod.exception.PlayerAlreadyExistException;
 import io.chocorean.authmod.exception.RegistrationException;
+import io.chocorean.authmod.exception.WrongPasswordConfirmation;
 import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
 import io.chocorean.authmod.guard.payload.RegistrationPayload;
 import io.chocorean.authmod.guard.registration.Registrator;
@@ -68,6 +69,8 @@ public class RegisterCommand implements ICommand {
           sender.sendMessage(this.handler.getMessage(this.getName() + ".invalidEmail"));
         } catch (PlayerAlreadyExistException e) {
           sender.sendMessage(this.handler.getMessage(this.getName() + ".exist"));
+        } catch (WrongPasswordConfirmation e) {
+          sender.sendMessage(this.handler.getMessage(this.getName() + ".wrongPasswordConfirmation"));
         } catch (RegistrationException e) {
           LOGGER.error(e.getMessage());
           sender.sendMessage(this.handler.getMessage("error"));
