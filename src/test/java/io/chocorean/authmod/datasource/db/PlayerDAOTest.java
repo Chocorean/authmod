@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import io.chocorean.authmod.DBHelpers;
 import io.chocorean.authmod.guard.datasource.db.IConnectionFactory;
-import io.chocorean.authmod.guard.datasource.db.IPlayersDAO;
 import io.chocorean.authmod.guard.datasource.db.PlayersDAO;
 import io.chocorean.authmod.model.IPlayer;
 import io.chocorean.authmod.model.Player;

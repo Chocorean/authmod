@@ -12,6 +12,7 @@ buildscript {
 plugins {
     id "org.sonarqube" version "2.6"
     id 'com.adarshr.test-logger' version '1.6.0'
+    id "com.diffplug.gradle.spotless" version "3.17.0"
 }
 
 apply plugin: 'net.minecraftforge.gradle.forge'
@@ -82,6 +83,14 @@ jacocoTestReport {
     reports {
         html.enabled = true
         xml.enabled true
+    }
+}
+
+apply plugin: 'java'
+
+spotless {
+    java {
+        googleJavaFormat()
     }
 }
 
