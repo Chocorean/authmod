@@ -88,12 +88,7 @@ public class RegisterCommandTest {
     }
 
     @Test
-    public void testExecuteWrongUsername() throws AuthmodException {
-        assertFalse(this.handler.isLogged(this.sender));
-    }
-
-    @Test
-    public void testExecuteEmailRequiredIncorrect() throws AuthmodException {
+    public void testExecuteEmailRequiredIncorrect() {
         assertFalse(this.handler.isLogged(this.sender));
     }
 
@@ -103,6 +98,13 @@ public class RegisterCommandTest {
         assertTrue(this.handler.isLogged(this.sender));
         this.registerCommand.execute(null, sender, new String[]{ player.getPassword(), player.getPassword() });
         assertTrue(this.handler.isLogged(this.sender));
+    }
+
+    @Test
+    public void testExecutePlayerAlreadyExists() throws AuthmodException {
+        this.registrator.register(io.chocorean.authmod.guard.PlayerFactory.createRegistrationFactoryFromPlayer(player));
+        this.registerCommand.execute(null, sender, new String[]{ player.getPassword(), player.getPassword() });
+        assertFalse(this.handler.isLogged(this.sender));
     }
 
     @Test

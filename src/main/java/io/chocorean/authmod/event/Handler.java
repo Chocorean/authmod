@@ -1,6 +1,8 @@
 package io.chocorean.authmod.event;
 
 import io.chocorean.authmod.AuthMod;
+import io.chocorean.authmod.config.AuthModConfig;
+import io.chocorean.authmod.model.PlayerDescriptor;
 import io.chocorean.authmod.model.PlayerPos;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -53,9 +55,9 @@ public class Handler {
             if (descriptors.containsKey(entity)) {
                 descriptors.remove(entity);
                 logged.remove(entity);
-                ((EntityPlayerMP) entity).connection.sendPacket(new SPacketDisconnect(new TextComponentString("Wake up! You only have " + AuthMod.getConfig().getDelay() + " seconds to log in.")));
+                ((EntityPlayerMP) entity).connection.sendPacket(new SPacketDisconnect(new TextComponentString("Wake up! You only have " + AuthModConfig.delay + " seconds to log in.")));
             }
-        }, AuthMod.getConfig().getDelay(), TimeUnit.SECONDS);
+        }, AuthModConfig.delay, TimeUnit.SECONDS);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -78,7 +80,7 @@ public class Handler {
         EntityPlayer entity = event.getEntityPlayer();
         if(descriptors.containsKey(entity) && event.isCancelable()) {
             event.setCanceled(true);
-            ((EntityPlayerMP) entity).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getWelcomeMessage())));
+            ((EntityPlayerMP) entity).connection.sendPacket(new SPacketChat(new TextComponentString("")));
         }
     }
 
@@ -87,7 +89,7 @@ public class Handler {
         String name = event.getCommand().getName();
         if (descriptors.containsKey(event.getSender()) && !(name.equals("register") || name.equals("login") || name.equals("logged?")) && (event.getSender() instanceof EntityPlayer) && event.isCancelable()) {
             event.setCanceled(true);
-            ((EntityPlayerMP)event.getSender()).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getWelcomeMessage())));
+            ((EntityPlayerMP)event.getSender()).connection.sendPacket(new SPacketChat(new TextComponentString("")));
         }
     }
 
@@ -96,7 +98,7 @@ public class Handler {
         EntityPlayerMP entity = event.getPlayer();
         if (event.isCancelable() && descriptors.containsKey(entity)) {
             event.setCanceled(true);
-            event.getPlayer().connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getWelcomeMessage())));
+            event.getPlayer().connection.sendPacket(new SPacketChat(new TextComponentString("")));
         }
     }
 
@@ -106,7 +108,7 @@ public class Handler {
         if (event.isCancelable() && descriptors.containsKey(entity)) {
             event.setCanceled(true);
             entity.inventory.addItemStackToInventory(event.getEntityItem().getItem());
-            ((EntityPlayerMP)event.getPlayer()).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getWelcomeMessage())));
+            ((EntityPlayerMP)event.getPlayer()).connection.sendPacket(new SPacketChat(new TextComponentString("")));
         }
     }
 
@@ -117,7 +119,7 @@ public class Handler {
     private static void handleLivingEvents(LivingEvent event, Entity entity) {
         if (event.getEntity() instanceof EntityPlayer && event.isCancelable() && descriptors.containsKey(entity)) {
             event.setCanceled(true);
-            ((EntityPlayerMP) entity).connection.sendPacket(new SPacketChat(new TextComponentString(AuthMod.getConfig().getWelcomeMessage())));
+            ((EntityPlayerMP) entity).connection.sendPacket(new SPacketChat(new TextComponentString("")));
         }
     }
 

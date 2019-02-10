@@ -1,0 +1,47 @@
+{
+  "name": "authmod",
+  "version": "2.7.0",
+  "description": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Chocorean/authmod.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Chocorean/authmod/issues"
+  },
+  "homepage": "https://github.com/Chocorean/authmod#readme",
+  "devDependencies": {
+    "husky": "^1.3.1",
+    "prettier": "^1.16.4",
+    "prettier-plugin-java": "0.0.10"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "trailingComma": "all",
+    "printWidth": 80
+  },
+  "lint-staged": {
+    "*.java": [
+      "prettier --write",
+      "eslint --fix",
+      "git add"
+    ],
+    "*.cfg": [
+      "prettier --write",
+      "git add"
+    ],
+    "*.json": [
+      "prettier --write",
+      "git add"
+    ],
+    "*.md": [
+      "prettier --write",
+      "git add"
+    ]
+  }
+}

@@ -1,7 +1,7 @@
 package io.chocorean.authmod.command;
 
 import io.chocorean.authmod.AuthMod;
-import io.chocorean.authmod.config.ModConfig;
+import io.chocorean.authmod.config.AuthModConfig;
 import io.chocorean.authmod.exception.AuthmodException;
 import io.chocorean.authmod.guard.payload.RegistrationPayload;
 import io.chocorean.authmod.guard.registration.Registrator;
@@ -65,7 +65,7 @@ public class RegisterCommand implements ICommand {
             if(this.handler.isLogged(player)) {
                 ((EntityPlayerMP) sender).connection.sendPacket(new SPacketChat(new TextComponentString("")));
             } else {
-                RegistrationPayload payload = new RegistrationPayload(ModConfig.emailRequired);
+                RegistrationPayload payload = new RegistrationPayload(AuthModConfig.emailRequired);
                 payload.setEmailRequired(this.emailRequired);
                 payload.setEmail(args.length == 3 ? args[0] : null);
                 payload.setPassword(args.length == 3 ? args[1] : args[0]);

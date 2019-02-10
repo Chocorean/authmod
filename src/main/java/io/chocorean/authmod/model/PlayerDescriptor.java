@@ -1,6 +1,5 @@
-package io.chocorean.authmod.event;
+package io.chocorean.authmod.model;
 
-import io.chocorean.authmod.model.PlayerPos;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class PlayerDescriptor {
@@ -8,7 +7,7 @@ public class PlayerDescriptor {
     private final EntityPlayer player;
     private final PlayerPos pos;
 
-    PlayerDescriptor(EntityPlayer entity, PlayerPos position){
+    public PlayerDescriptor(EntityPlayer entity, PlayerPos position){
         player = entity;
         pos = position;
     }

@@ -1,219 +1,73 @@
 package io.chocorean.authmod.config;
 
 import io.chocorean.authmod.AuthMod;
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
+import net.minecraftforge.common.config.Config;
+import net.minecraftforge.common.config.Config.Comment;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-
+@Config(modid = AuthMod.MODID)
 public class AuthModConfig {
 
-    private final Configuration config;
-    private static final String GEN_CATEGORY = "general";
-    private static final String MSG_CATEGORY = "messages";
-    private final AuthModDatabaseConfig databaseConfig;
+    @Comment("Email will be asked to the player for registration and authentication")
+    public static boolean emailRequired = false;
 
-    private boolean isLoginEnabled;
-    private boolean isRegisterEnabled;
-    private String strategy;
-    private String hostedDomain;
-    private String contact;
-    private int delay;
-    private boolean emailOnLogin;
+    @Comment("If the player doesn't log in after this delay (the unit is the second), he will be kicked from the server.")
+    public static int delay = 60;
 
-    private String welcomeMsg;
-    private String successMsg;
-    private String wrongPasswordMsg;
-    private String wrongUsernameMsg;
-    private String notValidEmailMsg;
-    private String databaseErrorMsg;
-    private String bannedMsg;
-    private String playerNotFoundMsg;
-    private String playerAlreadyExistsMsg;
-    private String playerAlreadyLoggedMsg;
-    private String wrongNumberOfArgsMsg;
-    private String registerUsageMsg;
-    private String loginUsageMsg;
-    private Map<String, String> defaultValues;
-    private Map<String, String> comments;
+    @Comment("Enable or disable the /login command (if disabled, the server will be opened to everyone)")
+    public static boolean enableAuthentication = true;
 
-    public AuthModConfig(File config) {
-        this(new Configuration(config));
+    @Comment("Enable or disable the /register command")
+    public static boolean enableRegistration = true;
+
+
+    public enum Strategies {
+        file,
+        database,
     }
 
-    private AuthModConfig(Configuration config) {
-        this.defaultValues = new HashMap<>();
-        this.comments = new HashMap<>();
-        this.config = config;
-        this.databaseConfig = new AuthModDatabaseConfig(this);
-        this.loadConfigurationData();
-        this.config.load();
-        this.loadProperties();
-    }
+    @Comment("The way you want to store player's data, choose between 'database' or 'file'. If the strategy is unknown, the server will be open for everyone.")
+    public static Strategies dataSourceStrategy = Strategies.file;
 
-    private void loadConfigurationData() {
-        Properties props = new Properties();
-        InputStream inputStream = getClass().getResourceAsStream("/authmod-configuration.properties");
-        try {
-            props.load(inputStream);
-            props.forEach((key, value) -> {
-                if(key.toString().endsWith(".comment")) {
-                    this.comments.put(key.toString(), value.toString());
-                }
-                if(key.toString().endsWith(".default")) {
-                    this.defaultValues.put(key.toString(), value.toString());
-                }
-            });
-        } catch (IOException e) {
-            AuthMod.LOGGER.catching(e);
-        }
-    }
+    public static DatabaseConfig database = new DatabaseConfig();
 
-    void loadProperties() {
-        this.config.addCustomCategoryComment("database",
-                " ______            __     __                                __\n" +
-                        "/\\  _  \\          /\\ \\__ /\\ \\                              /\\ \\\n" +
-                        "\\ \\ \\L\\ \\   __  __\\ \\ ,_\\\\ \\ \\___      ___ ___      ___    \\_\\ \\\n" +
-                        " \\ \\  __ \\ /\\ \\/\\ \\\\ \\ \\/ \\ \\  _ `\\  /' __` __`\\   / __`\\  /'_` \\\n" +
-                        "  \\ \\ \\/\\ \\\\ \\ \\_\\ \\\\ \\ \\_ \\ \\ \\ \\ \\ /\\ \\/\\ \\/\\ \\ /\\ \\L\\ \\/\\ \\L\\ \\\n" +
-                        "   \\ \\_\\ \\_\\\\ \\____/ \\ \\__\\ \\ \\_\\ \\_\\\\ \\_\\ \\_\\ \\_\\\\ \\____/\\ \\___,_\\\n" +
-                        "    \\/_/\\/_/ \\/___/   \\/__/  \\/_/\\/_/ \\/_/\\/_/\\/_/ \\/___/  \\/__,_ /\n" +
-                        "                                                       version " + AuthMod.VERSION +"\n" +
-                        " Github link\n" +
-                        "  - https://github.com/Chocorean/authmod\n" +
-                        " Authors\n" +
-                        "   - Chocorean\n" +
-                        "   - Mcdostone");
-        this.isLoginEnabled = this.getProperty(AuthModConfig.GEN_CATEGORY, "isLoginEnabled").getBoolean();
-        this.isRegisterEnabled = this.getProperty(AuthModConfig.GEN_CATEGORY, "isRegisterEnabled").getBoolean();
-        this.strategy = this.getProperty(AuthModConfig.GEN_CATEGORY,"strategy").getString();
-        this.hostedDomain = this.getProperty(AuthModConfig.GEN_CATEGORY,"hostedDomain").getString();
-        this.contact = this.getProperty(AuthModConfig.GEN_CATEGORY,"contact").getString();
-        this.delay = this.getProperty(AuthModConfig.GEN_CATEGORY,"delay").getInt();
-        this.emailOnLogin = this.getProperty(AuthModConfig.GEN_CATEGORY,"emailOnLogin").getBoolean();
+    public static class DatabaseConfig {
 
-        this.welcomeMsg = this.getProperty(AuthModConfig.MSG_CATEGORY,"welcome").getString();
-        this.successMsg = this.getProperty(AuthModConfig.MSG_CATEGORY,"success").getString();
-        this.wrongPasswordMsg = this.getProperty(AuthModConfig.MSG_CATEGORY,"wrongPassword").getString();
-        this.wrongUsernameMsg = this.getProperty(AuthModConfig.MSG_CATEGORY,"wrongUsername").getString();
-        this.notValidEmailMsg = this.getProperty(AuthModConfig.MSG_CATEGORY,"notValidEmail").getString();
-        this.databaseErrorMsg = this.getProperty(AuthModConfig.MSG_CATEGORY,"databaseError").getString();
-        this.bannedMsg = this.getProperty(AuthModConfig.MSG_CATEGORY,"banned").getString();
-        this.playerNotFoundMsg = this.getProperty(AuthModConfig.MSG_CATEGORY,"playerNotFound").getString();
-        this.playerAlreadyExistsMsg = this.getProperty(AuthModConfig.MSG_CATEGORY,"playerAlreadyExists").getString();
-        this.playerAlreadyLoggedMsg = this.getProperty(AuthModConfig.MSG_CATEGORY,"playerAlreadyLogged").getString();
-        this.wrongNumberOfArgsMsg = this.getProperty(AuthModConfig.MSG_CATEGORY,"wrongNumberOfArgs").getString();
-        this.registerUsageMsg = this.getProperty(AuthModConfig.MSG_CATEGORY,"registerUsage").getString();
-        this.loginUsageMsg = this.getProperty(AuthModConfig.MSG_CATEGORY,"loginUsage").getString();
+        @Comment("Column name for the email address")
+        public String emailField = "email";
 
-        this.databaseConfig.loadProperties();
-        if (this.config.hasChanged())
-            this.config.save();
-    }
+        @Comment("Column name telling whether the player is banned or not")
+        public String bannedField = "banned";
 
+        @Comment("Column name for the username")
+        public String usernameField = "username";
 
-    public Property getProperty(String category, String key) {
-        return this.config.get(category,
-                key,
-                this.getDefaultValue(category, key),
-                this.getComment(category, key));
-    }
+        @Comment({"Column name for the player's uuid"})
+        public String uuidField = "uuid";
 
-    private String getDefaultValue(String category, String key) {
-        return this.defaultValues.get(String.format("%s.%s.default", category.trim().toLowerCase(), key.trim()));
-    }
+        @Comment("Column name containing the encrypted password")
+        public String passwordField = "password";
 
-    private String getComment(String category, String key) {
-        return this.comments.get(String.format("%s.%s.comment", category.trim().toLowerCase(), key.trim()));
-    }
+        @Comment("Name of the database")
+        public String database = "minecraft";
 
-    public AuthModDatabaseConfig getDatabaseConfig() {
-        return this.databaseConfig;
-    }
+        @Comment("SQL dialect used")
+        public String dialect = "mariadb";
 
-    public String getAuthenticationStrategy() {
-        return this.strategy;
-    }
+        @Comment("Host hosting the database")
+        public String host = "mariadb";
 
-    public String getContact() {
-        return this.contact;
-    }
+        @Comment("Database user")
+        public String user = "root";
 
-    public String getHostedDomain() {
-        return this.hostedDomain;
-    }
+        @Comment("Database user's password")
+        public  String password = "root";
 
-    public boolean getEmailOnLogin() {
-        return this.emailOnLogin;
-    }
+        @Comment("Port to be used")
+        public int port = 3306;
 
-    public boolean isLoginEnabled() {
-        return this.isLoginEnabled;
-    }
+        @Comment("SQL table to be used")
+        public String table = "players";
 
-    public boolean isRegisterEnabled() {
-        return this.isRegisterEnabled;
-    }
-
-    public int getDelay() {
-        return this.delay;
-    }
-
-    public String getWelcomeMessage() {
-        return this.welcomeMsg;
-    }
-
-    public String getSuccessMsg() {
-        return this.successMsg;
-    }
-
-    public String getWrongPasswordMsg() {
-        return wrongPasswordMsg;
-    }
-
-    public String getWrongUsernameMsg() {
-        return wrongUsernameMsg;
-    }
-
-    public String getNotValidEmailMsg() {
-        return notValidEmailMsg;
-    }
-
-    public String getDatabaseErrorMsg() {
-        return databaseErrorMsg;
-    }
-
-    public String getBannedMsg() {
-        return bannedMsg;
-    }
-
-    public String getPlayerNotFoundMsg() {
-        return playerNotFoundMsg;
-    }
-
-    public String getPlayerAlreadyExistsMsg() {
-        return playerAlreadyExistsMsg;
-    }
-
-    public String getPlayerAlreadyLoggedMsg() {
-        return playerAlreadyLoggedMsg;
-    }
-
-    public String getWrongNumberOfArgsMsg() {
-        return wrongNumberOfArgsMsg;
-    }
-
-    public String getRegisterUsageMsg() {
-        return registerUsageMsg;
-    }
-
-    public String getLoginUsageMsg() {
-        return loginUsageMsg;
     }
 
 }
