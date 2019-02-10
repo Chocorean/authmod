@@ -13,7 +13,12 @@ import io.chocorean.authmod.guard.datasource.FileDataSourceStrategy;
 import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
 import io.chocorean.authmod.guard.datasource.db.ConnectionFactory;
 import io.chocorean.authmod.proxy.CommonProxy;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.nio.file.Paths;
+import net.minecraft.util.text.translation.LanguageMap;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.Mod;
@@ -44,9 +49,19 @@ public class AuthMod {
   private Handler handler;
   private IDataSourceStrategy dataSourceStrategy;
 
+  private void injectLang(File langFile) throws FileNotFoundException {
+    if (AuthModConfig.lang.length() != 0) {
+      InputStream in = new FileInputStream(langFile);
+      LanguageMap.inject(in);
+    }
+  }
+
   @Mod.EventHandler
   public void preInit(FMLPreInitializationEvent event) throws Exception {
-    AuthMod.LOGGER = event.getModLog();
+    if (AuthModConfig.lang.length() != 0) {
+      this.injectLang(
+          Paths.get(event.getModConfigurationDirectory().toString(), "test.lang").toFile());
+    }
     switch (AuthModConfig.dataSourceStrategy) {
       case DATABASE:
         this.dataSourceStrategy =

@@ -1,5 +1,6 @@
 package io.chocorean.authmod.command;
 
+import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.event.Handler;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,26 +13,37 @@ import net.minecraft.network.play.server.SPacketChat;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import org.apache.logging.log4j.Logger;
 
 public class LoggedCommand implements ICommand {
+  private static final Logger LOGGER = AuthMod.LOGGER;
   private final List<String> aliases;
   private final Handler handler;
+  private final String no;
+  private final String yes;
 
   public LoggedCommand(Handler handler) {
     this.handler = handler;
     this.aliases = new ArrayList<>();
-    this.aliases.add("logged");
     this.aliases.add("logged?");
+    this.yes =
+        new TextComponentTranslation(String.format("%s.%s", this.getName(), "yes"))
+            .getUnformattedComponentText();
+    this.no =
+        new TextComponentTranslation(String.format("%s.%s", this.getName(), "no"))
+            .getUnformattedComponentText();
   }
 
   @Override
   public String getName() {
-    return "logged?";
+    return "logged";
   }
 
   @Override
   public String getUsage(ICommandSender sender) {
-    return "/logged? - Tell you if you are authenticated on the server";
+    return new TextComponentTranslation(String.format("%s.%s", this.getName(), "usage"))
+        .getUnformattedComponentText();
   }
 
   @Override
@@ -44,7 +56,8 @@ public class LoggedCommand implements ICommand {
     EntityPlayer player = (EntityPlayer) sender;
     boolean logged = this.handler.isLogged(player);
     ((EntityPlayerMP) sender)
-        .connection.sendPacket(new SPacketChat(new TextComponentString(logged ? "Yes" : "No")));
+        .connection.sendPacket(
+            new SPacketChat(new TextComponentString(logged ? this.yes : this.no)));
   }
 
   @Override

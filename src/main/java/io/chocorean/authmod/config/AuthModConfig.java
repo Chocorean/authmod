@@ -20,6 +20,10 @@ public class AuthModConfig {
   @Comment("Enable or disable the /register command")
   public static boolean enableRegistration = true;
 
+  @Comment(
+      "Indicate the lang file to use (this file must be located on the server, in config/<file>.lang)")
+  public static String lang = "";
+
   public enum Strategies {
     FILE,
     DATABASE

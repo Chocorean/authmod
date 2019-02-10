@@ -1,0 +1,42 @@
+# Message displayed when a player tries to connect while being banned.
+login.banned=You've been banned. Please contact the admins.
+
+# Message displayed when an error with database occurs. Check your server logs.
+error=Something was wrong. Please contact the admins.
+
+# Usage for /login
+login.usage=/login <email> <password> - Allows you to authenticate on the server
+
+# Message displayed to a player when he/she attempts to sign in with an incorrect email.
+login.wrongEmail=Your email is not valid.
+
+# Message displayed when an already-logged player tries to sign in.
+login.exist=You are already logged in.
+
+# Message displayed when a player tries to sign up with an already-registered account.
+register.exist=Someone has already registered with this username or email.
+
+# Message displayed when a player tries to connect without having registered.
+login.unknown=You've not registered yet.
+
+# Usage for /register
+register.usage=/register <email> <password> - Be careful when choosing it, you'll be asked to login each time you play.
+
+# Message displayed to a player when he/she successfully signs in.
+login.success=You've successfully signed in.
+
+# Message displayed to a player when he/she joins the server.
+welcome=grosse merde
+
+delay=Wake up, you have only %s seconds to log in.
+
+# Message displayed to a player when he/she typed a wrong password.
+login.wrongPassword=Wrong password. Please try again.
+
+# Message displayed to a player when he/she attempts to sign in with wrong username
+login.wrongUsername=Your username does not correspond to your credentials.
+
+# Message displayed to a player when he/she attempts to sign in with wrong username
+logged.yes=Yes
+
+logged.no=No

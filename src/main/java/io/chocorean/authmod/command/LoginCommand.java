@@ -17,6 +17,7 @@ import net.minecraft.network.play.server.SPacketChat;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import org.apache.logging.log4j.Logger;
 
 public class LoginCommand implements ICommand {
@@ -46,7 +47,8 @@ public class LoginCommand implements ICommand {
 
   @Override
   public String getUsage(ICommandSender sender) {
-    return "";
+    return new TextComponentTranslation(String.format("%s.%s", this.getName(), "usage"))
+        .getUnformattedComponentText();
   }
 
   @Override

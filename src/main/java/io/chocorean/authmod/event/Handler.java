@@ -13,10 +13,10 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.play.server.SPacketChat;
 import net.minecraft.network.play.server.SPacketDisconnect;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.event.CommandEvent;
@@ -39,6 +39,9 @@ public class Handler {
   private static final ScheduledExecutorService scheduler = new ScheduledThreadPoolExecutor(1);
   private static final Map<EntityPlayer, PlayerDescriptor> descriptors = new HashMap<>();
   private static final Map<EntityPlayer, Boolean> logged = new HashMap<>();
+  private static final String welcome = new TextComponentTranslation("welcome").getFormattedText();
+  private static final String wakeUp =
+      new TextComponentTranslation("delay", AuthModConfig.delay).getFormattedText();
 
   @SubscribeEvent(priority = EventPriority.HIGHEST)
   public static void onJoin(PlayerLoggedInEvent event) {
@@ -55,12 +58,7 @@ public class Handler {
             descriptors.remove(entity);
             logged.remove(entity);
             ((EntityPlayerMP) entity)
-                .connection.sendPacket(
-                    new SPacketDisconnect(
-                        new TextComponentString(
-                            "Wake up! You only have "
-                                + AuthModConfig.delay
-                                + " seconds to log in.")));
+                .connection.sendPacket(new SPacketDisconnect(new TextComponentString(wakeUp)));
           }
         },
         AuthModConfig.delay,
@@ -88,21 +86,19 @@ public class Handler {
     EntityPlayer entity = event.getEntityPlayer();
     if (descriptors.containsKey(entity) && event.isCancelable()) {
       event.setCanceled(true);
-      ((EntityPlayerMP) entity).connection.sendPacket(new SPacketChat(new TextComponentString("")));
+      entity.sendMessage(new TextComponentString(welcome));
     }
   }
 
   @SubscribeEvent(priority = EventPriority.HIGHEST)
   public static void onCommand(CommandEvent event) {
     String name = event.getCommand().getName();
-    if (descriptors.containsKey(event.getSender()) && !name.equals("register")
-        || name.equals("login")
-        || name.equals("logged?")
-            && event.getSender() instanceof EntityPlayer
-            && event.isCancelable()) {
+    if (descriptors.containsKey(event.getSender())
+        && !(name.equals("register") || name.equals("login") || name.equals("logged"))
+        && event.getSender() instanceof EntityPlayer
+        && event.isCancelable()) {
       event.setCanceled(true);
-      ((EntityPlayerMP) event.getSender())
-          .connection.sendPacket(new SPacketChat(new TextComponentString("")));
+      event.getSender().sendMessage(new TextComponentString(welcome));
     }
   }
 
@@ -111,7 +107,7 @@ public class Handler {
     EntityPlayerMP entity = event.getPlayer();
     if (event.isCancelable() && descriptors.containsKey(entity)) {
       event.setCanceled(true);
-      event.getPlayer().connection.sendPacket(new SPacketChat(new TextComponentString("")));
+      event.getPlayer().sendMessage(new TextComponentString(welcome));
     }
   }
 
@@ -121,8 +117,7 @@ public class Handler {
     if (event.isCancelable() && descriptors.containsKey(entity)) {
       event.setCanceled(true);
       entity.inventory.addItemStackToInventory(event.getEntityItem().getItem());
-      ((EntityPlayerMP) event.getPlayer())
-          .connection.sendPacket(new SPacketChat(new TextComponentString("")));
+      event.getPlayer().sendMessage(new TextComponentString(welcome));
     }
   }
 
@@ -135,7 +130,7 @@ public class Handler {
         && event.isCancelable()
         && descriptors.containsKey(entity)) {
       event.setCanceled(true);
-      ((EntityPlayerMP) entity).connection.sendPacket(new SPacketChat(new TextComponentString("")));
+      entity.sendMessage(new TextComponentString(welcome));
     }
   }
 
