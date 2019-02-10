@@ -1,49 +1,63 @@
 package io.chocorean.authmod.guard.registration;
 
 import io.chocorean.authmod.AuthMod;
-import io.chocorean.authmod.guard.payload.IPayload;
+import io.chocorean.authmod.exception.AuthmodException;
+import io.chocorean.authmod.exception.PlayerAlreadyExistException;
 import io.chocorean.authmod.guard.MappingConstraintViolationsToExceptions;
 import io.chocorean.authmod.guard.PlayerFactory;
 import io.chocorean.authmod.guard.datasource.FileDataSourceStrategy;
 import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
-import io.chocorean.authmod.exception.AuthmodException;
-import io.chocorean.authmod.exception.PlayerAlreadyExistException;
+import io.chocorean.authmod.guard.payload.IPayload;
 import io.chocorean.authmod.guard.payload.RegistrationPayload;
 import io.chocorean.authmod.model.IPlayer;
-import org.apache.logging.log4j.Logger;
-import org.mindrot.jbcrypt.BCrypt;
 
-import javax.validation.ConstraintViolation;
 import java.nio.file.Paths;
 import java.util.Set;
 
-public class Registrator {
+import javax.validation.ConstraintViolation;
 
+import org.apache.logging.log4j.Logger;
+import org.mindrot.jbcrypt.BCrypt;
+
+public class Registrator {
     private static final Logger LOGGER = AuthMod.LOGGER;
     private final IDataSourceStrategy dataSource;
 
     public Registrator() {
-        this(new FileDataSourceStrategy(Paths.get(System.getProperty("java.io.tmpdir"), "authmod.csv").toFile()));
+        this(
+            new FileDataSourceStrategy(
+                Paths.get(
+                    System.getProperty("java.io.tmpdir"),
+                    "authmod.csv"
+                ).toFile()
+            )
+        );
     }
 
     public Registrator(IDataSourceStrategy dataSourceStrategy) {
         this.dataSource = dataSourceStrategy;
     }
 
-    public boolean register(RegistrationPayload payload) throws AuthmodException {
-        if(payload != null) {
-            if(payload.isValid()) {
-                IPlayer player = PlayerFactory.createFromRegistrationPayload(payload);
-                if(this.dataSource.exist(player)) {
+    public boolean register(RegistrationPayload payload)
+        throws
+            AuthmodException {
+        if (payload != null) {
+            if (payload.isValid()) {
+                IPlayer player = PlayerFactory.createFromRegistrationPayload(
+                    payload
+                );
+                if (this.dataSource.exist(player)) {
                     throw new PlayerAlreadyExistException();
                 } else {
                     LOGGER.info(payload.getUsername() + " is registering");
-                    player.setPassword(BCrypt.hashpw(player.getPassword(), BCrypt.gensalt()));
+                    player.setPassword(
+                        BCrypt.hashpw(player.getPassword(), BCrypt.gensalt())
+                    );
                     return this.dataSource.add(player);
                 }
             } else {
                 Set<ConstraintViolation<IPayload>> errors = payload.getErrors();
-                for(ConstraintViolation<IPayload> c: errors) {
+                for (ConstraintViolation<IPayload> c : errors) {
                     MappingConstraintViolationsToExceptions.throwException(c);
                 }
             }
@@ -56,3 +70,4 @@ public class Registrator {
     }
 
 }
+

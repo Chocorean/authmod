@@ -5,7 +5,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class Player implements IPlayer {
-
     private String password;
 
     @Email
@@ -59,16 +58,17 @@ public class Player implements IPlayer {
 
     @Override
     public IPlayer setUuid(String uuid) {
-        if(uuid == null) {
+        if (uuid == null) {
             this.uuid = "";
         } else {
-            if(uuid.length() == 32) {
-                uuid = String.format("%s-%s-%s-%s-%s",
-                        uuid.substring(0, 8),
-                        uuid.substring(8, 12),
-                        uuid.substring(12, 16),
-                        uuid.substring(16, 20),
-                        uuid.substring(20, 32)
+            if (uuid.length() == 32) {
+                uuid = String.format(
+                    "%s-%s-%s-%s-%s",
+                    uuid.substring(0, 8),
+                    uuid.substring(8, 12),
+                    uuid.substring(12, 16),
+                    uuid.substring(16, 20),
+                    uuid.substring(20, 32)
                 );
             }
             this.uuid = uuid.length() == 36 ? uuid : "";
@@ -82,7 +82,9 @@ public class Player implements IPlayer {
     }
 
     @Override
-    public boolean isPremium() { return this.getUuid().length() != 0; }
+    public boolean isPremium() {
+        return this.getUuid().length() != 0;
+    }
 
     @Override
     public IPlayer setUsername(String username) {
@@ -94,5 +96,5 @@ public class Player implements IPlayer {
         return String.format("{%s, %s}", this.getEmail(), this.getUsername());
     }
 
-
 }
+

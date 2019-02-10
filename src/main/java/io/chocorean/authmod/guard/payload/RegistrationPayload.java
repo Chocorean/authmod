@@ -1,16 +1,16 @@
 package io.chocorean.authmod.guard.payload;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotNull;
-import java.util.HashSet;
-import java.util.Set;
 
 public class RegistrationPayload implements IPayload {
-
     private final boolean emailRequired;
     @NotNull
     private LoginPayload payload;
@@ -39,7 +39,7 @@ public class RegistrationPayload implements IPayload {
     public boolean isValid() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
-        this.errors = validator.validate(this.payload);;
+        this.errors = validator.validate(this.payload);
         this.errors.addAll(validator.validate(this));
         return this.errors.isEmpty();
     }
@@ -80,7 +80,9 @@ public class RegistrationPayload implements IPayload {
 
     @AssertTrue
     private boolean isPasswordConfirmationMatchs() {
-        return this.getPasswordConfirmation().equals(this.payload.getPassword());
+        return this.getPasswordConfirmation().equals(
+            this.payload.getPassword()
+        );
     }
 
     @Override
@@ -111,4 +113,6 @@ public class RegistrationPayload implements IPayload {
         this.passwordConfirmation = passwordConfirmation;
         return this;
     }
+
 }
+

@@ -4,6 +4,13 @@ import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.config.AuthModConfig;
 import io.chocorean.authmod.model.PlayerDescriptor;
 import io.chocorean.authmod.model.PlayerPos;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,17 +33,11 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import org.apache.logging.log4j.Logger;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import org.apache.logging.log4j.Logger;
 
 @Mod.EventBusSubscriber
 public class Handler {
-
     private static final Logger LOGGER = AuthMod.LOGGER;
     private static final ScheduledExecutorService scheduler = new ScheduledThreadPoolExecutor(1);
     private static final Map<EntityPlayer, PlayerDescriptor> descriptors = new HashMap<>();
@@ -47,17 +48,27 @@ public class Handler {
         EntityPlayer entity = event.player;
         // initializing timer for kicking player if he/she hasn't logged in a minute
         BlockPos pos = entity.getPosition();
-        float yaw = entity.rotationYaw, pitch = entity.rotationPitch;
+        float yaw = entity.rotationYaw,
+        pitch = entity.rotationPitch;
         PlayerPos pp = new PlayerPos(pos, yaw, pitch);
         PlayerDescriptor dc = new PlayerDescriptor(entity, pp);
         descriptors.put(entity, dc);
         scheduler.schedule(() -> {
-            if (descriptors.containsKey(entity)) {
-                descriptors.remove(entity);
-                logged.remove(entity);
-                ((EntityPlayerMP) entity).connection.sendPacket(new SPacketDisconnect(new TextComponentString("Wake up! You only have " + AuthModConfig.delay + " seconds to log in.")));
-            }
-        }, AuthModConfig.delay, TimeUnit.SECONDS);
+                if (descriptors.containsKey(entity)) {
+                    descriptors.remove(entity);
+                    logged.remove(entity);
+                    ((EntityPlayerMP) entity).connection.sendPacket(
+                        new SPacketDisconnect(
+                            new TextComponentString(
+                                "Wake up! You only have " + AuthModConfig.delay + " seconds to log in."
+                            )
+                        )
+                    );
+                }
+            },
+            AuthModConfig.delay,
+            TimeUnit.SECONDS
+        );
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -65,50 +76,65 @@ public class Handler {
         logged.remove(event.player);
     }
 
-
     @SubscribeEvent
     public static void onPlayerTickEvent(TickEvent.PlayerTickEvent event) {
         if (descriptors.containsKey(event.player)) {
             PlayerPos pp = descriptors.get(event.player).getPosition();
             BlockPos pos = pp.getPosition();
-            ((EntityPlayerMP)event.player).connection.setPlayerLocation(pos.getX(), pos.getY(), pos.getZ(), pp.getYaw(), pp.getPitch());
+            ((EntityPlayerMP) event.player).connection.setPlayerLocation(
+                pos.getX(),
+                pos.getY(),
+                pos.getZ(),
+                pp.getYaw(),
+                pp.getPitch()
+            );
         }
     }
 
-    @SubscribeEvent(priority=EventPriority.HIGHEST)
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onPlayerEvent(PlayerEvent event) {
         EntityPlayer entity = event.getEntityPlayer();
-        if(descriptors.containsKey(entity) && event.isCancelable()) {
+        if (descriptors.containsKey(entity) && event.isCancelable()) {
             event.setCanceled(true);
-            ((EntityPlayerMP) entity).connection.sendPacket(new SPacketChat(new TextComponentString("")));
+            ((EntityPlayerMP) entity).connection.sendPacket(
+                new SPacketChat(new TextComponentString(""))
+            );
         }
     }
 
-    @SubscribeEvent(priority= EventPriority.HIGHEST)
-    public static void onCommand(CommandEvent event){
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public static void onCommand(CommandEvent event) {
         String name = event.getCommand().getName();
-        if (descriptors.containsKey(event.getSender()) && !(name.equals("register") || name.equals("login") || name.equals("logged?")) && (event.getSender() instanceof EntityPlayer) && event.isCancelable()) {
+        if (descriptors.containsKey(event.getSender()) && !name.equals(
+            "register"
+        ) || name.equals("login") || name.equals("logged?") && event.getSender(
+
+        ) instanceof EntityPlayer && event.isCancelable()) {
             event.setCanceled(true);
-            ((EntityPlayerMP)event.getSender()).connection.sendPacket(new SPacketChat(new TextComponentString("")));
+            ((EntityPlayerMP) event.getSender()).connection.sendPacket(
+                new SPacketChat(new TextComponentString(""))
+            );
         }
     }
 
-    @SubscribeEvent(priority=EventPriority.HIGHEST)
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onChatEvent(ServerChatEvent event) {
         EntityPlayerMP entity = event.getPlayer();
         if (event.isCancelable() && descriptors.containsKey(entity)) {
             event.setCanceled(true);
-            event.getPlayer().connection.sendPacket(new SPacketChat(new TextComponentString("")));
+            event.getPlayer().connection.sendPacket(
+                new SPacketChat(new TextComponentString(""))
+            );
         }
     }
 
-    @SubscribeEvent(priority=EventPriority.HIGHEST)
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onTossEvent(ItemTossEvent event) {
         EntityPlayer entity = event.getPlayer();
         if (event.isCancelable() && descriptors.containsKey(entity)) {
             event.setCanceled(true);
             entity.inventory.addItemStackToInventory(event.getEntityItem().getItem());
-            ((EntityPlayerMP)event.getPlayer()).connection.sendPacket(new SPacketChat(new TextComponentString("")));
+            ((EntityPlayerMP) event.getPlayer()).connection.sendPacket(new SPacketChat(new TextComponentString("")));
         }
     }
 
@@ -123,36 +149,36 @@ public class Handler {
         }
     }
 
-    @SubscribeEvent(priority=EventPriority.HIGHEST)
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onLivingAttackEvent(LivingAttackEvent event) {
         handleLivingEvents(event, event.getEntity());
     }
 
-    @SubscribeEvent(priority=EventPriority.HIGHEST)
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onLivingDeathEvent(LivingDeathEvent event) {
         handleLivingEvents(event, event.getEntity());
     }
 
-    @SubscribeEvent(priority=EventPriority.HIGHEST)
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onLivingEntityUseItemEvent(LivingEntityUseItemEvent event) {
         handleLivingEvents(event, event.getEntity());
     }
 
-    @SubscribeEvent(priority=EventPriority.HIGHEST)
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onLivingHealEvent(LivingHealEvent event) {
         handleLivingEvents(event, event.getEntity());
     }
 
-    @SubscribeEvent(priority=EventPriority.HIGHEST)
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onLivingHurtEvent(LivingHurtEvent event) {
         handleLivingEvents(event, event.getEntity());
     }
 
     /* NOT CANCELABLE*/
-    @SubscribeEvent(priority=EventPriority.HIGHEST)
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onLivingSetTargetAttackEvent(LivingSetAttackTargetEvent event) {
         if (event.getTarget() instanceof EntityPlayer && descriptors.containsKey(event.getTarget())) {
-            ((EntityLiving)event.getEntityLiving()).setAttackTarget(null);
+            ((EntityLiving) event.getEntityLiving()).setAttackTarget(null);
         }
     }
 
@@ -165,11 +191,12 @@ public class Handler {
         return logged.getOrDefault(player, false);
     }
 
-
     @SubscribeEvent
     public static void onConfigChanged(final ConfigChangedEvent.OnConfigChangedEvent event) {
         if (event.getModID().equals(AuthMod.MODID)) {
             ConfigManager.sync(AuthMod.MODID, Config.Type.INSTANCE);
         }
     }
+
 }
+

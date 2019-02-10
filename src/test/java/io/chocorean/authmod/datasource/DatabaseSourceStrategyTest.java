@@ -9,19 +9,19 @@ import io.chocorean.authmod.guard.datasource.DatabaseSourceStrategy;
 import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
 import io.chocorean.authmod.guard.datasource.db.IConnectionFactory;
 import io.chocorean.authmod.model.IPlayer;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class DatabaseSourceStrategyTest {
-
     private IPlayer player;
     private IDataSourceStrategy dataSource;
-    private  IConnectionFactory connectionFactory;
+    private IConnectionFactory connectionFactory;
 
     @BeforeEach
     void setupConnection() throws SQLException {
@@ -29,7 +29,10 @@ public class DatabaseSourceStrategyTest {
         DBHelpers.initTable(this.connectionFactory);
     }
 
-    private boolean registerPlayer() throws SQLException, RegistrationException {
+    private boolean registerPlayer()
+        throws
+            SQLException,
+            RegistrationException {
         this.dataSource = new DatabaseSourceStrategy(connectionFactory);
         this.player = PlayerFactory.create();
         return dataSource.add(this.player);
@@ -44,11 +47,13 @@ public class DatabaseSourceStrategyTest {
     public void testConstructorTableIsDifferent() throws SQLException {
         DBHelpers.dataFile.delete();
         Statement stmt = connectionFactory.getConnection().createStatement();
-        stmt.executeUpdate("CREATE TABLE players (" +
-                "id integer PRIMARY KEY," +
-                "email varchar(255) NOT NULL" +
-                ");");
-        assertThrows(SQLException.class, () -> new DatabaseSourceStrategy(connectionFactory));
+        stmt.executeUpdate(
+            "CREATE TABLE players (" + "id integer PRIMARY KEY," + "email varchar(255) NOT NULL" + ");"
+        );
+        assertThrows(
+            SQLException.class,
+            () -> new DatabaseSourceStrategy(connectionFactory)
+        );
     }
 
     @Test
@@ -76,7 +81,10 @@ public class DatabaseSourceStrategyTest {
     @Test
     public void testFindByEmail() throws RegistrationException, SQLException {
         this.registerPlayer();
-            assertNotNull(dataSource.find(this.player.getEmail(), null), "The player should exist and be found");
+        assertNotNull(
+            dataSource.find(this.player.getEmail(), null),
+            "The player should exist and be found"
+        );
     }
 
     @Test
@@ -84,25 +92,43 @@ public class DatabaseSourceStrategyTest {
         this.dataSource = new DatabaseSourceStrategy(connectionFactory);
         this.player = PlayerFactory.create();
         DBHelpers.dataFile.delete();
-        assertNull(dataSource.find(this.player.getEmail(), null), "The player should not exist");
+        assertNull(
+            dataSource.find(this.player.getEmail(), null),
+            "The player should not exist"
+        );
     }
 
     @Test
-    public void testFindByUsername() throws RegistrationException, SQLException {
+    public void testFindByUsername()
+        throws
+            RegistrationException,
+            SQLException {
         this.registerPlayer();
-        assertNotNull(dataSource.find(null, player.getUsername()), "The player should exist and be found");
+        assertNotNull(
+            dataSource.find(null, player.getUsername()),
+            "The player should exist and be found"
+        );
     }
 
     @Test
     public void testFindNotExist() throws RegistrationException, SQLException {
         this.registerPlayer();
-        assertNull(dataSource.find("test@test.fr", "test"), "The player should not exist");
+        assertNull(
+            dataSource.find("test@test.fr", "test"),
+            "The player should not exist"
+        );
     }
 
     @Test
-    public void testFindByUsernameOrEmail() throws RegistrationException, SQLException {
+    public void testFindByUsernameOrEmail()
+        throws
+            RegistrationException,
+            SQLException {
         this.registerPlayer();
-        assertNotNull(dataSource.find(player.getEmail(), player.getUsername()), "The player should exist and be found");
+        assertNotNull(
+            dataSource.find(player.getEmail(), player.getUsername()),
+            "The player should exist and be found"
+        );
     }
 
     @Test
@@ -112,3 +138,4 @@ public class DatabaseSourceStrategyTest {
     }
 
 }
+

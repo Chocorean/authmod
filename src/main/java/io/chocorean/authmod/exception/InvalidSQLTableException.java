@@ -7,3 +7,4 @@ public class InvalidSQLTableException extends LoginException {
     }
 
 }
+

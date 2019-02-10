@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 public class ClientProxyTest {
-
     private ClientProxy clientProxy;
 
     @BeforeEach
@@ -20,3 +19,4 @@ public class ClientProxyTest {
     }
 
 }
+

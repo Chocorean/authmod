@@ -23,4 +23,6 @@ public interface IPlayer {
     IPlayer setUuid(String uuid);
 
     String getUuid();
+
 }
+

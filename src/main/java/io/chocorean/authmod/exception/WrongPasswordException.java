@@ -7,3 +7,4 @@ public class WrongPasswordException extends LoginException {
     }
 
 }
+

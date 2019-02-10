@@ -3,7 +3,6 @@ package io.chocorean.authmod;
 import org.junit.jupiter.api.BeforeEach;
 
 public class AuthModTest {
-
     private AuthMod authmod;
 
     @BeforeEach
@@ -12,3 +11,4 @@ public class AuthModTest {
     }
 
 }
+

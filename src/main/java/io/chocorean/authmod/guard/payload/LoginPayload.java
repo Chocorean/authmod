@@ -1,4 +1,8 @@
 package io.chocorean.authmod.guard.payload;
+
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -7,16 +11,13 @@ import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.HashSet;
-import java.util.Set;
 
 public class LoginPayload implements IPayload {
-
     @Email
     private String email;
 
-    @Size(min = 5, max = 100)
     @NotNull
+    @Size(min = 5, max = 100)
     private String password;
 
     @NotNull
@@ -58,8 +59,8 @@ public class LoginPayload implements IPayload {
 
     @Override
     public LoginPayload setEmail(String email) {
-        if(email != null)
-            email = email.length() < 3 ? null : email;
+        if (email != null)
+        email = email.length() < 3 ? null : email;
         this.email = email;
         return this;
     }
@@ -110,4 +111,6 @@ public class LoginPayload implements IPayload {
         this.uuid = uuid;
         return this;
     }
+
 }
+

@@ -1,24 +1,24 @@
 package io.chocorean.authmod.guard.authentication;
 
+import io.chocorean.authmod.exception.*;
 import io.chocorean.authmod.guard.PlayerFactory;
 import io.chocorean.authmod.guard.datasource.FileDataSourceStrategy;
 import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
-import io.chocorean.authmod.exception.*;
 import io.chocorean.authmod.guard.payload.LoginPayload;
 import io.chocorean.authmod.guard.payload.RegistrationPayload;
 import io.chocorean.authmod.guard.registration.Registrator;
 import io.chocorean.authmod.model.IPlayer;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class AuthenticatorTest {
-
     private Authenticator authenticator;
     private Registrator registrator;
     private LoginPayload payload;
@@ -29,8 +29,11 @@ public class AuthenticatorTest {
 
     @BeforeEach
     void init() throws IOException, AuthmodException {
-        this.dataFile = Paths.get(System.getProperty("java.io.tmpdir"), "authmod.csv").toFile();
-        if(this.dataFile.exists()) {
+        this.dataFile = Paths.get(
+            System.getProperty("java.io.tmpdir"),
+            "authmod.csv"
+        ).toFile();
+        if (this.dataFile.exists()) {
             this.dataFile.delete();
         }
         this.dataSource = new FileDataSourceStrategy(this.dataFile);
@@ -56,8 +59,14 @@ public class AuthenticatorTest {
 
     @Test
     public void testConstructor() {
-        Authenticator authenticator = new Authenticator(new FileDataSourceStrategy(this.dataFile));
-        assertEquals(authenticator.getDataSourceStrategy().getClass(), FileDataSourceStrategy.class, "Data source strategy should be FileDataSourceStrategy");
+        Authenticator authenticator = new Authenticator(
+            new FileDataSourceStrategy(this.dataFile)
+        );
+        assertEquals(
+            authenticator.getDataSourceStrategy().getClass(),
+            FileDataSourceStrategy.class,
+            "Data source strategy should be FileDataSourceStrategy"
+        );
     }
 
     @Test
@@ -68,18 +77,28 @@ public class AuthenticatorTest {
 
     @Test
     public void testLoginWrongPassword() throws LoginException {
-        boolean logged = this.authenticator.login(this.payload.setPassword("wrong"));
+        boolean logged = this.authenticator.login(
+            this.payload.setPassword("wrong")
+        );
         assertFalse(logged, "Player should not be logged");
     }
 
     @Test
     public void testLoginUnknownPlayer() {
-        assertThrows(PlayerNotFoundException.class, () -> this.authenticator.login(this.payload.setEmail("freddie.wong@rocketjump.com")));
+        assertThrows(
+            PlayerNotFoundException.class,
+            () -> this.authenticator.login(
+                this.payload.setEmail("freddie.wong@rocketjump.com")
+            )
+        );
     }
 
     @Test
     public void testLoginDifferentUsername() {
-        assertThrows(DifferentUsernameException.class, () -> this.authenticator.login(this.payload.setUsername("wrong")));
+        assertThrows(
+            DifferentUsernameException.class,
+            () -> this.authenticator.login(this.payload.setUsername("wrong"))
+        );
     }
 
     @Test
@@ -91,7 +110,10 @@ public class AuthenticatorTest {
         LoginPayload p = new LoginPayload();
         p.setUsername("banner");
         p.setPassword("korben");
-        assertThrows(BannedPlayerException.class, () -> this.authenticator.login(p));
+        assertThrows(
+            BannedPlayerException.class,
+            () -> this.authenticator.login(p)
+        );
     }
 
     @Test
@@ -101,3 +123,4 @@ public class AuthenticatorTest {
     }
 
 }
+

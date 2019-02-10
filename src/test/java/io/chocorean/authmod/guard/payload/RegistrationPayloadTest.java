@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class RegistrationPayloadTest {
-
     private RegistrationPayload payload;
 
     @BeforeEach
@@ -30,34 +29,49 @@ public class RegistrationPayloadTest {
         assertTrue(this.payload.isValid(), "Payload should be valid");
     }
 
-
     @Test
     public void testIsValidEmailRequired() {
         this.payload.setEmailRequired(true);
         this.payload.setEmail(null);
         assertTrue(this.payload.isEmailRequired(), "payload must have email");
-        assertFalse(this.payload.isValid(), "Payload should not be valid, email is missing");
+        assertFalse(
+            this.payload.isValid(),
+            "Payload should not be valid, email is missing"
+        );
     }
 
     @Test
     public void testIsValidShortPassword() {
-        assertFalse(this.payload.setPassword("u").isValid(), "Payload should not be valid, password is too short");
+        assertFalse(
+            this.payload.setPassword("u").isValid(),
+            "Payload should not be valid, password is too short"
+        );
     }
 
     @Test
     public void testIsValidIncorrectUuid() {
-        assertFalse(this.payload.setUuid("uuid").isValid(), "payload should not be valid because of UUID");
+        assertFalse(
+            this.payload.setUuid("uuid").isValid(),
+            "payload should not be valid because of UUID"
+        );
     }
 
     @Test
     public void testIsValidNullUuid() {
-        assertTrue(this.payload.setUuid(null).isValid(), "payload should be valid");
+        assertTrue(
+            this.payload.setUuid(null).isValid(),
+            "payload should be valid"
+        );
     }
 
     @Test
     public void testIsValidPasswordsAreDifferent() {
         this.payload.setPasswordConfirmation("root");
-        assertFalse(this.payload.isValid(), "Payload should not be valid because of password confirmation");
+        assertFalse(
+            this.payload.isValid(),
+            "Payload should not be valid because of password confirmation"
+        );
     }
 
 }
+

@@ -7,3 +7,4 @@ public class AuthmodException extends Exception {
     }
 
 }
+

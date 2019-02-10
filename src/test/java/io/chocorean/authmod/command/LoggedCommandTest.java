@@ -1,9 +1,11 @@
 package io.chocorean.authmod.command;
 
 import io.chocorean.authmod.event.Handler;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetHandlerPlayServer;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -11,7 +13,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 public class LoggedCommandTest {
-
     private LoggedCommand loggedCommand;
     private Handler handler;
 
@@ -67,7 +68,9 @@ public class LoggedCommandTest {
 
     @Test
     public void testGetTabCompletions() {
-        assertNotNull(this.loggedCommand.getTabCompletions(null, null, null, null));
+        assertNotNull(
+            this.loggedCommand.getTabCompletions(null, null, null, null)
+        );
     }
 
     @Test
@@ -81,3 +84,4 @@ public class LoggedCommandTest {
     }
 
 }
+

@@ -6,8 +6,6 @@ import io.chocorean.authmod.guard.datasource.db.IPlayersDAO;
 import io.chocorean.authmod.guard.datasource.db.PlayersDAO;
 import io.chocorean.authmod.model.IPlayer;
 import io.chocorean.authmod.model.Player;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 import java.nio.file.Paths;
 import java.sql.SQLException;
@@ -15,10 +13,12 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class PlayerDAOTest {
-
     private IConnectionFactory connectionFactory;
 
     @BeforeEach
@@ -34,11 +34,14 @@ public class PlayerDAOTest {
 
     @Test
     public void testConstructorWrongTableStructure() {
-        assertThrows(SQLException.class, () -> {
-            Map<String, String> columns = new HashMap<>();
-            columns.put("email", "my_email");
-            new PlayersDAO(this.connectionFactory, columns);
-        });
+        assertThrows(
+            SQLException.class,
+            () -> {
+                Map<String, String> columns = new HashMap<>();
+                columns.put("email", "my_email");
+                new PlayersDAO(this.connectionFactory, columns);
+            }
+        );
     }
 
     @Test
@@ -50,7 +53,9 @@ public class PlayerDAOTest {
         stmt.executeUpdate(query);
         Map<String, String> columns = new HashMap<>();
         columns.put("username", "pseudo");
-        assertDoesNotThrow(() -> new PlayersDAO(this.connectionFactory, columns));
+        assertDoesNotThrow(
+            () -> new PlayersDAO(this.connectionFactory, columns)
+        );
     }
 
     @Test
@@ -59,11 +64,31 @@ public class PlayerDAOTest {
         IPlayer player = this.createPlayer();
         dao.create(player);
         IPlayer record = dao.find(player);
-        assertEquals(player.getUsername(), record.getUsername(), "Username should not be altered");
-        assertEquals(player.getEmail(), record.getEmail(), "email should not be altered");
-        assertEquals(player.getUuid(), record.getUuid(), "uuid should not be altered");
-        assertEquals(player.getPassword(), record.getPassword(), "password should not be altered");
-        assertEquals(player.isBanned(), record.isBanned(), "banned should not be altered");
+        assertEquals(
+            player.getUsername(),
+            record.getUsername(),
+            "Username should not be altered"
+        );
+        assertEquals(
+            player.getEmail(),
+            record.getEmail(),
+            "email should not be altered"
+        );
+        assertEquals(
+            player.getUuid(),
+            record.getUuid(),
+            "uuid should not be altered"
+        );
+        assertEquals(
+            player.getPassword(),
+            record.getPassword(),
+            "password should not be altered"
+        );
+        assertEquals(
+            player.isBanned(),
+            record.isBanned(),
+            "banned should not be altered"
+        );
     }
 
     private IPlayer createPlayer() {
@@ -101,3 +126,4 @@ public class PlayerDAOTest {
     }
 
 }
+

@@ -50,8 +50,8 @@ public class PlayersDAO implements IPlayersDAO<IPlayer> {
 
     private void checkTable() throws SQLException {
         try(
-                Connection connection = this.connectionFactory.getConnection();
-                PreparedStatement stmt = connection.prepareStatement(String.format("SELECT %s,%s,%s,%s,%s FROM %s",
+            Connection connection = this.connectionFactory.getConnection();
+            PreparedStatement stmt = connection.prepareStatement(String.format("SELECT %s,%s,%s,%s,%s FROM %s",
                 this.columns.getOrDefault(EMAIL, EMAIL),
                 this.columns.getOrDefault(BANNED, BANNED),
                 this.columns.getOrDefault(PASSWORD, PASSWORD),
@@ -66,11 +66,11 @@ public class PlayersDAO implements IPlayersDAO<IPlayer> {
     @Override
     public void create(IPlayer player) throws SQLException {
         String query = String.format("INSERT INTO %s(%s, %s, %s, %s) VALUES(?, ?, ?, ?)",
-                this.table,
-                this.columns.get(EMAIL),
-                this.columns.get(PASSWORD),
-                this.columns.get(USERNAME),
-                this.columns.get(UUID)
+            this.table,
+            this.columns.get(EMAIL),
+            this.columns.get(PASSWORD),
+            this.columns.get(USERNAME),
+            this.columns.get(UUID)
         );
         try(Connection conn = this.connectionFactory.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -89,9 +89,9 @@ public class PlayersDAO implements IPlayersDAO<IPlayer> {
     public IPlayer find(IPlayer player) throws SQLException {
         try(Connection conn = this.connectionFactory.getConnection();
             PreparedStatement stmt = conn.prepareStatement(String.format("SELECT * FROM %s WHERE %s = ? OR %s = ?",
-                    this.table,
-                    this.columns.get(EMAIL),
-                    this.columns.get(USERNAME)
+                this.table,
+                this.columns.get(EMAIL),
+                this.columns.get(USERNAME)
             ))) {
             stmt.setString(1, player.getEmail());
             stmt.setString(2, player.getUsername());

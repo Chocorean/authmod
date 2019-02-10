@@ -6,6 +6,12 @@ import io.chocorean.authmod.exception.LoginException;
 import io.chocorean.authmod.guard.authentication.Authenticator;
 import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
 import io.chocorean.authmod.guard.payload.LoginPayload;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nullable;
+
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,25 +20,21 @@ import net.minecraft.network.play.server.SPacketChat;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
-
 public class LoginCommand implements ICommand {
-
     private static final Logger LOGGER = AuthMod.LOGGER;
     private final List<String> aliases;
     private final Authenticator authenticator;
     private final Handler handler;
     private final boolean emailRequired;
 
-    public LoginCommand(Handler handler, IDataSourceStrategy strategy){
+    public LoginCommand(Handler handler, IDataSourceStrategy strategy) {
         this(handler, strategy, false);
     }
 
-    public LoginCommand(Handler handler, IDataSourceStrategy strategy, boolean emailRequired){
+    public LoginCommand(Handler handler, IDataSourceStrategy strategy, boolean emailRequired) {
         this.handler = handler;
         this.aliases = new ArrayList<>();
         this.aliases.add("login");
@@ -57,36 +59,52 @@ public class LoginCommand implements ICommand {
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
+    public void execute(
+        MinecraftServer server,
+        ICommandSender sender,
+        String[] args
+    ) {
         EntityPlayer player = (EntityPlayer) sender;
         LOGGER.info(player.getDisplayNameString() + " is signin in");
-        if(args.length == 1 || args.length == 2) {
-            if(this.handler.isLogged(player)) {
-                LOGGER.info("User %s tried to sign in twice.", player.getDisplayNameString());
-                ((EntityPlayerMP) sender).connection.sendPacket(new SPacketChat(new TextComponentString("")));
+        if (args.length == 1 || args.length == 2) {
+            if (this.handler.isLogged(player)) {
+                LOGGER.info(
+                    "User %s tried to sign in twice.",
+                    player.getDisplayNameString()
+                );
+                ((EntityPlayerMP) sender).connection.sendPacket(
+                    new SPacketChat(new TextComponentString(""))
+                );
             } else {
                 LoginPayload payload = new LoginPayload();
                 payload.setEmailRequired(this.emailRequired);
                 payload.setEmail(args.length == 2 ? args[0] : null);
                 payload.setPassword(args.length == 2 ? args[1] : args[0]);
                 payload.setUsername(player.getDisplayNameString());
-                payload.setUuid(EntityPlayer.getUUID(player.getGameProfile()).toString());
+                payload.setUuid(
+                    EntityPlayer.getUUID(player.getGameProfile()).toString()
+                );
                 try {
                     boolean correct = this.authenticator.login(payload);
-                    if(correct) {
+                    if (correct) {
                         this.handler.authorizePlayer(player);
                     } else {
-                        ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString("wrong")));
+                        ((EntityPlayerMP) sender).connection.sendPacket(
+                            new SPacketChat(new TextComponentString("wrong"))
+                        );
                     }
-                } catch (LoginException e) {
+                } catch(LoginException e) {
                     LOGGER.error(e.getMessage());
-                    ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString(e.getMessage())));
+                    ((EntityPlayerMP) sender).connection.sendPacket(
+                        new SPacketChat(new TextComponentString(e.getMessage()))
+                    );
                 }
             }
         } else {
-            ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString(this.getUsage(sender))));
+            ((EntityPlayerMP) sender).connection.sendPacket(
+                new SPacketChat(new TextComponentString(this.getUsage(sender)))
+            );
         }
-
     }
 
     @Override
@@ -110,3 +128,4 @@ public class LoginCommand implements ICommand {
     }
 
 }
+

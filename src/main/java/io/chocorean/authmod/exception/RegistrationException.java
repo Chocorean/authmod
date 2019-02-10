@@ -7,3 +7,4 @@ public class RegistrationException extends AuthmodException {
     }
 
 }
+

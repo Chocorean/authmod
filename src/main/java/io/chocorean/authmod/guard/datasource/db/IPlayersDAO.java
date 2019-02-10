@@ -10,4 +10,6 @@ public interface IPlayersDAO<P extends IPlayer> {
     void create(P player) throws SQLException;
 
     P find(P player) throws SQLException;
+
 }
+

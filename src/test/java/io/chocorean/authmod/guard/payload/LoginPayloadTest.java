@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LoginPayloadTest {
-
     private LoginPayload payload;
 
     @BeforeEach
@@ -26,7 +25,10 @@ public class LoginPayloadTest {
     @Test
     public void testIsValid() {
         assertTrue(this.payload.isValid(), "Payload should be valid");
-        assertTrue(this.payload.getErrors().isEmpty(), "Payload should not have errors");
+        assertTrue(
+            this.payload.getErrors().isEmpty(),
+            "Payload should not have errors"
+        );
     }
 
     @Test
@@ -35,24 +37,43 @@ public class LoginPayloadTest {
         this.payload.setEmail(null);
         assertFalse(this.payload.isValid(), "Payload should not be valid");
         assertTrue(this.payload.isEmailRequired(), "payload must have email");
-        assertTrue(this.payload.getErrors().size() == 1, "payload should have only 1 error");
+        assertTrue(
+            this.payload.getErrors().size() == 1,
+            "payload should have only 1 error"
+        );
     }
 
     @Test
     public void testIsValidShortPassword() {
-        assertFalse(this.payload.setPassword("u").isValid(), "Payload should not be valid, password is too short");
-        assertTrue(this.payload.getErrors().size() == 1, "payload should have only 1 error");
+        assertFalse(
+            this.payload.setPassword("u").isValid(),
+            "Payload should not be valid, password is too short"
+        );
+        assertTrue(
+            this.payload.getErrors().size() == 1,
+            "payload should have only 1 error"
+        );
     }
 
     @Test
     public void testIsValidIncorrectUuid() {
-        assertFalse(this.payload.setUuid("uuid").isValid(), "payload should not be valid because of UUID");
-        assertTrue(this.payload.getErrors().size() == 1, "payload should have only 1 error");
+        assertFalse(
+            this.payload.setUuid("uuid").isValid(),
+            "payload should not be valid because of UUID"
+        );
+        assertTrue(
+            this.payload.getErrors().size() == 1,
+            "payload should have only 1 error"
+        );
     }
 
     @Test
     public void testIsValidNullUuid() {
-        assertTrue(this.payload.setUuid(null).isValid(), "payload should be valid");
+        assertTrue(
+            this.payload.setUuid(null).isValid(),
+            "payload should be valid"
+        );
     }
 
 }
+

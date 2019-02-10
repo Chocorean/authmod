@@ -1,20 +1,20 @@
 package io.chocorean.authmod.guard.datasource;
 
 import io.chocorean.authmod.AuthMod;
+import io.chocorean.authmod.exception.PlayerAlreadyExistException;
+import io.chocorean.authmod.exception.RegistrationException;
 import io.chocorean.authmod.guard.datasource.db.IConnectionFactory;
 import io.chocorean.authmod.guard.datasource.db.IPlayersDAO;
 import io.chocorean.authmod.guard.datasource.db.PlayersDAO;
-import io.chocorean.authmod.exception.PlayerAlreadyExistException;
-import io.chocorean.authmod.exception.RegistrationException;
 import io.chocorean.authmod.model.IPlayer;
 import io.chocorean.authmod.model.Player;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.Logger;
 
 import java.sql.SQLException;
 
-public class DatabaseSourceStrategy implements IDataSourceStrategy {
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.Logger;
 
+public class DatabaseSourceStrategy implements IDataSourceStrategy {
     private final IPlayersDAO<IPlayer> playersDAO;
     private static final Logger LOGGER = AuthMod.LOGGER;
 
@@ -26,25 +26,26 @@ public class DatabaseSourceStrategy implements IDataSourceStrategy {
     public IPlayer find(String email, String username) {
         IPlayer p;
         try {
-            p = this.playersDAO.find(new Player().setEmail(email).setUsername(username));
+            p = this.playersDAO.find(
+                new Player().setEmail(email).setUsername(username)
+            );
             return p;
         } catch(SQLException e) {
             LOGGER.catching(Level.ERROR, e);
         }
         return null;
-
     }
 
     @Override
     public boolean add(IPlayer player) throws RegistrationException {
         try {
             boolean alreadyExist = this.exist(player);
-            if(alreadyExist) {
+            if (alreadyExist) {
                 throw new PlayerAlreadyExistException();
             }
             this.playersDAO.create(player);
             return true;
-        } catch (SQLException e) {
+        } catch(SQLException e) {
             e.printStackTrace();
             return false;
         }
@@ -54,10 +55,11 @@ public class DatabaseSourceStrategy implements IDataSourceStrategy {
     public boolean exist(IPlayer player) {
         try {
             return this.playersDAO.find(player) != null;
-        } catch (SQLException e) {
+        } catch(SQLException e) {
             LOGGER.catching(Level.ERROR, e);
         }
         return false;
     }
 
 }
+

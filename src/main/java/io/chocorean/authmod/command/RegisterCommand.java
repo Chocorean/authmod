@@ -2,11 +2,17 @@ package io.chocorean.authmod.command;
 
 import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.config.AuthModConfig;
+import io.chocorean.authmod.event.Handler;
 import io.chocorean.authmod.exception.AuthmodException;
+import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
 import io.chocorean.authmod.guard.payload.RegistrationPayload;
 import io.chocorean.authmod.guard.registration.Registrator;
-import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
-import io.chocorean.authmod.event.Handler;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nullable;
+
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,21 +21,17 @@ import net.minecraft.network.play.server.SPacketChat;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
-
 public class RegisterCommand implements ICommand {
-
     private static final Logger LOGGER = AuthMod.LOGGER;
     private final List<String> aliases;
     private final Registrator registrator;
     private final Handler handler;
     private final boolean emailRequired;
 
-    public RegisterCommand(Handler handler, IDataSourceStrategy strategy, boolean emailRequired){
+    public RegisterCommand(Handler handler, IDataSourceStrategy strategy, boolean emailRequired) {
         this.handler = handler;
         aliases = new ArrayList<>();
         aliases.add("register");
@@ -38,7 +40,7 @@ public class RegisterCommand implements ICommand {
         this.emailRequired = emailRequired;
     }
 
-    public RegisterCommand(Handler handler, IDataSourceStrategy strategy){
+    public RegisterCommand(Handler handler, IDataSourceStrategy strategy) {
         this(handler, strategy, false);
     }
 
@@ -61,29 +63,40 @@ public class RegisterCommand implements ICommand {
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
         EntityPlayer player = (EntityPlayer) sender;
         LOGGER.info(player.getDisplayNameString() + " is registering");
-        if(args.length == 2 || args.length == 3) {
-            if(this.handler.isLogged(player)) {
-                ((EntityPlayerMP) sender).connection.sendPacket(new SPacketChat(new TextComponentString("")));
+        if (args.length == 2 || args.length == 3) {
+            if (this.handler.isLogged(player)) {
+                ((EntityPlayerMP) sender).connection.sendPacket(
+                    new SPacketChat(new TextComponentString(""))
+                );
             } else {
-                RegistrationPayload payload = new RegistrationPayload(AuthModConfig.emailRequired);
+                RegistrationPayload payload = new RegistrationPayload(
+                    AuthModConfig.emailRequired
+                );
                 payload.setEmailRequired(this.emailRequired);
                 payload.setEmail(args.length == 3 ? args[0] : null);
                 payload.setPassword(args.length == 3 ? args[1] : args[0]);
-                payload.setPasswordConfirmation(args.length == 3 ? args[2] : args[1]);
+                payload.setPasswordConfirmation(
+                    args.length == 3 ? args[2] : args[1]
+                );
                 payload.setUsername(player.getDisplayNameString());
-                payload.setUuid(EntityPlayer.getUUID(player.getGameProfile()).toString());
+                payload.setUuid(
+                    EntityPlayer.getUUID(player.getGameProfile()).toString()
+                );
                 try {
                     boolean registered = this.registrator.register(payload);
-                    if(registered)
-                        this.handler.authorizePlayer(player);
-                } catch (AuthmodException e) {
+                    if (registered)
+                    this.handler.authorizePlayer(player);
+                } catch(AuthmodException e) {
                     LOGGER.error(e.getMessage());
-                    ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString(e.getMessage())));
+                    ((EntityPlayerMP) sender).connection.sendPacket(
+                        new SPacketChat(new TextComponentString(e.getMessage()))
+                    );
                 }
             }
-        }
-        else {
-            ((EntityPlayerMP)sender).connection.sendPacket(new SPacketChat(new TextComponentString(this.getUsage(sender))));
+        } else {
+            ((EntityPlayerMP) sender).connection.sendPacket(
+                new SPacketChat(new TextComponentString(this.getUsage(sender)))
+            );
         }
     }
 
@@ -106,4 +119,6 @@ public class RegisterCommand implements ICommand {
     public int compareTo(ICommand iCommand) {
         return this.getName().compareTo(iCommand.getName());
     }
+
 }
+
