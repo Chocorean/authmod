@@ -33,10 +33,15 @@ public class DBHelpers {
   }
 
   public static void initTable(IConnectionFactory connectionFactory) throws SQLException {
+    initTable("players", connectionFactory);
+  }
+
+  public static void initTable(String table, IConnectionFactory connectionFactory)
+      throws SQLException {
     Connection connection = connectionFactory.getConnection();
     if (connection != null) {
       Statement stmt = connection.createStatement();
-      stmt.executeUpdate(getCreationTableQuery());
+      stmt.executeUpdate(getCreationTableQuery().replace("players", table));
     }
   }
 

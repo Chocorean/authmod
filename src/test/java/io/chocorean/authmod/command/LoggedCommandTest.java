@@ -1,5 +1,8 @@
 package io.chocorean.authmod.command;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+
 import io.chocorean.authmod.event.Handler;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -8,9 +11,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
 
 class LoggedCommandTest {
   private LoggedCommand loggedCommand;
@@ -32,14 +32,14 @@ class LoggedCommandTest {
 
   @Test
   void testExecuteNotLogged() {
-    this.loggedCommand.execute(mock(MinecraftServer.class), sender, new String[]{});
+    this.loggedCommand.execute(mock(MinecraftServer.class), sender, new String[] {});
     assertFalse(handler.isLogged(sender));
   }
 
   @Test
   void testExecute() {
     handler.authorizePlayer(sender);
-    this.loggedCommand.execute(mock(MinecraftServer.class), sender, new String[]{});
+    this.loggedCommand.execute(mock(MinecraftServer.class), sender, new String[] {});
     assertTrue(handler.isLogged(sender));
   }
 
@@ -60,17 +60,24 @@ class LoggedCommandTest {
 
   @Test
   void testCheckPermissions() {
-    assertTrue(this.loggedCommand.checkPermission(mock(MinecraftServer.class), mock(ICommandSender.class)));
+    assertTrue(
+        this.loggedCommand.checkPermission(
+            mock(MinecraftServer.class), mock(ICommandSender.class)));
   }
 
   @Test
   void testGetTabCompletions() {
-    assertNotNull(this.loggedCommand.getTabCompletions(mock(MinecraftServer.class), mock(ICommandSender.class), new String[]{}, mock(BlockPos.class)));
+    assertNotNull(
+        this.loggedCommand.getTabCompletions(
+            mock(MinecraftServer.class),
+            mock(ICommandSender.class),
+            new String[] {},
+            mock(BlockPos.class)));
   }
 
   @Test
   void testisUsernameIndex() {
-    assertTrue(this.loggedCommand.isUsernameIndex(new String[]{}, 0));
+    assertTrue(this.loggedCommand.isUsernameIndex(new String[] {}, 0));
   }
 
   @Test

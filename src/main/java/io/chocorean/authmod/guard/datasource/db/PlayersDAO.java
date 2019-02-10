@@ -21,7 +21,8 @@ public class PlayersDAO implements IPlayersDAO<IPlayer> {
     this("players", connectionFactory);
   }
 
-  public PlayersDAO(IConnectionFactory connectionFactory, Map<String, String> columns) throws SQLException {
+  public PlayersDAO(IConnectionFactory connectionFactory, Map<String, String> columns)
+      throws SQLException {
     this.table = "players";
     this.columns = columns;
     this.connectionFactory = connectionFactory;
@@ -85,7 +86,9 @@ public class PlayersDAO implements IPlayersDAO<IPlayer> {
             conn.prepareStatement(
                 String.format(
                     "SELECT * FROM %s WHERE %s = ? OR %s = ?",
-                    this.table, this.columns.get(EMAIL_COLUMN), this.columns.get(USERNAME_COLUMN)))) {
+                    this.table,
+                    this.columns.get(EMAIL_COLUMN),
+                    this.columns.get(USERNAME_COLUMN)))) {
       stmt.setString(1, player.getEmail());
       stmt.setString(2, player.getUsername());
       ResultSet rs = stmt.executeQuery();

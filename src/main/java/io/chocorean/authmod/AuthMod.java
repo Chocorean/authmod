@@ -50,7 +50,8 @@ public class AuthMod {
     switch (AuthModConfig.dataSourceStrategy) {
       case DATABASE:
         this.dataSourceStrategy =
-            new DatabaseSourceStrategy(AuthModConfig.database.table,
+            new DatabaseSourceStrategy(
+                AuthModConfig.database.table,
                 new ConnectionFactory(
                     AuthModConfig.database.dialect,
                     AuthModConfig.database.host,

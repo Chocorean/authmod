@@ -6,6 +6,8 @@ import javax.validation.ConstraintViolation;
 
 public class MappingConstraintViolationsToExceptions {
 
+  private MappingConstraintViolationsToExceptions() {}
+
   public static void throwException(ConstraintViolation<IPayload> c) throws InvalidEmailException {
     if (getProperty(c).equals("email")
         && getAnnotationType(c).equals(javax.validation.constraints.Email.class)) {

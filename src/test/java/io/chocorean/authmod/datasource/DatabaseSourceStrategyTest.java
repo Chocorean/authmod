@@ -64,6 +64,17 @@ class DatabaseSourceStrategyTest {
   }
 
   @Test
+  void testConstructorCustomTable() throws AuthmodException, SQLException {
+    DBHelpers.dataFile.delete();
+    String table = "my_table";
+    this.connectionFactory = DBHelpers.getConnectionFactory();
+    DBHelpers.initTable(table, this.connectionFactory);
+    this.dataSource = new DatabaseSourceStrategy(table, connectionFactory);
+    this.player = PlayerFactory.create();
+    assertTrue(dataSource.add(this.player), "The player should be registered");
+  }
+
+  @Test
   void testAddSQLError() throws AuthmodException, SQLException {
     this.dataSource = new DatabaseSourceStrategy(connectionFactory);
     this.player = PlayerFactory.create();

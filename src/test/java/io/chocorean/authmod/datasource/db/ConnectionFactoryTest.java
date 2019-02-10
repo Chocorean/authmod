@@ -45,7 +45,7 @@ class ConnectionFactoryTest {
   @Test
   void testGetConnectionSQLError() {
     IConnectionFactory connectionFactory =
-        new ConnectionFactory("mariadb", "localhost", 3306, "minecraft", null, null);
+        new ConnectionFactory("mariadb", "localhost", 3306, "minecraft", "root", "root");
     assertThrows(SQLException.class, connectionFactory::getConnection);
   }
 }

@@ -6,6 +6,9 @@ import io.chocorean.authmod.exception.AuthmodException;
 import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
 import io.chocorean.authmod.guard.payload.RegistrationPayload;
 import io.chocorean.authmod.guard.registration.Registrator;
+import java.util.ArrayList;
+import java.util.List;
+import javax.annotation.Nullable;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,10 +18,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import org.apache.logging.log4j.Logger;
-
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 
 public class RegisterCommand implements ICommand {
   private static final Logger LOGGER = AuthMod.LOGGER;
@@ -62,19 +61,21 @@ public class RegisterCommand implements ICommand {
       LOGGER.info(player.getDisplayNameString() + " is registering");
       if (this.emailRequired && args.length == 3 || !this.emailRequired && args.length == 2) {
         if (this.handler.isLogged(player)) {
-          ((EntityPlayerMP) sender).connection.sendPacket(new SPacketChat(new TextComponentString("")));
+          ((EntityPlayerMP) sender)
+              .connection.sendPacket(new SPacketChat(new TextComponentString("")));
         } else {
           RegistrationPayload payload = this.createPayload(player, args);
           boolean registered = this.registrator.register(payload);
           if (registered) this.handler.authorizePlayer(player);
         }
       } else {
-        ((EntityPlayerMP) sender).connection.sendPacket(new SPacketChat(new TextComponentString(this.getUsage(sender))));
+        ((EntityPlayerMP) sender)
+            .connection.sendPacket(new SPacketChat(new TextComponentString(this.getUsage(sender))));
       }
     } catch (AuthmodException e) {
       LOGGER.error(e.getMessage());
       ((EntityPlayerMP) sender)
-        .connection.sendPacket(new SPacketChat(new TextComponentString(e.getMessage())));
+          .connection.sendPacket(new SPacketChat(new TextComponentString(e.getMessage())));
     }
   }
 
@@ -85,7 +86,7 @@ public class RegisterCommand implements ICommand {
 
   @Override
   public List<String> getTabCompletions(
-    MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos) {
+      MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos) {
     return new ArrayList<>();
   }
 

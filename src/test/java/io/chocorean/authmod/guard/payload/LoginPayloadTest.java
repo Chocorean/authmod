@@ -1,9 +1,9 @@
 package io.chocorean.authmod.guard.payload;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class LoginPayloadTest {
   private LoginPayload payload;

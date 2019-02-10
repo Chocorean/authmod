@@ -15,7 +15,6 @@ import io.chocorean.authmod.model.IPlayer;
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.UUID;
-
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetHandlerPlayServer;
@@ -28,13 +27,13 @@ class LoginCommandTest {
   private LoginCommand loginCommand;
   private Handler handler;
   private IDataSourceStrategy dataSourceStrategy;
-    private IPlayer player;
+  private IPlayer player;
   private EntityPlayerMP sender;
   private Registrator registrator;
 
   @BeforeEach
   void init() {
-      File dataFile = Paths.get(System.getProperty("java.io.tmpdir"), "authmod.csv").toFile();
+    File dataFile = Paths.get(System.getProperty("java.io.tmpdir"), "authmod.csv").toFile();
     if (dataFile.exists()) dataFile.delete();
     this.handler = new Handler();
     this.player = PlayerFactory.create();
@@ -58,13 +57,15 @@ class LoginCommandTest {
   void testExecute() throws AuthmodException {
     this.registrator.register(
         io.chocorean.authmod.guard.PlayerFactory.createRegistrationFactoryFromPlayer(this.player));
-    this.loginCommand.execute(mock(MinecraftServer.class), sender, new String[] {player.getPassword()});
+    this.loginCommand.execute(
+        mock(MinecraftServer.class), sender, new String[] {player.getPassword()});
     assertTrue(this.handler.isLogged(this.sender));
   }
 
   @Test
   void testExecuteWrongPassword() throws AuthmodException {
-    this.registrator.register(io.chocorean.authmod.guard.PlayerFactory.createRegistrationFactoryFromPlayer(this.player));
+    this.registrator.register(
+        io.chocorean.authmod.guard.PlayerFactory.createRegistrationFactoryFromPlayer(this.player));
     this.loginCommand.execute(mock(MinecraftServer.class), sender, new String[] {"wrongpass"});
     assertFalse(this.handler.isLogged(this.sender));
   }
@@ -72,7 +73,9 @@ class LoginCommandTest {
   @Test
   void testExecuteWrongNumberOfArgs() {
     this.loginCommand.execute(
-      mock(MinecraftServer.class), sender, new String[] {"test", "test2", player.getEmail(), player.getPassword()});
+        mock(MinecraftServer.class),
+        sender,
+        new String[] {"test", "test2", player.getEmail(), player.getPassword()});
     assertFalse(this.handler.isLogged(this.sender));
   }
 
@@ -82,7 +85,10 @@ class LoginCommandTest {
     this.registrator.register(
         io.chocorean.authmod.guard.PlayerFactory.createRegistrationFactoryFromPlayer(this.player));
     this.loginCommand = new LoginCommand(this.handler, this.dataSourceStrategy, true);
-    this.loginCommand.execute(mock(MinecraftServer.class), sender, new String[] {player.getEmail(), player.getPassword()});
+    this.loginCommand.execute(
+        mock(MinecraftServer.class),
+        sender,
+        new String[] {player.getEmail(), player.getPassword()});
     assertTrue(this.handler.isLogged(this.sender));
   }
 
@@ -92,7 +98,8 @@ class LoginCommandTest {
     this.registrator.register(
         io.chocorean.authmod.guard.PlayerFactory.createRegistrationFactoryFromPlayer(this.player));
     this.loginCommand = new LoginCommand(this.handler, this.dataSourceStrategy, false);
-    this.loginCommand.execute(mock(MinecraftServer.class), sender, new String[] {player.getPassword()});
+    this.loginCommand.execute(
+        mock(MinecraftServer.class), sender, new String[] {player.getPassword()});
     assertFalse(this.handler.isLogged(this.sender));
   }
 
@@ -133,17 +140,23 @@ class LoginCommandTest {
 
   @Test
   void testCheckPermissions() {
-    assertTrue(this.loginCommand.checkPermission(mock(MinecraftServer.class), mock(ICommandSender.class)));
+    assertTrue(
+        this.loginCommand.checkPermission(mock(MinecraftServer.class), mock(ICommandSender.class)));
   }
 
   @Test
   void testGetTabCompletions() {
-    assertNotNull(this.loginCommand.getTabCompletions(mock(MinecraftServer.class), mock(ICommandSender.class), new String[]{}, mock(BlockPos.class)));
+    assertNotNull(
+        this.loginCommand.getTabCompletions(
+            mock(MinecraftServer.class),
+            mock(ICommandSender.class),
+            new String[] {},
+            mock(BlockPos.class)));
   }
 
   @Test
   void testisUsernameIndex() {
-    assertTrue(this.loginCommand.isUsernameIndex(new String[]{}, 0));
+    assertTrue(this.loginCommand.isUsernameIndex(new String[] {}, 0));
   }
 
   @Test

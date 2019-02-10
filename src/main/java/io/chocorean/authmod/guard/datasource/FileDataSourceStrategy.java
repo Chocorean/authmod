@@ -66,17 +66,17 @@ public class FileDataSourceStrategy implements IDataSourceStrategy {
     this.reloadFile();
     if (email != null) {
       return this.players
-        .stream()
-        .filter(tmp -> tmp.getEmail().equals(email))
-        .findFirst()
-        .orElse(null);
+          .stream()
+          .filter(tmp -> tmp.getEmail().equals(email))
+          .findFirst()
+          .orElse(null);
     }
     if (username != null) {
       return this.players
-        .stream()
-        .filter(tmp -> tmp.getUsername().equals(username))
-        .findFirst()
-        .orElse(null);
+          .stream()
+          .filter(tmp -> tmp.getUsername().equals(username))
+          .findFirst()
+          .orElse(null);
     }
     return null;
   }
@@ -97,14 +97,14 @@ public class FileDataSourceStrategy implements IDataSourceStrategy {
   public boolean exist(IPlayer player) {
     this.reloadFile();
     IPlayer p =
-      this.players
-        .stream()
-        .filter(
-          tmp ->
-            player.getEmail().equals(tmp.getEmail())
-              || player.getUsername().equals(tmp.getUsername()))
-        .findFirst()
-        .orElse(null);
+        this.players
+            .stream()
+            .filter(
+                tmp ->
+                    player.getEmail().equals(tmp.getEmail())
+                        || player.getUsername().equals(tmp.getUsername()))
+            .findFirst()
+            .orElse(null);
     return p != null;
   }
 
@@ -114,12 +114,12 @@ public class FileDataSourceStrategy implements IDataSourceStrategy {
       bw.newLine();
       for (IPlayer entry : this.players) {
         bw.write(
-          String.join(
-            SEPARATOR,
-            entry.getEmail(),
-            entry.getUsername(),
-            entry.getPassword(),
-            Boolean.toString(entry.isBanned())));
+            String.join(
+                SEPARATOR,
+                entry.getEmail(),
+                entry.getUsername(),
+                entry.getPassword(),
+                Boolean.toString(entry.isBanned())));
         bw.newLine();
       }
       this.lastModification = Files.getLastModifiedTime(this.authFile.toPath()).toMillis();
