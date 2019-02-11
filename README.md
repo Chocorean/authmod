@@ -21,22 +21,25 @@
     <img src="https://sonarcloud.io/api/project_badges/measure?project=authmod&metric=bugs" alt="bugs"/>
 </a>
 <a href="https://sonarcloud.io/dashboard?id=authmod">
-    <img src="https://sonarcloud.io/api/project_badges/measure?project=authmod&metric=code_smells" />
+    <img src="https://sonarcloud.io/api/project_badges/measure?project=authmod&metric=code_smells" alt="code smells"/>
 </a>
 <a href="https://sonarcloud.io/dashboard?id=authmod">
-    <img src="https://sonarcloud.io/api/project_badges/measure?project=authmod&metric=duplicated_lines_density" />
+    <img src="https://sonarcloud.io/api/project_badges/measure?project=authmod&metric=coverage" alt="code coverage" />
 </a>
 <a href="https://sonarcloud.io/dashboard?id=authmod">
-    <img src="https://sonarcloud.io/api/project_badges/measure?project=authmod&metric=sqale_rating" />
+    <img src="https://sonarcloud.io/api/project_badges/measure?project=authmod&metric=duplicated_lines_density" alt="duplicated lines" />
 </a>
 <a href="https://sonarcloud.io/dashboard?id=authmod">
-    <img src="https://sonarcloud.io/api/project_badges/measure?project=authmod&metric=vulnerabilities" />
+    <img src="https://sonarcloud.io/api/project_badges/measure?project=authmod&metric=sqale_rating" alt="maintainability" />
+</a>
+<a href="https://sonarcloud.io/dashboard?id=authmod">
+    <img src="https://sonarcloud.io/api/project_badges/measure?project=authmod&metric=vulnerabilities" alt="vulnerabilities" />
 </a>
 <a href="https://img.shields.io/badge/forge%20version-1.12.2-blue.svg">
-    <img src="https://img.shields.io/badge/forge%20version-1.12.2-blue.svg" />
+    <img src="https://img.shields.io/badge/forge%20version-1.12.2-blue.svg" alt="forge version"/>
 </a>
 <a href="https://img.shields.io/badge/java-1.8-blue.svg">
-    <img src="https://img.shields.io/badge/java-1.8-blue.svg" />
+    <img src="https://img.shields.io/badge/java-1.8-blue.svg" alt="java version" />
 </a>
 </p>
 
@@ -45,13 +48,15 @@
 ## Table of contents
 
 - [What is Authmod?](#what-is-authmod)
-- [How it works](#how-it-works)
+  - [How it works](#how-it-works)
 - [Getting started for developers](#getting-started-for-developers)
-- [Requirements](#requirements)
-- [Installation](#installation)
-- [Using the file strategy](#using-the-file-strategy)
-- [Using the database strategy](#using-the-database-strategy)
+  - [Requirements](#requirements)
+  - [Installation](#installation)
+  - [Using the file strategy](#using-the-file-strategy)
+  - [Using the database strategy](#using-the-database-strategy)
 - [Getting started for administrators](#getting-started-for-administrators)
+  - [Internationalization](#internationalization)
+  - [Limits](#limits)
 - [Issues](#issues)
 - [Website](#website)
 - [Resources](#resources)
@@ -92,8 +97,6 @@ The mod provides to the users a set of commands that can be used once connected 
 # Tell to the user whether authenticated
 /logged
 ```
-
-For the `/login` command, once this command is entered by the user, the mod will check whether **the email address, the password and the username** correspond to data stored in a database or a CSV file (it depends on the strategy you choose).
 
 ## Getting started for developers
 
@@ -198,7 +201,7 @@ curl -s https://api.github.com/repos/chocorean/authmod/releases/latest \
 | wget -qi -
 ```
 
-3. Now, we configure authmod. Go under the `config` folder and download the cfg template file (you can also run the server once and the file will be generated):
+3. Now, we need to configure authmod. Go under the `config` folder and download the cfg template file (you can also run the server once and the file will be generated):
 
 ```bash
 # in the config/ folder
@@ -216,7 +219,7 @@ Authmod is designed to support internalization. By default, the `en_us.lang` is 
 ```bash
 # in the config/ folder
 cd config/
-wget https://raw.githubusercontent.com/Chocorean/authmod/master/src/main/resources/assets/authmod/langen_us.lang -O custom.lang
+wget https://raw.githubusercontent.com/Chocorean/authmod/master/src/main/resources/assets/authmod/lang/en_us.lang -O custom.lang
 ```
 
 After downloaded the file, just modify it as you wish. Finally, modify `authmod.cfg` to tell the mod to use your `lang` file:
@@ -228,6 +231,11 @@ general {
     S:lang=custom
 ```
 Restart the server and that's it!
+
+## Limits
+It is important to understand that **authmod is not perfect**. During the development, we detected hacks that can cause hassle for players. Here the list of these problems:
+ - If two players connect with the same username, no matter if one of them is authenticated or not, the first that came on the server will be automatically disconnected. We don't know yet if this issue can be solved.
+ - TODO
 
 
 ## Issues
