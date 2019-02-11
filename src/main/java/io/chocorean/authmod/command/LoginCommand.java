@@ -1,14 +1,7 @@
 package io.chocorean.authmod.command;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nullable;
-
-import io.chocorean.authmod.guard.payload.IPayload;
-import org.apache.logging.log4j.Logger;
-
 import io.chocorean.authmod.AuthMod;
+import io.chocorean.authmod.config.AuthModConfig;
 import io.chocorean.authmod.event.Handler;
 import io.chocorean.authmod.exception.*;
 import io.chocorean.authmod.guard.authentication.Authenticator;
@@ -20,7 +13,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
+import org.apache.logging.log4j.Logger;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoginCommand implements ICommand {
   private static final Logger LOGGER = AuthMod.LOGGER;
@@ -48,7 +45,7 @@ public class LoginCommand implements ICommand {
 
   @Override
   public String getUsage(ICommandSender sender) {
-    return new TextComponentTranslation(this.getName() + ".usage").getUnformattedComponentText();
+    return AuthModConfig.i18n.loginUsage;
   }
 
   @Override
@@ -67,17 +64,17 @@ public class LoginCommand implements ICommand {
           this.authenticator.login(payload);
           this.handler.authorizePlayer(player);
           LOGGER.info(player.getDisplayNameString() + " authenticated");
-          sender.sendMessage(this.handler.getMessage(this.getName() + ".success"));
+          sender.sendMessage(new TextComponentString(AuthModConfig.i18n.loginSuccess));
         } catch (WrongUsernameException e) {
-          sender.sendMessage(this.handler.getMessage(this.getName() + ".wrongUsername"));
+          sender.sendMessage(new TextComponentString(AuthModConfig.i18n.loginWrongUsername));
         } catch (WrongPasswordException e) {
-          sender.sendMessage(this.handler.getMessage(this.getName() + ".wrongPassword"));
+          sender.sendMessage(new TextComponentString(AuthModConfig.i18n.loginWrongPassword));
         } catch (BannedPlayerException e) {
-          sender.sendMessage(this.handler.getMessage(this.getName() + ".banned"));
+          sender.sendMessage(new TextComponentString(AuthModConfig.i18n.loginBanned));
         } catch (PlayerNotFoundException e) {
-          sender.sendMessage(this.handler.getMessage(this.getName() + ".unknown", payload.getUsername()));
+          sender.sendMessage(new TextComponentString(String.format(AuthModConfig.i18n.loginUnknown, player.getDisplayNameString())));
         } catch (LoginException e) {
-          sender.sendMessage(this.handler.getMessage("error"));
+          sender.sendMessage(new TextComponentString(AuthModConfig.i18n.error));
           LOGGER.error(e.getMessage());
         }
       }

@@ -104,4 +104,13 @@ public class LoginPayload implements IPayload {
     this.uuid = uuid;
     return this;
   }
+
+  @Override
+  public String toString() {
+    return "LoginPayload{" +
+      "email='" + email + '\'' +
+      ", username='" + username + '\'' +
+      ", uuid='" + uuid + '\'' +
+      '}';
+  }
 }

@@ -4,11 +4,13 @@ import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.model.IPlayer;
 import io.chocorean.authmod.model.Player;
+import org.apache.logging.log4j.Logger;
 
 public class PlayersDAO implements IPlayersDAO<IPlayer> {
-
+  private static final Logger LOGGER = AuthMod.LOGGER;
   private final String table;
   private final IConnectionFactory connectionFactory;
   private final Map<String, String> columns;
@@ -55,6 +57,9 @@ public class PlayersDAO implements IPlayersDAO<IPlayer> {
                     this.columns.getOrDefault(UUID_COLUMN, UUID_COLUMN),
                     this.table))) {
       stmt.executeQuery();
+    } catch(SQLException e) {
+      LOGGER.error(e.getMessage());
+      throw e;
     }
   }
 

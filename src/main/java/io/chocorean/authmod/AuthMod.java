@@ -1,16 +1,5 @@
 package io.chocorean.authmod;
 
-import static io.chocorean.authmod.config.AuthModConfig.enableAuthentication;
-import static io.chocorean.authmod.config.AuthModConfig.enableRegistration;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.nio.file.Paths;
-
-import org.apache.logging.log4j.Logger;
-
 import io.chocorean.authmod.command.LoggedCommand;
 import io.chocorean.authmod.command.LoginCommand;
 import io.chocorean.authmod.command.RegisterCommand;
@@ -21,7 +10,6 @@ import io.chocorean.authmod.guard.datasource.FileDataSourceStrategy;
 import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
 import io.chocorean.authmod.guard.datasource.db.ConnectionFactory;
 import io.chocorean.authmod.proxy.CommonProxy;
-import net.minecraft.util.text.translation.LanguageMap;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.Mod;
@@ -29,6 +17,12 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import org.apache.logging.log4j.Logger;
+
+import java.nio.file.Paths;
+
+import static io.chocorean.authmod.config.AuthModConfig.enableAuthentication;
+import static io.chocorean.authmod.config.AuthModConfig.enableRegistration;
 
 @Mod(modid = AuthMod.MODID, name = AuthMod.NAME, version = AuthMod.VERSION, serverSideOnly = true, acceptableRemoteVersions = "*")
 public class AuthMod {
@@ -45,20 +39,11 @@ public class AuthMod {
   private Handler handler;
   private IDataSourceStrategy dataSourceStrategy;
 
-  private void injectLang(File langFile) throws FileNotFoundException {
-    if (AuthModConfig.lang.length() != 0) {
-      InputStream in = new FileInputStream(langFile);
-      LanguageMap.inject(in);
-    }
-  }
 
   @Mod.EventHandler
   public void preInit(FMLPreInitializationEvent event) throws Exception {
     AuthMod.LOGGER = event.getModLog();
     LOGGER.info(MODID + " " + VERSION);
-    if (AuthModConfig.lang.length() != 0) {
-      this.injectLang(Paths.get(event.getModConfigurationDirectory().toString(), AuthModConfig.lang.trim() + ".lang").toFile());
-    }
     switch (AuthModConfig.dataSourceStrategy) {
       case DATABASE:
         this.dataSourceStrategy =

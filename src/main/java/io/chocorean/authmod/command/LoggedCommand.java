@@ -1,5 +1,6 @@
 package io.chocorean.authmod.command;
 
+import io.chocorean.authmod.config.AuthModConfig;
 import io.chocorean.authmod.event.Handler;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
@@ -7,7 +8,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -23,8 +23,8 @@ public class LoggedCommand implements ICommand {
     this.handler = handler;
     this.aliases = new ArrayList<>();
     this.aliases.add("logged?");
-    this.yes = new TextComponentTranslation(this.getName() + ".yes").getUnformattedComponentText();
-    this.no = new TextComponentTranslation(this.getName() + ".no").getUnformattedComponentText();
+    this.yes = AuthModConfig.i18n.loggedYes;
+    this.no = AuthModConfig.i18n.loggedNo;
   }
 
   @Override
@@ -34,7 +34,7 @@ public class LoggedCommand implements ICommand {
 
   @Override
   public String getUsage(ICommandSender sender) {
-    return new TextComponentTranslation(this.getName() + ".usage").getUnformattedComponentText();
+    return AuthModConfig.i18n.loggedUsage;
   }
 
   @Override

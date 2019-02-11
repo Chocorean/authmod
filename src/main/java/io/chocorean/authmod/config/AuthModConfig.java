@@ -18,9 +18,6 @@ public class AuthModConfig {
   @Comment("Enable or disable the /register command")
   public static boolean enableRegistration = true;
 
-  @Comment("Indicate the lang file to use (this file must be located on the server, in config/<file>.lang)")
-  public static String lang = "";
-
   public enum Strategies {
     FILE,
     DATABASE
@@ -33,6 +30,8 @@ public class AuthModConfig {
   public static Strategies dataSourceStrategy = Strategies.FILE;
 
   public static final DatabaseConfig database = new DatabaseConfig();
+
+  public static final I18nConfig i18n = new I18nConfig();
 
   public static final class DatabaseConfig {
     @Comment("Column name for the email address")
@@ -71,4 +70,61 @@ public class AuthModConfig {
     @Comment("SQL table to be used")
     public String table = "players";
   }
+
+  public static final class I18nConfig {
+    @Comment("Message displayed when an error with database occurs. Check your server logs.")
+    public String error = "Something was wrong. Please contact the admins.";
+
+    @Comment("Message displayed to a player when he/she joins the server.")
+    public String welcome = "Use /register to sign up or /login to sign in.";
+
+    public String delay = "Wake up, you have only %s seconds to log in.";
+
+
+    @Comment("Message displayed when a player tries to connect while being banned.")
+    public String loginBanned = "You've been banned. Please contact the admins.";
+
+    @Comment("Usage for /login")
+    public String loginUsage = "/login <email> <password> - Allows you to authenticate on the server";
+
+    @Comment("Message displayed to a player when he/she attempts to sign in with an incorrect email.")
+    public String loginInvalidEmail = "Your email is not valid.";
+
+    @Comment("Message displayed when a player tries to connect without having registered.")
+    public String loginUnknown = "%s is not registered on this server.";
+
+    @Comment("Message displayed to a player when he/she successfully signs in.")
+    public String loginSuccess = "Have fun!";
+
+    @Comment("Message displayed to a player when he/she typed a wrong password.")
+    public String loginWrongPassword = "Wrong password. Please try again.";
+
+    @Comment("Message displayed to a player when he/she typed a wrong password.")
+    public String loginWrongUuid = "Wrong UUID. Please be sure you use the same UUID when you registered your account.";
+
+    @Comment("Message displayed to a player when he/she attempts to sign in with wrong username")
+    public String loginWrongUsername = "Your username does not correspond to your credentials.";
+
+    @Comment("Message displayed when a player tries to sign up with an already-registered account.")
+    public String registerExist = "Someone has already registered with this username or email.";
+
+    @Comment("Usage for /register")
+    public String registerUsage = "/register <email> <password> - Be careful when choosing it, you'll be asked to login each time you play.";
+
+    @Comment("Message displayed to a player when he/she successfully registered.")
+    public String registerSuccess = "You are registered and authenticated, have fun!";
+
+    @Comment("Message displayed to a player when he/she successfully registered.")
+    public String registerWrongPasswordConfirmation = "The password confirmation doesn't match. Please retry.";
+
+
+    public String loggedYes = "Yes";
+
+    public String loggedNo = "No";
+
+    @Comment("Usage for /logged")
+    public String loggedUsage = "/logged - tells you whether you are authenticated or not";
+
+  }
+
 }

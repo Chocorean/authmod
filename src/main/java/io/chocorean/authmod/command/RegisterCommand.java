@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import io.chocorean.authmod.config.AuthModConfig;
 import io.chocorean.authmod.guard.payload.LoginPayload;
 import org.apache.logging.log4j.Logger;
 
@@ -50,7 +51,7 @@ public class RegisterCommand implements ICommand {
 
   @Override
   public String getUsage(ICommandSender sender) {
-    return this.handler.getMessage(this.getName() + ".usage").getUnformattedComponentText();
+    return AuthModConfig.i18n.registerUsage;
   }
 
   @Override
@@ -68,22 +69,23 @@ public class RegisterCommand implements ICommand {
         try {
           this.registrator.register(payload);
           this.handler.authorizePlayer(player);
-          sender.sendMessage(this.handler.getMessage(this.getName() + ".success"));
+          sender.sendMessage(new TextComponentString(AuthModConfig.i18n.registerSuccess));
         } catch (InvalidEmailException e) {
-          sender.sendMessage(this.handler.getMessage(this.getName() + ".invalidEmail"));
+          sender.sendMessage(new TextComponentString(AuthModConfig.i18n.loginInvalidEmail));
         } catch (PlayerAlreadyExistException e) {
-          sender.sendMessage(this.handler.getMessage(this.getName() + ".exist"));
+          sender.sendMessage(new TextComponentString(AuthModConfig.i18n.registerExist));
         } catch (WrongPasswordConfirmation e) {
-          sender.sendMessage(this.handler.getMessage(this.getName() + ".wrongPasswordConfirmation"));
+          sender.sendMessage(new TextComponentString(AuthModConfig.i18n.registerWrongPasswordConfirmation));
         } catch (RegistrationException e) {
           LOGGER.error(e.getMessage());
-          sender.sendMessage(this.handler.getMessage("error"));
+          sender.sendMessage(new TextComponentString(AuthModConfig.i18n.error));
         }
       } else {
         sender.sendMessage(new TextComponentString(this.getUsage(sender)));
       }
     }
   }
+
 
   @Override
   public boolean checkPermission(MinecraftServer server, ICommandSender sender) {

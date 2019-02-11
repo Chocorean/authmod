@@ -1,11 +1,5 @@
 package io.chocorean.authmod.event;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-
 import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.config.AuthModConfig;
 import io.chocorean.authmod.model.PlayerDescriptor;
@@ -16,9 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.play.server.SPacketDisconnect;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.event.CommandEvent;
@@ -34,13 +26,19 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
 @Mod.EventBusSubscriber
 public class Handler {
   private static final ScheduledExecutorService scheduler = new ScheduledThreadPoolExecutor(1);
   private static final Map<EntityPlayer, PlayerDescriptor> descriptors = new HashMap<>();
   private static final Map<EntityPlayer, Boolean> logged = new HashMap<>();
-  private static final String WELCOME = new TextComponentTranslation("welcome").getFormattedText();
-  private static final String WAKE_UP = new TextComponentTranslation("delay", AuthModConfig.delay).getFormattedText();
+  private static final String WELCOME = AuthModConfig.i18n.welcome;
+  private static final String WAKE_UP = String.format(AuthModConfig.i18n.delay, Integer.toString(AuthModConfig.delay));
 
   @SubscribeEvent(priority = EventPriority.HIGHEST)
   public static void onJoin(PlayerLoggedInEvent event) {
@@ -175,7 +173,4 @@ public class Handler {
     return logged.getOrDefault(player, false);
   }
 
-  public ITextComponent getMessage(String key, Object... args) {
-    return new TextComponentString(new TextComponentTranslation(key, args).getUnformattedComponentText());
-  }
 }

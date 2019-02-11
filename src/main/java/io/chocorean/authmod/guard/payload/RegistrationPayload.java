@@ -118,4 +118,13 @@ public class RegistrationPayload implements IPayload {
     this.passwordConfirmation = passwordConfirmation;
     return this;
   }
+
+  @Override
+  public String toString() {
+    return "RegistrationPayload{" +
+      "email='" + this.payload.getEmail() + '\'' +
+      ", username='" + this.payload.getUsername() + '\'' +
+      ", uuid='" + this.payload.getUuid() + '\'' +
+      '}';
+  }
 }

@@ -55,8 +55,7 @@
   - [Using the file strategy](#using-the-file-strategy)
   - [Using the database strategy](#using-the-database-strategy)
 - [Getting started for administrators](#getting-started-for-administrators)
-  - [Internationalization](#internationalization)
-  - [Limits](#limits)
+- [Limits](#limits)
 - [Issues](#issues)
 - [Website](#website)
 - [Resources](#resources)
@@ -185,6 +184,13 @@ INSERT INTO minecraft.players (id, email, password, uuid, username, banned) VALU
 (2, 'linus.torvalds.linux.org', NULL, NULL, 'linux', 0);
 ```
 
+### Building authmod
+
+```bash
+./gradlew build
+ls ./build/libs/authmod-X.X.jar
+```
+
 ## Getting started for administrators
 
 1. stop your server.
@@ -212,25 +218,6 @@ wget https://raw.githubusercontent.com/Chocorean/authmod/master/src/main/resourc
 4. Edit the `config/authmod.cfg` file depending on your needs.
 5. Restart the server and everything should be ok!
 
-### Internationalization
-
-Authmod is designed to support internalization. By default, the `en_us.lang` is used. You can custom everything by creating your own `lang` file:
-
-```bash
-# in the config/ folder
-cd config/
-wget https://raw.githubusercontent.com/Chocorean/authmod/master/src/main/resources/assets/authmod/lang/en_us.lang -O custom.lang
-```
-
-After downloaded the file, just modify it as you wish. Finally, modify `authmod.cfg` to tell the mod to use your `lang` file:
-
-```cfg
-general {
-    # ...
-    # Indicate the lang file to use (this file must be located on the server, in config/<file>.lang)
-    S:lang=custom
-```
-Restart the server and that's it!
 
 ## Limits
 It is important to understand that **authmod is not perfect**. During the development, we detected hacks that can cause hassle for players. Here the list of these problems:
