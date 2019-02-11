@@ -1,12 +1,13 @@
 package io.chocorean.authmod;
 
-import io.chocorean.authmod.guard.datasource.db.ConnectionFactory;
-import io.chocorean.authmod.guard.datasource.db.IConnectionFactory;
 import java.io.File;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+
+import io.chocorean.authmod.guard.datasource.db.ConnectionFactory;
+import io.chocorean.authmod.guard.datasource.db.IConnectionFactory;
 
 public class DBHelpers {
   public static File dataFile;
@@ -36,8 +37,7 @@ public class DBHelpers {
     initTable("players", connectionFactory);
   }
 
-  public static void initTable(String table, IConnectionFactory connectionFactory)
-      throws SQLException {
+  public static void initTable(String table, IConnectionFactory connectionFactory) throws SQLException {
     Connection connection = connectionFactory.getConnection();
     if (connection != null) {
       Statement stmt = connection.createStatement();
@@ -50,8 +50,7 @@ public class DBHelpers {
     return new ConnectionFactory("jdbc:sqlite:" + dataFile.getAbsolutePath());
   }
 
-  public static IConnectionFactory getConnectionFactory(
-      String dialect, String host, int port, String database, String user, String password) {
+  public static IConnectionFactory getConnectionFactory(String dialect, String host, int port, String database, String user, String password) {
     return new ConnectionFactory(dialect, host, port, database, user, password);
   }
 }

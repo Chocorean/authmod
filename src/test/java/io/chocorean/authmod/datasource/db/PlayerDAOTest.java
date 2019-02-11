@@ -2,17 +2,19 @@ package io.chocorean.authmod.datasource.db;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import io.chocorean.authmod.DBHelpers;
 import io.chocorean.authmod.guard.datasource.db.IConnectionFactory;
 import io.chocorean.authmod.guard.datasource.db.PlayersDAO;
 import io.chocorean.authmod.model.IPlayer;
 import io.chocorean.authmod.model.Player;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.HashMap;
-import java.util.Map;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 class PlayerDAOTest {
   private IConnectionFactory connectionFactory;
@@ -30,13 +32,11 @@ class PlayerDAOTest {
 
   @Test
   void testConstructorWrongTableStructure() {
-    assertThrows(
-        SQLException.class,
-        () -> {
-          Map<String, String> columns = new HashMap<>();
-          columns.put("email", "my_email");
-          new PlayersDAO(this.connectionFactory, columns);
-        });
+    assertThrows(SQLException.class, () -> {
+      Map<String, String> columns = new HashMap<>();
+      columns.put("email", "my_email");
+      new PlayersDAO(this.connectionFactory, columns);
+    });
   }
 
   @Test

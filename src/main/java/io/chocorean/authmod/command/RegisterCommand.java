@@ -1,5 +1,13 @@
 package io.chocorean.authmod.command;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nullable;
+
+import io.chocorean.authmod.guard.payload.LoginPayload;
+import org.apache.logging.log4j.Logger;
+
 import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.event.Handler;
 import io.chocorean.authmod.exception.InvalidEmailException;
@@ -9,16 +17,12 @@ import io.chocorean.authmod.exception.WrongPasswordConfirmation;
 import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
 import io.chocorean.authmod.guard.payload.RegistrationPayload;
 import io.chocorean.authmod.guard.registration.Registrator;
-import java.util.ArrayList;
-import java.util.List;
-import javax.annotation.Nullable;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
-import org.apache.logging.log4j.Logger;
 
 public class RegisterCommand implements ICommand {
   private static final Logger LOGGER = AuthMod.LOGGER;
@@ -87,8 +91,7 @@ public class RegisterCommand implements ICommand {
   }
 
   @Override
-  public List<String> getTabCompletions(
-      MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos) {
+  public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos) {
     return new ArrayList<>();
   }
 
@@ -103,12 +106,6 @@ public class RegisterCommand implements ICommand {
   }
 
   private RegistrationPayload createPayload(EntityPlayer player, String[] args) {
-    RegistrationPayload payload = new RegistrationPayload();
-    payload.setEmailRequired(this.emailRequired);
-    payload.setEmail(this.emailRequired ? args[0] : null);
-    payload.setPassword(this.emailRequired ? args[1] : args[0]);
-    payload.setPasswordConfirmation(this.emailRequired ? args[2] : args[1]);
-    payload.setUsername(player.getDisplayNameString());
-    return payload.setUuid(EntityPlayer.getUUID(player.getGameProfile()).toString());
+    return new RegistrationPayload(LoginCommand.createPayload(this.emailRequired, player, args), this.emailRequired ? args[2] : args[1]);
   }
 }

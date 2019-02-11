@@ -2,6 +2,12 @@ package io.chocorean.authmod.datasource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import io.chocorean.authmod.DBHelpers;
 import io.chocorean.authmod.PlayerFactory;
 import io.chocorean.authmod.exception.AuthmodException;
@@ -11,10 +17,6 @@ import io.chocorean.authmod.guard.datasource.DatabaseSourceStrategy;
 import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
 import io.chocorean.authmod.guard.datasource.db.IConnectionFactory;
 import io.chocorean.authmod.model.IPlayer;
-import java.sql.SQLException;
-import java.sql.Statement;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 class DatabaseSourceStrategyTest {
   private IPlayer player;
@@ -86,8 +88,7 @@ class DatabaseSourceStrategyTest {
   @Test
   void testFindByEmail() throws RegistrationException, SQLException {
     this.registerPlayer();
-    assertNotNull(
-        dataSource.find(this.player.getEmail(), null), "The player should exist and be found");
+    assertNotNull(dataSource.find(this.player.getEmail(), null), "The player should exist and be found");
   }
 
   @Test
@@ -114,9 +115,7 @@ class DatabaseSourceStrategyTest {
   @Test
   void testFindByUsernameOrEmail() throws RegistrationException, SQLException {
     this.registerPlayer();
-    assertNotNull(
-        dataSource.find(player.getEmail(), player.getUsername()),
-        "The player should exist and be found");
+    assertNotNull(dataSource.find(player.getEmail(), player.getUsername()),"The player should exist and be found");
   }
 
   @Test

@@ -7,6 +7,8 @@ import io.chocorean.authmod.model.Player;
 
 public class PlayerFactory {
 
+  private PlayerFactory() {}
+
   public static IPlayer createFromRegistrationPayload(RegistrationPayload payload) {
     IPlayer player = new Player();
     player.setUsername(payload.getUsername());

@@ -1,16 +1,18 @@
 package io.chocorean.authmod.guard.datasource;
 
-import io.chocorean.authmod.AuthMod;
-import io.chocorean.authmod.exception.PlayerAlreadyExistException;
-import io.chocorean.authmod.exception.RegistrationException;
-import io.chocorean.authmod.model.IPlayer;
-import io.chocorean.authmod.model.Player;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.logging.log4j.Logger;
+
+import io.chocorean.authmod.AuthMod;
+import io.chocorean.authmod.exception.PlayerAlreadyExistException;
+import io.chocorean.authmod.exception.RegistrationException;
+import io.chocorean.authmod.model.IPlayer;
+import io.chocorean.authmod.model.Player;
 
 public class FileDataSourceStrategy implements IDataSourceStrategy {
 
@@ -99,10 +101,7 @@ public class FileDataSourceStrategy implements IDataSourceStrategy {
     IPlayer p =
         this.players
             .stream()
-            .filter(
-                tmp ->
-                    player.getEmail().equals(tmp.getEmail())
-                        || player.getUsername().equals(tmp.getUsername()))
+            .filter(tmp -> player.getEmail().equals(tmp.getEmail()) || player.getUsername().equals(tmp.getUsername()))
             .findFirst()
             .orElse(null);
     return p != null;
@@ -113,13 +112,7 @@ public class FileDataSourceStrategy implements IDataSourceStrategy {
       bw.write(String.join(SEPARATOR, "# email", " username", " hashed password", " is banned ?"));
       bw.newLine();
       for (IPlayer entry : this.players) {
-        bw.write(
-            String.join(
-                SEPARATOR,
-                entry.getEmail(),
-                entry.getUsername(),
-                entry.getPassword(),
-                Boolean.toString(entry.isBanned())));
+        bw.write(String.join(SEPARATOR, entry.getEmail(), entry.getUsername(), entry.getPassword(), Boolean.toString(entry.isBanned())));
         bw.newLine();
       }
       this.lastModification = Files.getLastModifiedTime(this.authFile.toPath()).toMillis();

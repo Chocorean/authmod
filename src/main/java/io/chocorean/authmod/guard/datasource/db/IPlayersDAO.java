@@ -1,7 +1,8 @@
 package io.chocorean.authmod.guard.datasource.db;
 
-import io.chocorean.authmod.model.IPlayer;
 import java.sql.SQLException;
+
+import io.chocorean.authmod.model.IPlayer;
 
 public interface IPlayersDAO<P extends IPlayer> {
 

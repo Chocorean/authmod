@@ -16,11 +16,4 @@ public class PlayerFactory {
     return player;
   }
 
-  public static IPlayer create(String email, String username) {
-    IPlayer player = new Player();
-    player.setUsername(email);
-    player.setUsername(username);
-    player.setPassword(email + username);
-    return player;
-  }
 }

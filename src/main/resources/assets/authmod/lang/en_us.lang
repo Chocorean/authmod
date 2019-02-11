@@ -25,6 +25,9 @@ login.success=Have fun!
 # Message displayed to a player when he/she typed a wrong password.
 login.wrongPassword=Wrong password. Please try again.
 
+# Message displayed to a player when he/she typed a wrong password.
+login.wrongUuid=Wrong UUID. Please be sure you use the same UUID when you registered your account.
+
 # Message displayed to a player when he/she attempts to sign in with wrong username
 login.wrongUsername=Your username does not correspond to your credentials.
 

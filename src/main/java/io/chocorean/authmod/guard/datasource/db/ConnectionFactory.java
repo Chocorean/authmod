@@ -1,10 +1,12 @@
 package io.chocorean.authmod.guard.datasource.db;
 
-import io.chocorean.authmod.AuthMod;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+
 import org.apache.logging.log4j.Logger;
+
+import io.chocorean.authmod.AuthMod;
 
 public class ConnectionFactory implements IConnectionFactory {
   private static final Logger LOGGER = AuthMod.LOGGER;
@@ -21,12 +23,9 @@ public class ConnectionFactory implements IConnectionFactory {
   public ConnectionFactory(
       String dialect, String host, int port, String database, String user, String password) {
     StringBuilder urlBuilder = new StringBuilder();
-    urlBuilder.append("jdbc:");
-    urlBuilder.append(dialect);
+    urlBuilder.append("jdbc:").append(dialect);
     if (host != null) {
-      urlBuilder.append("://").append(host);
-      urlBuilder.append(":").append(port);
-      urlBuilder.append("/").append(database);
+      urlBuilder.append("://").append(host).append(":").append(port).append("/").append(database);
     } else {
       urlBuilder.append(":").append(database);
     }

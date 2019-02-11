@@ -3,17 +3,17 @@ package io.chocorean.authmod.model;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
-import net.minecraft.entity.player.EntityPlayerMP;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import net.minecraft.entity.player.EntityPlayerMP;
 
 class PlayerDescriptorTest {
   private PlayerDescriptor playerDescriptor;
 
   @BeforeEach
   void init() {
-    this.playerDescriptor =
-        new PlayerDescriptor(mock(EntityPlayerMP.class), new PlayerPos(null, 1, 0));
+    this.playerDescriptor = new PlayerDescriptor(mock(EntityPlayerMP.class), new PlayerPos(null, 1, 0));
   }
 
   @Test

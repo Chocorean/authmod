@@ -2,6 +2,7 @@ package io.chocorean.authmod.guard.payload;
 
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -18,6 +19,15 @@ public class RegistrationPayload implements IPayload {
   public RegistrationPayload() {
     this.payload = new LoginPayload();
     this.errors = new HashSet<>();
+  }
+
+  public RegistrationPayload(IPayload payload, String passwordConfirmation) {
+    this();
+    this.payload.setEmail(payload.getEmail());
+    this.payload.setUsername(payload.getUsername());
+    this.payload.setUuid(payload.getUuid());
+    this.payload.setPassword(payload.getPassword());
+    this.passwordConfirmation = passwordConfirmation;
   }
 
   @Override

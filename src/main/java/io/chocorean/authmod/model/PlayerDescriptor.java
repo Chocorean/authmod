@@ -7,15 +7,15 @@ public class PlayerDescriptor {
   private final PlayerPos pos;
 
   public PlayerDescriptor(EntityPlayer entity, PlayerPos position) {
-    player = entity;
-    pos = position;
+    this.player = entity;
+    this.pos = position;
   }
 
   public EntityPlayer getPlayer() {
-    return player;
+    return this.player;
   }
 
   public PlayerPos getPosition() {
-    return pos;
+    return this.pos;
   }
 }

@@ -2,10 +2,11 @@ package io.chocorean.authmod.guard;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import io.chocorean.authmod.guard.payload.RegistrationPayload;
-import io.chocorean.authmod.model.IPlayer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import io.chocorean.authmod.guard.payload.RegistrationPayload;
+import io.chocorean.authmod.model.IPlayer;
 
 class PlayerFactoryTest {
   private String username;

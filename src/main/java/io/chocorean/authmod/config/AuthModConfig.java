@@ -9,19 +9,16 @@ public class AuthModConfig {
   @Comment("Email will be asked to the player for registration and authentication")
   public static boolean emailRequired = false;
 
-  @Comment(
-      "If the player doesn't log in after this delay (the unit is the second), he will be kicked from the server.")
+  @Comment("If the player doesn't log in after this delay (the unit is the second), he will be kicked from the server.")
   public static int delay = 60;
 
-  @Comment(
-      "Enable or disable the /login command (if disabled, the server will be opened to everyone)")
+  @Comment("Enable or disable the /login command (if disabled, the server will be opened to everyone)")
   public static boolean enableAuthentication = true;
 
   @Comment("Enable or disable the /register command")
   public static boolean enableRegistration = true;
 
-  @Comment(
-      "Indicate the lang file to use (this file must be located on the server, in config/<file>.lang)")
+  @Comment("Indicate the lang file to use (this file must be located on the server, in config/<file>.lang)")
   public static String lang = "";
 
   public enum Strategies {

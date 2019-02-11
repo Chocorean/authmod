@@ -38,16 +38,13 @@ public class LoginPayloadTest {
 
   @Test
   public void testIsValidShortPassword() {
-    assertFalse(
-        this.payload.setPassword("u").isValid(),
-        "Payload should not be valid, password is too short");
+    assertFalse(this.payload.setPassword("u").isValid());
     assertEquals(1, this.payload.getErrors().size(), "payload should have only 1 error");
   }
 
   @Test
   public void testIsValidIncorrectUuid() {
-    assertFalse(
-        this.payload.setUuid("uuid").isValid(), "payload should not be valid because of UUID");
+    assertFalse(this.payload.setUuid("uuid").isValid());
     assertEquals(1, this.payload.getErrors().size(), "payload should have only 1 error");
   }
 

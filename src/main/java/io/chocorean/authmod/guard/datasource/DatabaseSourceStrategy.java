@@ -1,5 +1,10 @@
 package io.chocorean.authmod.guard.datasource;
 
+import java.sql.SQLException;
+
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.Logger;
+
 import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.exception.PlayerAlreadyExistException;
 import io.chocorean.authmod.exception.RegistrationException;
@@ -8,9 +13,6 @@ import io.chocorean.authmod.guard.datasource.db.IPlayersDAO;
 import io.chocorean.authmod.guard.datasource.db.PlayersDAO;
 import io.chocorean.authmod.model.IPlayer;
 import io.chocorean.authmod.model.Player;
-import java.sql.SQLException;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.Logger;
 
 public class DatabaseSourceStrategy implements IDataSourceStrategy {
   private final IPlayersDAO<IPlayer> playersDAO;

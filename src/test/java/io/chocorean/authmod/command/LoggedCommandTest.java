@@ -3,14 +3,15 @@ package io.chocorean.authmod.command;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import io.chocorean.authmod.event.Handler;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 class LoggedCommandTest {
   private LoggedCommand loggedCommand;
@@ -60,19 +61,12 @@ class LoggedCommandTest {
 
   @Test
   void testCheckPermissions() {
-    assertTrue(
-        this.loggedCommand.checkPermission(
-            mock(MinecraftServer.class), mock(ICommandSender.class)));
+    assertTrue(this.loggedCommand.checkPermission(mock(MinecraftServer.class), mock(ICommandSender.class)));
   }
 
   @Test
   void testGetTabCompletions() {
-    assertNotNull(
-        this.loggedCommand.getTabCompletions(
-            mock(MinecraftServer.class),
-            mock(ICommandSender.class),
-            new String[] {},
-            mock(BlockPos.class)));
+    assertNotNull(this.loggedCommand.getTabCompletions(mock(MinecraftServer.class), mock(ICommandSender.class), new String[] {}, mock(BlockPos.class)));
   }
 
   @Test

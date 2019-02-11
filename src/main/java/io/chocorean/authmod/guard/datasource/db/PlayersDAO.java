@@ -1,10 +1,11 @@
 package io.chocorean.authmod.guard.datasource.db;
 
-import io.chocorean.authmod.model.IPlayer;
-import io.chocorean.authmod.model.Player;
 import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
+
+import io.chocorean.authmod.model.IPlayer;
+import io.chocorean.authmod.model.Player;
 
 public class PlayersDAO implements IPlayersDAO<IPlayer> {
 

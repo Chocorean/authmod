@@ -2,6 +2,15 @@ package io.chocorean.authmod.datasource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Paths;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import io.chocorean.authmod.PlayerFactory;
 import io.chocorean.authmod.exception.AuthmodException;
 import io.chocorean.authmod.exception.PlayerAlreadyExistException;
@@ -9,13 +18,6 @@ import io.chocorean.authmod.exception.RegistrationException;
 import io.chocorean.authmod.guard.datasource.FileDataSourceStrategy;
 import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
 import io.chocorean.authmod.model.IPlayer;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Paths;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 class FileDataSourceStrategyTest {
   private File dataFile;
@@ -63,9 +65,7 @@ class FileDataSourceStrategyTest {
     writer.append("test@test.fr, mcdostone, password, false");
     writer.flush();
     writer.close();
-    assertNotNull(
-        this.dataSource.find(null, "mcdostone"),
-        "The player should exist, even if the file is modified by something external");
+    assertNotNull(this.dataSource.find(null, "mcdostone"));
   }
 
   @Test
@@ -91,9 +91,7 @@ class FileDataSourceStrategyTest {
   @Test
   void testFindByUsernameOrEmail() throws RegistrationException {
     this.registerPlayer();
-    assertNotNull(
-        dataSource.find(player.getEmail(), player.getUsername()),
-        "The player should exist and be found");
+    assertNotNull(dataSource.find(player.getEmail(), player.getUsername()),"The player should exist and be found");
   }
 
   @Test

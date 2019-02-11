@@ -2,16 +2,18 @@ package io.chocorean.authmod.guard.registration;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import io.chocorean.authmod.exception.*;
 import io.chocorean.authmod.guard.datasource.FileDataSourceStrategy;
 import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
 import io.chocorean.authmod.guard.payload.RegistrationPayload;
 import io.chocorean.authmod.model.IPlayer;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Paths;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 class RegistratorTest {
   private Registrator registrator;
@@ -37,10 +39,7 @@ class RegistratorTest {
   @Test
   void testDefaultConstructor() {
     Registrator registrator = new Registrator();
-    assertEquals(
-        registrator.getDataSourceStrategy().getClass(),
-        FileDataSourceStrategy.class,
-        "Default data source strategy should be FileDataSourceStrategy");
+    assertEquals(registrator.getDataSourceStrategy().getClass(), FileDataSourceStrategy.class,"Default data source strategy should be FileDataSourceStrategy");
   }
 
   @Test
@@ -58,17 +57,13 @@ class RegistratorTest {
 
   @Test
   void testRegisterInvalidEmail() {
-    assertThrows(
-        InvalidEmailException.class,
-        () -> this.registrator.register(this.payload.setEmail("wrong")));
+    assertThrows(InvalidEmailException.class, () -> this.registrator.register(this.payload.setEmail("wrong")));
   }
 
   @Test
   void testRegisterPlayerAlreadyExist() throws AuthmodException {
     this.registrator.register(this.payload);
-    assertThrows(
-        PlayerAlreadyExistException.class,
-        () -> this.registrator.register(this.payload.setEmail("root@root.root")));
+    assertThrows(PlayerAlreadyExistException.class, () -> this.registrator.register(this.payload.setEmail("root@root.root")));
   }
 
   @Test
@@ -80,16 +75,12 @@ class RegistratorTest {
   @Test
   void testRegisterEmailRequired() throws AuthmodException {
     this.registrator = new Registrator(this.dataSource);
-    assertFalse(
-        this.registrator.register(this.payload.setEmail(null).setEmailRequired(true)),
-        "Can't register the player, email is required");
+    assertFalse(this.registrator.register(this.payload.setEmail(null).setEmailRequired(true)));
   }
 
   @Test
   void testIncorrectPasswordConfirmation() {
     this.registrator = new Registrator(this.dataSource);
-    assertThrows(
-        WrongPasswordConfirmation.class,
-        () -> this.registrator.register(this.payload.setPasswordConfirmation("nope")));
+    assertThrows(WrongPasswordConfirmation.class, () -> this.registrator.register(this.payload.setPasswordConfirmation("nope")));
   }
 }

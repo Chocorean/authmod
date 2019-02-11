@@ -39,15 +39,12 @@ class RegistrationPayloadTest {
 
   @Test
   void testIsValidShortPassword() {
-    assertFalse(
-        this.payload.setPassword("u").isValid(),
-        "Payload should not be valid, password is too short");
+    assertFalse(this.payload.setPassword("u").isValid());
   }
 
   @Test
   void testIsValidIncorrectUuid() {
-    assertFalse(
-        this.payload.setUuid("uuid").isValid(), "payload should not be valid because of UUID");
+    assertFalse(this.payload.setUuid("uuid").isValid());
   }
 
   @Test
@@ -58,7 +55,6 @@ class RegistrationPayloadTest {
   @Test
   void testIsValidPasswordsAreDifferent() {
     this.payload.setPasswordConfirmation("root");
-    assertFalse(
-        this.payload.isValid(), "Payload should not be valid because of password confirmation");
+    assertFalse(this.payload.isValid());
   }
 }

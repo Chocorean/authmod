@@ -1,5 +1,12 @@
 package io.chocorean.authmod.guard.registration;
 
+import java.nio.file.Paths;
+
+import javax.validation.ConstraintViolation;
+
+import org.apache.logging.log4j.Logger;
+import org.mindrot.jbcrypt.BCrypt;
+
 import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.exception.InvalidEmailException;
 import io.chocorean.authmod.exception.PlayerAlreadyExistException;
@@ -10,19 +17,13 @@ import io.chocorean.authmod.guard.datasource.FileDataSourceStrategy;
 import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
 import io.chocorean.authmod.guard.payload.RegistrationPayload;
 import io.chocorean.authmod.model.IPlayer;
-import java.nio.file.Paths;
-import javax.validation.ConstraintViolation;
-import org.apache.logging.log4j.Logger;
-import org.mindrot.jbcrypt.BCrypt;
 
 public class Registrator {
   private static final Logger LOGGER = AuthMod.LOGGER;
   private final IDataSourceStrategy dataSource;
 
   public Registrator() {
-    this(
-        new FileDataSourceStrategy(
-            Paths.get(System.getProperty("java.io.tmpdir"), "authmod.csv").toFile()));
+    this(new FileDataSourceStrategy(Paths.get(System.getProperty("java.io.tmpdir"), "authmod.csv").toFile()));
   }
 
   public Registrator(IDataSourceStrategy dataSourceStrategy) {

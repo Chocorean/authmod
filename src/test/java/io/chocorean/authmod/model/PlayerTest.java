@@ -18,20 +18,14 @@ class PlayerTest {
   void testSetEmail() {
     String email = "root@root.fr";
     this.player.setEmail(email + ' ');
-    assertEquals(
-        email,
-        this.player.getEmail(),
-        "The email should contain whitespace character at the beginning or the end");
+    assertEquals(email, this.player.getEmail());
   }
 
   @Test
   void testSetUsername() {
     String username = "mcdostone";
     this.player.setUsername(username + ' ');
-    assertEquals(
-        username,
-        this.player.getUsername(),
-        "The username should contain whitespace character at the beginning or the end");
+    assertEquals(username, this.player.getUsername());
   }
 
   @Test
@@ -61,8 +55,7 @@ class PlayerTest {
   @Test
   void testSetUuidIncorrect() {
     this.player.setUuid("15");
-    assertEquals(
-        this.player.getUuid().length(), 0, "The UUID should be empty because it is incorrect");
+    assertEquals(this.player.getUuid().length(), 0);
   }
 
   @Test
@@ -75,9 +68,6 @@ class PlayerTest {
   void testToString() {
     player.setUsername("korben");
     player.setEmail("korben.dallas@gmail.com");
-    assertEquals(
-        "{korben.dallas@gmail.com, korben}",
-        player.toString(),
-        "Player is described by an optional email and a username");
+    assertEquals("{korben.dallas@gmail.com, korben}", player.toString());
   }
 }

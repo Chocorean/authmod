@@ -2,6 +2,13 @@ package io.chocorean.authmod.guard.authentication;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import io.chocorean.authmod.exception.*;
 import io.chocorean.authmod.guard.PlayerFactory;
 import io.chocorean.authmod.guard.datasource.FileDataSourceStrategy;
@@ -10,11 +17,6 @@ import io.chocorean.authmod.guard.payload.LoginPayload;
 import io.chocorean.authmod.guard.payload.RegistrationPayload;
 import io.chocorean.authmod.guard.registration.Registrator;
 import io.chocorean.authmod.model.IPlayer;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Paths;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 class AuthenticatorTest {
   private Authenticator authenticator;
@@ -38,6 +40,7 @@ class AuthenticatorTest {
     payload.setEmail("test@test.test");
     payload.setUsername("mcdostone");
     payload.setPassword("rootroot");
+    payload.setUuid("6f71149a11764f58810b261d82a05350");
     registrationPayload.setEmail(payload.getEmail());
     registrationPayload.setUsername(payload.getUsername());
     registrationPayload.setPasswordConfirmation(payload.getPassword());
@@ -55,10 +58,7 @@ class AuthenticatorTest {
   @Test
   void testConstructor() {
     Authenticator authenticator = new Authenticator(new FileDataSourceStrategy(this.dataFile));
-    assertEquals(
-        authenticator.getDataSourceStrategy().getClass(),
-        FileDataSourceStrategy.class,
-        "Data source strategy should be FileDataSourceStrategy");
+    assertEquals(authenticator.getDataSourceStrategy().getClass(), FileDataSourceStrategy.class);
   }
 
   @Test
@@ -69,24 +69,23 @@ class AuthenticatorTest {
 
   @Test
   void testLoginWrongPassword() {
-    assertThrows(
-        WrongPasswordException.class,
-        () -> this.authenticator.login(this.payload.setPassword("wrong")));
+    assertThrows(WrongPasswordException.class, () -> this.authenticator.login(this.payload.setPassword("wrong")));
   }
 
   @Test
   void testLoginUnknownPlayer() {
-    assertThrows(
-        PlayerNotFoundException.class,
-        () -> this.authenticator.login(this.payload.setEmail("freddie.wong@rocketjump.com")));
+    assertThrows(PlayerNotFoundException.class, () -> this.authenticator.login(this.payload.setEmail("freddie.wong@rocketjump.com")));
   }
 
   @Test
   void testLoginDifferentUsername() {
-    assertThrows(
-        WrongUsernameException.class,
-        () -> this.authenticator.login(this.payload.setUsername("wrong")));
+    assertThrows(WrongUsernameException.class, () -> this.authenticator.login(this.payload.setUsername("wrong")));
   }
+
+  // @Test
+  // void testLoginWrongUUID() {
+  //   assertThrows(WrongUuidException.class, () -> this.authenticator.login(this.payload.setUuid("")));
+  // }
 
   @Test
   void testLoginBanned() throws RegistrationException {
