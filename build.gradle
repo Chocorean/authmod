@@ -17,7 +17,7 @@ plugins {
 apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'jacoco'
 
-version = "2.7"
+version = "3.0"
 group = "io.chocorean.authmod"
 archivesBaseName = "authmod"
 sourceCompatibility = targetCompatibility = "1.8"

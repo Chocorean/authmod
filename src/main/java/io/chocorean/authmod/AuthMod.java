@@ -34,7 +34,7 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 public class AuthMod {
   public static final String MODID = "authmod";
   static final String NAME = "AuthMod";
-  static final String VERSION = "2.7";
+  static final String VERSION = "3.0";
   private static final String COMMON_PROXY = "io.chocorean.authmod.proxy.CommonProxy";
   private static final String CLIENT_PROXY = "io.chocorean.authmod.proxy.ClientProxy";
   public static Logger LOGGER = FMLLog.log;
@@ -55,6 +55,7 @@ public class AuthMod {
   @Mod.EventHandler
   public void preInit(FMLPreInitializationEvent event) throws Exception {
     AuthMod.LOGGER = event.getModLog();
+    LOGGER.info(MODID + " " + VERSION);
     if (AuthModConfig.lang.length() != 0) {
       this.injectLang(Paths.get(event.getModConfigurationDirectory().toString(), AuthModConfig.lang.trim() + ".lang").toFile());
     }
