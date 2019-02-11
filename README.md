@@ -146,9 +146,10 @@ Change the `authmod.cfg` configuration by modifying this:
 
 ```bash
 general {
-# ...
-# S:strategy=FILE
-S:strategy=DATABASE
+    # Valid values:
+    # FILE
+    # DATABASE
+    S:dataSourceStrategy=FILE
 }
 ```
 
@@ -188,6 +189,7 @@ INSERT INTO minecraft.players (id, email, password, uuid, username, banned) VALU
 ```bash
 # This command downloads the latest version of authmod
 # Execute it in the mods/ folder
+cd mods/
 curl -s https://api.github.com/repos/chocorean/authmod/releases/latest \
 | grep "browser_download_url.*jar" \
 | cut -d : -f 2,3 \
@@ -199,11 +201,33 @@ curl -s https://api.github.com/repos/chocorean/authmod/releases/latest \
 
 ```bash
 # in the config/ folder
+cd config/
 wget https://raw.githubusercontent.com/Chocorean/authmod/master/src/main/resources/authmod.cfg
 ```
 
 4. Edit the `config/authmod.cfg` file depending on your needs.
 5. Restart the server and everything should be ok!
+
+### Internationalization
+
+Authmod is designed to support internalization. By default, the `en_us.lang` is used. You can custom everything by creating your own `lang` file:
+
+```bash
+# in the config/ folder
+cd config/
+wget https://raw.githubusercontent.com/Chocorean/authmod/master/src/main/resources/assets/authmod/langen_us.lang -O custom.lang
+```
+
+After downloaded the file, just modify it as you wish. Finally, modify `authmod.cfg` to tell the mod to use your `lang` file:
+
+```cfg
+general {
+    # ...
+    # Indicate the lang file to use (this file must be located on the server, in config/<file>.lang)
+    S:lang=custom
+```
+Restart the server and that's it!
+
 
 ## Issues
 
