@@ -56,7 +56,7 @@ public class AuthMod {
   public void preInit(FMLPreInitializationEvent event) throws Exception {
     AuthMod.LOGGER = event.getModLog();
     if (AuthModConfig.lang.length() != 0) {
-      this.injectLang(Paths.get(event.getModConfigurationDirectory().toString(), "test.lang").toFile());
+      this.injectLang(Paths.get(event.getModConfigurationDirectory().toString(), AuthModConfig.lang.trim() + ".lang").toFile());
     }
     switch (AuthModConfig.dataSourceStrategy) {
       case DATABASE:

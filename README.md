@@ -64,9 +64,11 @@ _We are 2 students from TELECOM Nancy wanted to create a minecraft server for ou
 
 AuthMod is a server side Minecraft mod allowing you to accept premium or demo minecraft accounts safely. What is important to remind with this mod is **the mojang authentication cannot be used**. So if you rely on this, this mod is maybe not a good solution for you. Authmod proposes a set of interesting features:
 
-- Possibility to enable or disable the registration on the minecraft server.
-- Possibility to enable or disable the authentication on the minecraft server.
+- Possibility to enable or disable the registration on the server.
+- Possibility to enable or disable the authentication on the server.
 - Possibility to register a list of allowed users.
+- Possibility to ban a registered player.
+- Registration/authentication can require an email address.
 - Possibility to exclude a player if he's not logged after a certain delay.
 
 All the data related to the registration, the authentication... are stored either in a SQL database or a file.
@@ -154,7 +156,6 @@ general {
 ```
 
 Don't forget to configure in this file all information related to the database (under the `database {...}` key).
-
 The last step is to init the database and a table `players`:
 
 ```sql
@@ -183,7 +184,7 @@ INSERT INTO minecraft.players (id, email, password, uuid, username, banned) VALU
 
 ## Getting started for administrators
 
-1. stop your minecraft server.
+1. stop your server.
 2. Add `authmod-X.X.jar` in the `mods/` directory:
 
 ```bash
