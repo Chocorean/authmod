@@ -62,7 +62,7 @@ class AuthenticatorTest {
   }
 
   @Test
-  void testLogin() throws LoginException {
+  void testLogin() throws LoginException, InvalidEmailException {
     boolean logged = this.authenticator.login(this.payload);
     assertTrue(logged, "Player should be logged");
   }
@@ -100,7 +100,7 @@ class AuthenticatorTest {
   }
 
   @Test
-  void testLoginNullParams() throws LoginException {
+  void testLoginNullParams() throws LoginException, InvalidEmailException {
     boolean logged = this.authenticator.login(null);
     assertFalse(logged, "Can't be logged, no payload provided");
   }

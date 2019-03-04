@@ -56,14 +56,15 @@ public class LoginCommand implements ICommand {
   @Override
   public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
     EntityPlayer player = (EntityPlayer) sender;
-    LOGGER.info(player.getDisplayNameString() + " is going to log in");
     if (args.length == (this.emailRequired ? 2 : 1)) {
       if (!this.handler.isLogged(player)) {
         LoginPayload payload = createPayload(this.emailRequired, player, args);
+        LOGGER.info(payload.toString() + " is going to log in");
         try {
-          this.authenticator.login(payload);
-          this.handler.authorizePlayer(player);
-          LOGGER.info(player.getDisplayNameString() + " authenticated");
+          if(this.authenticator.login(payload)) {
+            this.handler.authorizePlayer(player);
+            LOGGER.info(player.getDisplayNameString() + " authenticated");
+          }
           sender.sendMessage(new TextComponentString(AuthModConfig.i18n.loginSuccess));
         } catch (WrongUsernameException e) {
           sender.sendMessage(new TextComponentString(AuthModConfig.i18n.loginWrongUsername));
@@ -73,6 +74,8 @@ public class LoginCommand implements ICommand {
           sender.sendMessage(new TextComponentString(AuthModConfig.i18n.loginBanned));
         } catch (PlayerNotFoundException e) {
           sender.sendMessage(new TextComponentString(String.format(AuthModConfig.i18n.loginUnknown, player.getDisplayNameString())));
+        } catch (InvalidEmailException e) {
+          sender.sendMessage(new TextComponentString(AuthModConfig.i18n.loginInvalidEmail));
         } catch (LoginException e) {
           sender.sendMessage(new TextComponentString(AuthModConfig.i18n.error));
           LOGGER.error(e.getMessage());

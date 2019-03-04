@@ -81,6 +81,6 @@ class RegistratorTest {
   @Test
   void testIncorrectPasswordConfirmation() {
     this.registrator = new Registrator(this.dataSource);
-    assertThrows(WrongPasswordConfirmation.class, () -> this.registrator.register(this.payload.setPasswordConfirmation("nope")));
+    assertThrows(WrongPasswordConfirmationException.class, () -> this.registrator.register(this.payload.setPasswordConfirmation("nope")));
   }
 }

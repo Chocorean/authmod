@@ -51,12 +51,12 @@ class ConnectionFactoryTest {
   @Test
   void testGetConnectionSQLError() {
     IConnectionFactory connectionFactory = new ConnectionFactory(
-      "mariadb",
+      "unknown-dialect",
       "localhost",
       3306,
       "minecraft",
-      "root",
-      "root");
+      "awesome",
+      "password");
     assertThrows(SQLException.class, connectionFactory::getConnection);
   }
 }

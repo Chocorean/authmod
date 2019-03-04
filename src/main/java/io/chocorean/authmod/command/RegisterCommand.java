@@ -6,7 +6,6 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import io.chocorean.authmod.config.AuthModConfig;
-import io.chocorean.authmod.guard.payload.LoginPayload;
 import org.apache.logging.log4j.Logger;
 
 import io.chocorean.authmod.AuthMod;
@@ -14,7 +13,7 @@ import io.chocorean.authmod.event.Handler;
 import io.chocorean.authmod.exception.InvalidEmailException;
 import io.chocorean.authmod.exception.PlayerAlreadyExistException;
 import io.chocorean.authmod.exception.RegistrationException;
-import io.chocorean.authmod.exception.WrongPasswordConfirmation;
+import io.chocorean.authmod.exception.WrongPasswordConfirmationException;
 import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
 import io.chocorean.authmod.guard.payload.RegistrationPayload;
 import io.chocorean.authmod.guard.registration.Registrator;
@@ -74,7 +73,7 @@ public class RegisterCommand implements ICommand {
           sender.sendMessage(new TextComponentString(AuthModConfig.i18n.loginInvalidEmail));
         } catch (PlayerAlreadyExistException e) {
           sender.sendMessage(new TextComponentString(AuthModConfig.i18n.registerExist));
-        } catch (WrongPasswordConfirmation e) {
+        } catch (WrongPasswordConfirmationException e) {
           sender.sendMessage(new TextComponentString(AuthModConfig.i18n.registerWrongPasswordConfirmation));
         } catch (RegistrationException e) {
           LOGGER.error(e.getMessage());

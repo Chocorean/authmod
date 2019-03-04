@@ -1,23 +1,6 @@
 package io.chocorean.authmod.command;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.UUID;
-import java.util.stream.Stream;
-
-import io.chocorean.authmod.guard.datasource.DatabaseSourceStrategy;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import com.mojang.authlib.GameProfile;
-
 import io.chocorean.authmod.PlayerFactory;
 import io.chocorean.authmod.event.Handler;
 import io.chocorean.authmod.exception.AuthmodException;
@@ -30,6 +13,16 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.io.File;
+import java.nio.file.Paths;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class LoginCommandTest {
   private LoginCommand loginCommand;

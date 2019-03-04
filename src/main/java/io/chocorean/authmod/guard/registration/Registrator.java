@@ -11,7 +11,7 @@ import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.exception.InvalidEmailException;
 import io.chocorean.authmod.exception.PlayerAlreadyExistException;
 import io.chocorean.authmod.exception.RegistrationException;
-import io.chocorean.authmod.exception.WrongPasswordConfirmation;
+import io.chocorean.authmod.exception.WrongPasswordConfirmationException;
 import io.chocorean.authmod.guard.PlayerFactory;
 import io.chocorean.authmod.guard.datasource.FileDataSourceStrategy;
 import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
@@ -45,7 +45,7 @@ public class Registrator {
         for (ConstraintViolation c : payload.getErrors()) {
           if (c.getPropertyPath().toString().equals("email")) throw new InvalidEmailException();
           if (c.getPropertyPath().toString().equals("passwordConfirmationMatches"))
-            throw new WrongPasswordConfirmation();
+            throw new WrongPasswordConfirmationException();
         }
       }
     }
