@@ -31,7 +31,6 @@ public class DatabaseSourceStrategy implements IDataSourceStrategy {
     IPlayer p;
     try {
       p = this.playersDAO.find(new Player().setEmail(email).setUsername(username));
-      LOGGER.info(p);
       return p;
     } catch (SQLException e) {
       LOGGER.catching(Level.ERROR, e);

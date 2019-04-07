@@ -23,7 +23,6 @@ public class Authenticator {
     if (payload != null) {
       if (payload.isValid()) {
         IPlayer player = this.dataSource.find(payload.getEmail(), payload.getUsername());
-        LOGGER.info(payload);
         if (player == null)
           throw new PlayerNotFoundException();
         if (!player.getUsername().equals(payload.getUsername()))
