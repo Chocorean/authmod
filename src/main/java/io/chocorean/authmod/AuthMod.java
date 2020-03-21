@@ -9,12 +9,9 @@ import io.chocorean.authmod.guard.datasource.DatabaseSourceStrategy;
 import io.chocorean.authmod.guard.datasource.FileDataSourceStrategy;
 import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
 import io.chocorean.authmod.guard.datasource.db.ConnectionFactory;
-import io.chocorean.authmod.proxy.CommonProxy;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import org.apache.logging.log4j.Logger;
@@ -29,12 +26,7 @@ public class AuthMod {
   public static final String MODID = "authmod";
   static final String NAME = "AuthMod";
   static final String VERSION = "3.0";
-  private static final String COMMON_PROXY = "io.chocorean.authmod.proxy.CommonProxy";
-  private static final String CLIENT_PROXY = "io.chocorean.authmod.proxy.ClientProxy";
   public static Logger LOGGER = FMLLog.log;
-
-  @SidedProxy(clientSide = AuthMod.CLIENT_PROXY, serverSide = AuthMod.COMMON_PROXY)
-  private static CommonProxy proxy;
 
   private Handler handler;
   private IDataSourceStrategy dataSourceStrategy;
@@ -43,7 +35,6 @@ public class AuthMod {
   @Mod.EventHandler
   public void preInit(FMLPreInitializationEvent event) throws Exception {
     AuthMod.LOGGER = event.getModLog();
-    LOGGER.info(MODID + " " + VERSION);
     switch (AuthModConfig.dataSourceStrategy) {
       case DATABASE:
         this.dataSourceStrategy =
@@ -74,15 +65,10 @@ public class AuthMod {
   }
 
   @Mod.EventHandler
-  public void load(FMLInitializationEvent e) {
-    proxy.registerRenderers();
-  }
-
-  @Mod.EventHandler
   public void serverStarting(FMLServerStartingEvent event) {
     if (AuthModConfig.dataSourceStrategy != null) {
+      this.handler = new Handler(); 
       if (enableAuthentication) {
-        this.handler = new Handler();
         LOGGER.info("Registering AuthMod event handler");
         MinecraftForge.EVENT_BUS.register(this.handler);
         LOGGER.info("Registering AuthMod /login command");
