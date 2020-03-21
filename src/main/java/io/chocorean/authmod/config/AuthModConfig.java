@@ -111,20 +111,25 @@ public class AuthModConfig {
     @Comment("Usage for /register")
     public String registerUsage = "/register <email> <password> - Be careful when choosing it, you'll be asked to login each time you play.";
 
+    @Comment("Alternative usage for /register")
+    public String registerAlternativeUsage = "/register <password> - Be careful when choosing it, you'll be asked to login each time you play.";
+
     @Comment("Message displayed to a player when he/she successfully registered.")
     public String registerSuccess = "You are registered and authenticated, have fun!";
 
-    @Comment("Message displayed to a player when he/she successfully registered.")
+    @Comment("Message displayed to a player when he/she fails to login.")
     public String registerWrongPasswordConfirmation = "The password confirmation doesn't match. Please retry.";
 
+    @Comment("Message displayed to a player when he/she tries to register while being already logged in.")
+    public String registerAlreadyLogged = "You are already logged in, no need to register !";
+
+    @Comment("Message displayed to a player when he/she tries to register with a short password.")
+    public String registerPasswordTooShort = "Your password should be at least 5-character long.";
 
     public String loggedYes = "Yes";
-
     public String loggedNo = "No";
 
     @Comment("Usage for /logged")
     public String loggedUsage = "/logged - tells you whether you are authenticated or not";
-
   }
-
 }

@@ -4,22 +4,21 @@ import java.nio.file.Paths;
 
 import javax.validation.ConstraintViolation;
 
-import org.apache.logging.log4j.Logger;
 import org.mindrot.jbcrypt.BCrypt;
 
-import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.exception.InvalidEmailException;
+import io.chocorean.authmod.exception.InvalidPasswordException;
 import io.chocorean.authmod.exception.PlayerAlreadyExistException;
 import io.chocorean.authmod.exception.RegistrationException;
 import io.chocorean.authmod.exception.WrongPasswordConfirmationException;
 import io.chocorean.authmod.guard.PlayerFactory;
 import io.chocorean.authmod.guard.datasource.FileDataSourceStrategy;
 import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
+import io.chocorean.authmod.guard.payload.IPayload;
 import io.chocorean.authmod.guard.payload.RegistrationPayload;
 import io.chocorean.authmod.model.IPlayer;
 
 public class Registrator {
-  private static final Logger LOGGER = AuthMod.LOGGER;
   private final IDataSourceStrategy dataSource;
 
   public Registrator() {
@@ -37,15 +36,15 @@ public class Registrator {
         if (this.dataSource.exist(player)) {
           throw new PlayerAlreadyExistException();
         } else {
-          LOGGER.info(payload.getUsername() + " is registering");
           player.setPassword(BCrypt.hashpw(player.getPassword(), BCrypt.gensalt()));
           return this.dataSource.add(player);
         }
       } else {
-        for (ConstraintViolation c : payload.getErrors()) {
+        for (ConstraintViolation<IPayload> c : payload.getErrors()) {
           if (c.getPropertyPath().toString().equals("email")) throw new InvalidEmailException();
           if (c.getPropertyPath().toString().equals("passwordConfirmationMatches"))
             throw new WrongPasswordConfirmationException();
+          if (c.getPropertyPath().toString().equals("password")) throw new InvalidPasswordException();
         }
       }
     }
