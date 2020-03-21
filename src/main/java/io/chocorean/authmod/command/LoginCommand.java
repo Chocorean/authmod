@@ -91,7 +91,7 @@ public class LoginCommand implements ICommand {
     return true;
   }
 
-  static LoginPayload createPayload( boolean emailRequired, EntityPlayer player, String[] args) {
+  static LoginPayload createPayload(boolean emailRequired, EntityPlayer player, String[] args) {
     LoginPayload payload = new LoginPayload();
     payload.setEmailRequired(emailRequired);
     payload.setEmail(emailRequired ? args[0] : null);
