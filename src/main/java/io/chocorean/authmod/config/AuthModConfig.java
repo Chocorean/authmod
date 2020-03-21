@@ -109,10 +109,10 @@ public class AuthModConfig {
     public String registerExist = "Someone has already registered with this username or email.";
 
     @Comment("Usage for /register")
-    public String registerUsage = "/register <email> <password> - Be careful when choosing it, you'll be asked to login each time you play.";
+    public String registerUsage = "/register <email> <password> <password>- Be careful when choosing it, you'll be asked to login each time you play.";
 
     @Comment("Alternative usage for /register")
-    public String registerAlternativeUsage = "/register <password> - Be careful when choosing it, you'll be asked to login each time you play.";
+    public String registerAlternativeUsage = "/register <password> <password>- Be careful when choosing it, you'll be asked to login each time you play.";
 
     @Comment("Message displayed to a player when he/she successfully registered.")
     public String registerSuccess = "You are registered and authenticated, have fun!";

@@ -62,7 +62,7 @@ public class RegisterCommand implements ICommand {
   @Override
   public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
     EntityPlayer player = (EntityPlayer) sender;
-    if (args.length == (this.emailRequired ? 2 : 1)) {
+    if (args.length == (this.emailRequired ? 3 : 2)) {
       if (!this.handler.isLogged(player)) {
         try {
           RegistrationPayload payload = this.createPayload(player, args);
