@@ -1,9 +1,11 @@
 package io.chocorean.authmod.core;
 
-public interface GuardInterface extends Error {
+import io.chocorean.authmod.core.exception.GuardError;
 
-  public boolean authenticate(PayloadInterface payload);
+public interface GuardInterface {
 
-  public boolean register(PayloadInterface payload);
+  boolean authenticate(PayloadInterface payload) throws GuardError;
+
+  boolean register(PayloadInterface payload) throws GuardError;
 
 }

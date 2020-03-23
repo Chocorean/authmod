@@ -1,46 +1,36 @@
 package io.chocorean.authmod.command;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nullable;
-
-import io.chocorean.authmod.guard.payload.LoginPayload;
-import org.apache.logging.log4j.Logger;
-
 import io.chocorean.authmod.AuthMod;
+import io.chocorean.authmod.config.AuthModConfig;
+import io.chocorean.authmod.core.GuardInterface;
+import io.chocorean.authmod.core.Payload;
+import io.chocorean.authmod.core.Player;
+import io.chocorean.authmod.core.PlayerInterface;
+import io.chocorean.authmod.core.exception.GuardError;
 import io.chocorean.authmod.event.Handler;
-import io.chocorean.authmod.exception.InvalidEmailException;
-import io.chocorean.authmod.exception.PlayerAlreadyExistException;
-import io.chocorean.authmod.exception.RegistrationException;
-import io.chocorean.authmod.exception.WrongPasswordConfirmation;
-import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
-import io.chocorean.authmod.guard.payload.RegistrationPayload;
-import io.chocorean.authmod.guard.registration.Registrator;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+import org.apache.logging.log4j.Logger;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RegisterCommand implements ICommand {
   private static final Logger LOGGER = AuthMod.LOGGER;
   private final List<String> aliases;
-  private final Registrator registrator;
+  private final GuardInterface guard;
   private final Handler handler;
-  private final boolean emailRequired;
 
-  public RegisterCommand(Handler handler, IDataSourceStrategy strategy, boolean emailRequired) {
+  public RegisterCommand(Handler handler, GuardInterface guard) {
     this.handler = handler;
     aliases = new ArrayList<>();
+    this.guard = guard;
     aliases.add("reg");
-    this.registrator = new Registrator(strategy);
-    this.emailRequired = emailRequired;
-  }
-
-  public RegisterCommand(Handler handler, IDataSourceStrategy strategy) {
-    this(handler, strategy, false);
   }
 
   @Override
@@ -60,31 +50,23 @@ public class RegisterCommand implements ICommand {
 
   @Override
   public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
-    EntityPlayer player = (EntityPlayer) sender;
-    LOGGER.info(player.getDisplayNameString() + " is registering");
-    if (args.length == (this.emailRequired ? 3 : 2)) {
-      if (!this.handler.isLogged(player)) {
-        RegistrationPayload payload = this.createPayload(player, args);
-        try {
-          this.registrator.register(payload);
-          this.handler.authorizePlayer(player);
-          sender.sendMessage(this.handler.getMessage(this.getName() + ".success"));
-        } catch (InvalidEmailException e) {
-          sender.sendMessage(this.handler.getMessage(this.getName() + ".invalidEmail"));
-        } catch (PlayerAlreadyExistException e) {
-          sender.sendMessage(this.handler.getMessage(this.getName() + ".exist"));
-        } catch (WrongPasswordConfirmation e) {
-          sender.sendMessage(this.handler.getMessage(this.getName() + ".wrongPasswordConfirmation"));
-        } catch (RegistrationException e) {
-          LOGGER.error(e.getMessage());
-          sender.sendMessage(this.handler.getMessage("error"));
+    EntityPlayer entityPlayer = (EntityPlayer) sender;
+    try {
+      if (!this.handler.isLogged(entityPlayer)) {
+        PlayerInterface player = new Player(
+          entityPlayer.getDisplayNameString(),
+          EntityPlayer.getUUID(entityPlayer.getGameProfile()).toString()
+        );
+        LOGGER.info(player.getUsername() + " is registering");
+        if(this.guard.register(new Payload(player, args))) {
+          this.handler.authorizePlayer(entityPlayer);
+          sender.sendMessage(new TextComponentString(AuthModConfig.i18n.registerSuccess));
         }
-      } else {
-        sender.sendMessage(new TextComponentString(this.getUsage(sender)));
       }
+    } catch(GuardError e) {
+      sender.sendMessage(new TextComponentString(ExceptionToMessageMapper.getMessage(e)));
     }
   }
-
   @Override
   public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
     return true;
@@ -105,7 +87,4 @@ public class RegisterCommand implements ICommand {
     return this.getName().compareTo(iCommand.getName());
   }
 
-  private RegistrationPayload createPayload(EntityPlayer player, String[] args) {
-    return new RegistrationPayload(LoginCommand.createPayload(this.emailRequired, player, args), this.emailRequired ? args[2] : args[1]);
-  }
 }

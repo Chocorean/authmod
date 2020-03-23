@@ -1,9 +1,10 @@
 package io.chocorean.authmod.core.validator;
 
 import io.chocorean.authmod.core.PayloadInterface;
+import io.chocorean.authmod.core.exception.GuardError;
 
 public interface ValidatorInterface {
 
-  public boolean validate(PayloadInterface payload);
+  boolean validate(PayloadInterface payload) throws GuardError;
 
 }

@@ -2,6 +2,9 @@ package io.chocorean.authmod.guard.datasource;
 
 import java.sql.SQLException;
 
+import io.chocorean.authmod.core.Error;
+import io.chocorean.authmod.core.exception.GuardError;
+import io.chocorean.authmod.core.exception.SomethingGoesWrongError;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 
@@ -14,9 +17,10 @@ import io.chocorean.authmod.guard.datasource.db.PlayersDAO;
 import io.chocorean.authmod.model.IPlayer;
 import io.chocorean.authmod.model.Player;
 
-public class DatabaseSourceStrategy implements IDataSourceStrategy {
+public class DatabaseSourceStrategy implements IDataSourceStrategy, Error {
   private final IPlayersDAO<IPlayer> playersDAO;
   private static final Logger LOGGER = AuthMod.LOGGER;
+  private GuardError error;
 
   public DatabaseSourceStrategy(String table, IConnectionFactory connectionFactory)
       throws SQLException {
@@ -34,6 +38,7 @@ public class DatabaseSourceStrategy implements IDataSourceStrategy {
       p = this.playersDAO.find(new Player().setEmail(email).setUsername(username));
       return p;
     } catch (SQLException e) {
+      this.error = new SomethingGoesWrongError(e.getMessage());
       LOGGER.catching(Level.ERROR, e);
     }
     return null;
@@ -62,5 +67,10 @@ public class DatabaseSourceStrategy implements IDataSourceStrategy {
       LOGGER.catching(Level.ERROR, e);
     }
     return false;
+  }
+
+  @Override
+  public GuardError getError() {
+    return null;
   }
 }

@@ -35,6 +35,10 @@ public class DatabaseStrategy implements DataSourceStrategyInterface {
     this.checkTable();
   }
 
+  public DatabaseStrategy(ConnectionFactoryInterface connectionFactory, Map<String, String> columns) {
+    this("players", connectionFactory, columns, new BcryptPasswordHash());
+  }
+
   public DatabaseStrategy(ConnectionFactoryInterface connectionFactory) {
     this("players", connectionFactory, new HashMap<>(), new BcryptPasswordHash());
   }

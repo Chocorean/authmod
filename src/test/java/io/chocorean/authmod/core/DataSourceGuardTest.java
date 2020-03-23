@@ -5,6 +5,16 @@ import io.chocorean.authmod.core.datasource.DatabaseStrategy;
 import io.chocorean.authmod.core.datasource.FileDataSourceStrategy;
 import io.chocorean.authmod.core.datasource.db.ConnectionFactoryInterface;
 import io.chocorean.authmod.core.datasource.db.DBHelpers;
+import io.chocorean.authmod.core.exception.BannedPlayerError;
+import io.chocorean.authmod.core.exception.PlayerAlreadyExistError;
+import io.chocorean.authmod.core.exception.PlayerNotFoundError;
+import io.chocorean.authmod.exception.AuthmodException;
+import io.chocorean.authmod.exception.InvalidEmailException;
+import io.chocorean.authmod.exception.PlayerAlreadyExistException;
+import io.chocorean.authmod.exception.WrongPasswordConfirmation;
+import io.chocorean.authmod.guard.registration.Registrator;
+import io.chocorean.authmod.model.IPlayer;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -27,7 +37,7 @@ class DataSourceGuardTest {
   private PayloadInterface registrationPayload;
   private PayloadInterface loginPayload;
 
-  void init(DataSourceStrategyInterface impl) throws Exception {
+  private void init(DataSourceStrategyInterface impl) throws Exception {
     this.dataSourceStrategy = impl;
     if(impl instanceof FileDataSourceStrategy && FILE.exists()) {
       FILE.delete();
@@ -57,23 +67,24 @@ class DataSourceGuardTest {
     assertFalse(this.guard.authenticate(payload));
   }
 
-  @ParameterizedTest
+  @ParameterizedTest(name = "with {0}")
   @MethodSource("parameters")
   void testAuthenticateWrongPassword(DataSourceStrategyInterface impl) throws Exception {
     init(impl);
     this.guard.register(registrationPayload);
-    assertTrue(this.guard.authenticate(loginPayload));
+    this.loginPayload = new Payload(this.player, new String[]{"qwertyqwerty"});
+    assertFalse(this.guard.authenticate(loginPayload));
   }
 
-  @ParameterizedTest
+  @ParameterizedTest(name = "with {0}")
   @MethodSource("parameters")
   void testAuthenticateUnknownPlayer(DataSourceStrategyInterface impl) throws Exception {
     init(impl);
     PayloadInterface payload = new Payload(this.player.setUsername("admin"), new String[]{"rootroot"});
-    assertFalse(this.guard.authenticate(payload));
+    assertThrows(PlayerNotFoundError.class, () -> this.guard.authenticate(payload));
   }
 
-  @ParameterizedTest
+  @ParameterizedTest(name = "with {0}")
   @MethodSource("parameters")
   void testAuthenticateBanned(DataSourceStrategyInterface impl) throws Exception {
     init(impl);
@@ -82,28 +93,47 @@ class DataSourceGuardTest {
       DBHelpers.banPlayer(connectionFactory, registrationPayload.getPlayer().getUsername());
     }
     this.dataSourceStrategy.find(registrationPayload.getPlayer().getUsername()).setBanned(true);
-    assertFalse(this.guard.authenticate(this.loginPayload));
+    assertThrows(BannedPlayerError.class, () -> this.guard.authenticate(this.loginPayload));
   }
 
-  @ParameterizedTest
+  @ParameterizedTest(name = "with {0}")
   @MethodSource("parameters")
-  public void testAuthenticatePayloadNull(DataSourceStrategyInterface impl) throws Exception {
+  public void testAuthenticateNullParam(DataSourceStrategyInterface impl) throws Exception {
     init(impl);
-    assertFalse(this.guard.authenticate(null));
+    assertThrows(Exception.class, () -> this.guard.authenticate(null));
   }
 
-  @ParameterizedTest
+  @ParameterizedTest(name = "with {0}")
   @MethodSource("parameters")
-  public void testRegisterPayloadNull(DataSourceStrategyInterface impl) throws Exception {
+  public void testRegisterNullParam(DataSourceStrategyInterface impl) throws Exception {
     init(impl);
-    assertFalse(this.guard.register(null));
+    assertThrows(Exception.class, () -> this.guard.authenticate(null));
   }
 
-  @ParameterizedTest
+  @ParameterizedTest(name = "with {0}")
   @MethodSource("parameters")
-  public void testGetError(DataSourceStrategyInterface impl) throws Exception {
+  void testRegisterPlayerAlreadyExist(DataSourceStrategyInterface impl) throws Exception {
     init(impl);
-    assertNotNull(this.guard.getError());
+    this.guard.register(this.registrationPayload);
+    assertThrows(PlayerAlreadyExistError.class, () -> this.guard.register(this.registrationPayload));
+  }
+
+  @ParameterizedTest(name = "with {0}")
+  @MethodSource("parameters")
+  void testRegisterIdentifierRequired(DataSourceStrategyInterface impl) throws Exception {
+    init(impl);
+    this.guard = new DataSourceGuard(dataSourceStrategy, true);
+    this.registrationPayload = new Payload(this.player, new String[]{"Crumb", this.password, this.password});
+    assertTrue(this.guard.register(this.registrationPayload));
+  }
+
+  @ParameterizedTest(name = "with {0}")
+  @MethodSource("parameters")
+  void testIncorrectPasswordConfirmation(DataSourceStrategyInterface impl) throws Exception {
+    init(impl);
+    this.guard = new DataSourceGuard(dataSourceStrategy, true);
+    this.registrationPayload = new Payload(this.player, new String[]{"Crumb", this.password, this.password + "typo"});
+    assertThrows(WrongPasswordConfirmation.class, () -> this.guard.register(this.registrationPayload));
   }
 
   static Stream<Arguments> parameters() throws Exception {

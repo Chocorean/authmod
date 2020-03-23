@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-class LoginCommandTest {
+class RegisterCommandTest {
   private LoginCommand loginCommand;
   private Handler handler;
   private IDataSourceStrategy dataSourceStrategy;

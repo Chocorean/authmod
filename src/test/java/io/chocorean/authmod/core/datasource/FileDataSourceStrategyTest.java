@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,7 +21,7 @@ class FileDataSourceStrategyTest {
   private DataSourceStrategyInterface dataSource;
 
   @BeforeEach
-  void init() {
+  void init() throws Exception {
     this.file = Paths.get(System.getProperty("java.io.tmpdir"), "authmod.csv").toFile();
     this.dataSource = new FileDataSourceStrategy(this.file);
     if (this.file.exists()) {
@@ -30,7 +31,7 @@ class FileDataSourceStrategyTest {
   }
 
   @Test
-  void testConstructor() {
+  void testConstructor() throws Exception {
     new FileDataSourceStrategy(this.file);
     assertTrue(this.file.exists(), "The strategy should create a CSV file automatically");
   }

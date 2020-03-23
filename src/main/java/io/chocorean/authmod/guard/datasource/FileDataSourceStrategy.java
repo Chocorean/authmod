@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.chocorean.authmod.core.exception.SomethingGoesWrongError;
 import org.apache.logging.log4j.Logger;
 
 import io.chocorean.authmod.AuthMod;
@@ -21,6 +22,7 @@ public class FileDataSourceStrategy implements IDataSourceStrategy {
   private long lastModification;
   private static final Logger LOGGER = AuthMod.LOGGER;
   private static final String SEPARATOR = ",";
+  private SomethingGoesWrongError error;
 
   public FileDataSourceStrategy() {
     this.authFile = Paths.get(System.getProperty("java.io.tmpdir"), "authmod.csv").toFile();
@@ -55,6 +57,7 @@ public class FileDataSourceStrategy implements IDataSourceStrategy {
         this.lastModification = this.authFile.lastModified();
       }
     } catch (IOException e) {
+      this.error = new SomethingGoesWrongError(e.getMessage());
       LOGGER.catching(e);
     }
   }
