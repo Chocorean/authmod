@@ -1,43 +1,20 @@
-package io.chocorean.authmod.model;
+package io.chocorean.authmod.core;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+import io.chocorean.authmod.core.datasource.DataSourcePlayer;
+import io.chocorean.authmod.core.datasource.DataSourcePlayerInterface;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 class PlayerTest {
-  private Player player;
+
   private final String uuid = "7128022b-9195-490d-9bc8-9b42ebe2a8e3";
+  private PlayerInterface player;
 
   @BeforeEach
   void init() {
-    this.player = new Player();
-  }
-
-  @Test
-  void testSetEmail() {
-    String email = "root@root.fr";
-    this.player.setEmail(email + ' ');
-    assertEquals(email, this.player.getEmail());
-  }
-
-  @Test
-  void testSetUsername() {
-    String username = "mcdostone";
-    this.player.setUsername(username + ' ');
-    assertEquals(username, this.player.getUsername());
-  }
-
-  @Test
-  void testSetUuidNullParam() {
-    this.player.setUuid(null);
-    assertEquals(this.player.getUuid().length(), 0, "The UUID should be empty");
-  }
-
-  @Test
-  void testSetEmailNullParam() {
-    this.player.setEmail(null);
-    assertEquals(this.player.getEmail().length(), 0, "The email should be null");
+    this.player = new Player(null, uuid);
   }
 
   @Test
@@ -45,6 +22,7 @@ class PlayerTest {
     this.player.setUuid(this.uuid.replaceAll("-", ""));
     assertEquals(this.uuid, this.player.getUuid(), "The UUID format should be X-X-X-X-X");
   }
+
 
   @Test
   void testSetUuidLongFormat() {
@@ -65,9 +43,15 @@ class PlayerTest {
   }
 
   @Test
+  void testSetUuidNullParam() {
+    this.player.setUuid(null);
+    assertEquals(this.player.getUuid().length(), 0, "The UUID should be empty");
+  }
+
+  @Test
   void testToString() {
     player.setUsername("korben");
-    player.setEmail("korben.dallas@gmail.com");
-    assertEquals("{korben.dallas@gmail.com, korben}", player.toString());
+    assertEquals("{username: " + this.player.getUsername() + ", uuid: " + this.player.getUuid() + "}", player.toString());
   }
+
 }
