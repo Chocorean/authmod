@@ -2,17 +2,11 @@ package io.chocorean.authmod.core.datasource;
 
 
 import io.chocorean.authmod.core.Player;
-import io.chocorean.authmod.core.PlayerInterface;
-import io.chocorean.authmod.core.datasource.db.ConnectionFactory;
 import io.chocorean.authmod.core.datasource.db.ConnectionFactoryInterface;
 import io.chocorean.authmod.core.datasource.db.DBHelpers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;

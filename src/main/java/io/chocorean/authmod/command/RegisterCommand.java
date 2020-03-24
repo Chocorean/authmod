@@ -6,7 +6,7 @@ import io.chocorean.authmod.core.GuardInterface;
 import io.chocorean.authmod.core.Payload;
 import io.chocorean.authmod.core.Player;
 import io.chocorean.authmod.core.PlayerInterface;
-import io.chocorean.authmod.core.exception.GuardError;
+import io.chocorean.authmod.core.exception.AuthmodError;
 import io.chocorean.authmod.event.Handler;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
@@ -63,7 +63,7 @@ public class RegisterCommand implements ICommand {
           sender.sendMessage(new TextComponentString(AuthModConfig.i18n.registerSuccess));
         }
       }
-    } catch(GuardError e) {
+    } catch(AuthmodError e) {
       sender.sendMessage(new TextComponentString(ExceptionToMessageMapper.getMessage(e)));
     }
   }

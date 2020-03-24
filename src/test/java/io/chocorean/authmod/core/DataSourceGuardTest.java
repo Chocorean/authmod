@@ -8,13 +8,7 @@ import io.chocorean.authmod.core.datasource.db.DBHelpers;
 import io.chocorean.authmod.core.exception.BannedPlayerError;
 import io.chocorean.authmod.core.exception.PlayerAlreadyExistError;
 import io.chocorean.authmod.core.exception.PlayerNotFoundError;
-import io.chocorean.authmod.exception.AuthmodException;
-import io.chocorean.authmod.exception.InvalidEmailException;
-import io.chocorean.authmod.exception.PlayerAlreadyExistException;
-import io.chocorean.authmod.exception.WrongPasswordConfirmation;
-import io.chocorean.authmod.guard.registration.Registrator;
-import io.chocorean.authmod.model.IPlayer;
-import org.junit.jupiter.api.Test;
+import io.chocorean.authmod.core.exception.WrongPasswordConfirmationError;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -29,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class DataSourceGuardTest {
 
   private GuardInterface guard;
-  private String password = "my-very-l0ng-password";
+  private final String password = "my-very-l0ng-password";
   private final static File FILE = Paths.get(System.getProperty("java.io.tmpdir"), "authmod.csv").toFile();
   private static ConnectionFactoryInterface connectionFactory;
   private PlayerInterface player;
@@ -133,7 +127,7 @@ class DataSourceGuardTest {
     init(impl);
     this.guard = new DataSourceGuard(dataSourceStrategy, true);
     this.registrationPayload = new Payload(this.player, new String[]{"Crumb", this.password, this.password + "typo"});
-    assertThrows(WrongPasswordConfirmation.class, () -> this.guard.register(this.registrationPayload));
+    assertThrows(WrongPasswordConfirmationError.class, () -> this.guard.register(this.registrationPayload));
   }
 
   static Stream<Arguments> parameters() throws Exception {

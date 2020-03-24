@@ -1,7 +1,7 @@
 package io.chocorean.authmod.core.validator;
 
 import io.chocorean.authmod.core.PayloadInterface;
-import io.chocorean.authmod.core.exception.GuardError;
+import io.chocorean.authmod.core.exception.AuthmodError;
 import io.chocorean.authmod.core.exception.WrongPasswordConfirmationError;
 import io.chocorean.authmod.core.exception.WrongRegisterUsageError;
 
@@ -14,7 +14,7 @@ public class DataSourceRegistrationValidator implements ValidatorInterface {
   }
 
   @Override
-  public boolean validate(PayloadInterface payload) throws GuardError {
+  public boolean validate(PayloadInterface payload) throws AuthmodError {
     int numberOfArgs = this.indentifierRequired ? 3 : 2;
     if(payload.getArgs().length != numberOfArgs) {
       throw new WrongRegisterUsageError();

@@ -1,9 +1,5 @@
 package io.chocorean.authmod.core.exception;
 
-public class RegistrationError extends GuardError {
-
-  RegistrationError(String message) {
-    super(message);
-  }
+public class RegistrationError extends AuthmodError {
 
 }

@@ -1,10 +1,11 @@
 package io.chocorean.authmod.core;
 
-import io.chocorean.authmod.core.exception.GuardError;
+import io.chocorean.authmod.core.exception.AuthmodError;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ImARobotGuardTest {
 
@@ -16,7 +17,7 @@ class ImARobotGuardTest {
   }
 
   @Test
-  public void testAuthenticate() throws GuardError {
+  public void testAuthenticate() throws AuthmodError {
     assertTrue(this.guard.authenticate(new Payload(null, new String[]{"I'm", "not", "a", "robot"})));
   }
 
@@ -26,7 +27,7 @@ class ImARobotGuardTest {
   }
 
   @Test
-  public void testRegister() throws GuardError {
+  public void testRegister() throws AuthmodError {
     assertTrue(this.guard.register(null));
   }
 

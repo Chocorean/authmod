@@ -7,13 +7,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class DataSourcePlayerTest {
 
-  private final String uuid = "7128022b-9195-490d-9bc8-9b42ebe2a8e3";
   private DataSourcePlayerInterface player;
 
   @BeforeEach
   void init() {
     this.player = new DataSourcePlayer();
-    this.player.setUuid(uuid);
+    this.player.setUuid("7128022b-9195-490d-9bc8-9b42ebe2a8e3");
   }
 
   @Test

@@ -1,6 +1,5 @@
 package io.chocorean.authmod.core.datasource;
 
-import io.chocorean.authmod.core.PayloadInterface;
 import io.chocorean.authmod.core.datasource.db.ConnectionFactoryInterface;
 
 import java.sql.*;
@@ -35,10 +34,6 @@ public class DatabaseStrategy implements DataSourceStrategyInterface {
     this.checkTable();
   }
 
-  public DatabaseStrategy(ConnectionFactoryInterface connectionFactory, Map<String, String> columns) {
-    this("players", connectionFactory, columns, new BcryptPasswordHash());
-  }
-
   public DatabaseStrategy(ConnectionFactoryInterface connectionFactory) {
     this("players", connectionFactory, new HashMap<>(), new BcryptPasswordHash());
   }
@@ -50,7 +45,9 @@ public class DatabaseStrategy implements DataSourceStrategyInterface {
       stmt.setString(1, identifier);
       ResultSet rs = stmt.executeQuery();
       return this.createPlayer(rs);
-    } catch(Exception e) {}
+    } catch(Exception e) {
+      e.printStackTrace();
+    }
     return null;
   }
 
@@ -89,11 +86,6 @@ public class DatabaseStrategy implements DataSourceStrategyInterface {
     return this.passwordHash;
   }
 
-  @Override
-  public boolean validatePayload(PayloadInterface payload) {
-    return false;
-  }
-
   private void checkTable() {
     try (Connection connection = this.connectionFactory.getConnection();
          PreparedStatement stmt =
@@ -108,6 +100,7 @@ public class DatabaseStrategy implements DataSourceStrategyInterface {
                this.table))) {
       stmt.executeQuery();
     } catch (SQLException e) {
+      e.printStackTrace();
     }
   }
 

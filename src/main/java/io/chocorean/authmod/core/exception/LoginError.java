@@ -1,8 +1,5 @@
 package io.chocorean.authmod.core.exception;
 
-public class LoginError extends GuardError {
+public class LoginError extends AuthmodError {
 
-  public LoginError(String message) {
-    super(message);
-  }
 }

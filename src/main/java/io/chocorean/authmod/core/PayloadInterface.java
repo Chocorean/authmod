@@ -2,7 +2,7 @@ package io.chocorean.authmod.core;
 
 public interface PayloadInterface {
 
-  public PlayerInterface getPlayer();
+  PlayerInterface getPlayer();
 
-  public String[] getArgs();
+  String[] getArgs();
 }

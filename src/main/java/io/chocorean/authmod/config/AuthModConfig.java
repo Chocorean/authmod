@@ -1,6 +1,5 @@
 package io.chocorean.authmod.config;
 
-import com.ibm.icu.impl.Normalizer2Impl;
 import io.chocorean.authmod.AuthMod;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.Config.Comment;

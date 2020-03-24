@@ -1,4 +1,4 @@
-package io.chocorean.authmod.model;
+package io.chocorean.authmod.core;
 
 import net.minecraft.util.math.BlockPos;
 

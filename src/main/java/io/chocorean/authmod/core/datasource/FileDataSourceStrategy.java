@@ -1,24 +1,17 @@
 package io.chocorean.authmod.core.datasource;
 
-import io.chocorean.authmod.core.Error;
-import io.chocorean.authmod.core.PayloadInterface;
 import io.chocorean.authmod.core.Player;
-import io.chocorean.authmod.core.PlayerInterface;
-import io.chocorean.authmod.core.exception.GuardError;
-import io.chocorean.authmod.core.exception.SomethingGoesWrongError;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.nio.file.Paths;
 
-public class FileDataSourceStrategy implements DataSourceStrategyInterface, Error {
+public class FileDataSourceStrategy implements DataSourceStrategyInterface {
 
   private static final String SEPARATOR = ",";
   private final File file;
   private final PasswordHashInterface passwordHash;
   private long lastModification;
-  private GuardError error;
   private final ArrayList<DataSourcePlayerInterface> players;
 
   public FileDataSourceStrategy(File file,  PasswordHashInterface passwordHash) throws IOException {
@@ -44,7 +37,7 @@ public class FileDataSourceStrategy implements DataSourceStrategyInterface, Erro
           .orElse(null);
       }
     } catch (IOException e) {
-      this.error = new SomethingGoesWrongError(e.getMessage());
+      e.printStackTrace();
     }
     return null;
   }
@@ -69,11 +62,6 @@ public class FileDataSourceStrategy implements DataSourceStrategyInterface, Erro
     return this.passwordHash;
   }
 
-  @Override
-  public boolean validatePayload(PayloadInterface payload) {
-    return false;
-  }
-
   private void saveFile() {
     try (BufferedWriter bw = new BufferedWriter(new FileWriter(this.file))) {
       bw.write(String.join(SEPARATOR, "# Identifier", " username", " hashed password", " is banned ?"));
@@ -84,7 +72,7 @@ public class FileDataSourceStrategy implements DataSourceStrategyInterface, Erro
       }
       this.lastModification = Files.getLastModifiedTime(this.file.toPath()).toMillis();
     } catch (IOException e) {
-      this.error = new SomethingGoesWrongError(e.getMessage());
+      e.printStackTrace();
     }
   }
 
@@ -114,8 +102,4 @@ public class FileDataSourceStrategy implements DataSourceStrategyInterface, Erro
     if (lastModification != this.file.lastModified()) this.readFile();
   }
 
-  @Override
-  public GuardError getError() {
-    return this.error;
-  }
 }

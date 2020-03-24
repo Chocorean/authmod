@@ -1,12 +1,11 @@
 package io.chocorean.authmod.command;
 
 import com.mojang.authlib.GameProfile;
-import io.chocorean.authmod.core.Player;
-import io.chocorean.authmod.core.PlayerInterface;
+import io.chocorean.authmod.core.*;
+import io.chocorean.authmod.core.datasource.DataSourcePlayer;
+import io.chocorean.authmod.core.datasource.DataSourceStrategyInterface;
+import io.chocorean.authmod.core.datasource.FileDataSourceStrategy;
 import io.chocorean.authmod.event.Handler;
-import io.chocorean.authmod.guard.datasource.FileDataSourceStrategy;
-import io.chocorean.authmod.guard.datasource.IDataSourceStrategy;
-import io.chocorean.authmod.guard.registration.Registrator;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetHandlerPlayServer;
@@ -16,6 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.UUID;
 
@@ -24,142 +24,128 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class LoginCommandTest {
-  private LoginCommand loginCommand;
+  private LoginCommand command;
   private Handler handler;
-  private IDataSourceStrategy dataSourceStrategy;
+  private DataSourceStrategyInterface dataSource;
   private PlayerInterface player;
+  private GuardInterface guard;
   private EntityPlayerMP sender;
-  private Registrator registrator;
-  private File dataFile = Paths.get(System.getProperty("java.io.tmpdir"), "authmod.csv").toFile();
+  private String password;
 
   @BeforeEach
-  void init() {
-    if (dataFile.exists()) dataFile.delete();
+  void init() throws Exception {
+    File file = Paths.get(System.getProperty("java.io.tmpdir"), "authmod.csv").toFile();
+    Files.deleteIfExists(file.toPath());
     this.handler = new Handler();
-    this.player = new Player("Batman", null);
+    this.player = new Player("Batman", "7128022b-9195-490d-9bc8-9b42ebe2a8e3");
     this.sender = mock(EntityPlayerMP.class);
 
     when(this.sender.getGameProfile()).thenReturn(new GameProfile(UUID.fromString(player.getUuid()), player.getUsername()));
     when(this.sender.getDisplayNameString()).thenReturn(player.getUsername());
     sender.connection = mock(NetHandlerPlayServer.class);
-    this.dataSourceStrategy = new FileDataSourceStrategy(dataFile);
-    this.registrator = new Registrator(this.dataSourceStrategy);
-    this.loginCommand = new LoginCommand(this.handler, this.dataSourceStrategy);
+    this.password = "rootrootme";
+    this.dataSource = new FileDataSourceStrategy(file);
+    this.guard = new DataSourceGuard(this.dataSource);
+    PayloadInterface payload = new Payload(this.player, new String[]{password, password});
+    this.command = new LoginCommand(this.handler, this.guard);
+    this.guard.register(payload);
   }
 
   @Test
   void testConstructor() {
-    assertNotNull(this.loginCommand);
+    assertNotNull(this.command);
   }
 
-  /*@Test
-  void testExecute() throws AuthmodException {
-    this.registrator.register(io.chocorean.authmod.guard.PlayerFactory.createRegistrationFactoryFromPlayer(this.player));
-    this.loginCommand.execute(mock(MinecraftServer.class), sender, new String[] {player.getPassword()});
+  @Test
+  void testExecute() {
+    this.command.execute(mock(MinecraftServer.class), sender, new String[] {this.password});
     assertTrue(this.handler.isLogged(this.sender));
   }
 
   @Test
-  void testExecuteWrongPassword() throws AuthmodException {
-    this.registrator.register(io.chocorean.authmod.guard.PlayerFactory.createRegistrationFactoryFromPlayer(this.player));
-    this.loginCommand.execute(mock(MinecraftServer.class), sender, new String[] {"wrongpass"});
+  void testExecuteWrongPassword() {
+    this.command.execute(mock(MinecraftServer.class), sender, new String[] {"wrongpass"});
     assertFalse(this.handler.isLogged(this.sender));
   }
 
   @Test
   void testExecuteWrongNumberOfArgs() {
-    this.loginCommand.execute(mock(MinecraftServer.class), sender, new String[] {"test", "test2", player.getEmail(), player.getPassword()});
+    this.command.execute(mock(MinecraftServer.class), sender, new String[] {"test", "test2", player.getUsername()});
     assertFalse(this.handler.isLogged(this.sender));
   }
 
   @Test
-  void testExecuteEmailRequiredCorrect() throws AuthmodException {
-    this.registrator = new Registrator(this.dataSourceStrategy);
-    this.registrator.register(io.chocorean.authmod.guard.PlayerFactory.createRegistrationFactoryFromPlayer(this.player));
-    this.loginCommand = new LoginCommand(this.handler, this.dataSourceStrategy, true);
-    this.loginCommand.execute(mock(MinecraftServer.class), sender, new String[] {player.getEmail(), player.getPassword()});
+  void testExecuteIdentifierRequired() {
+    this.guard = new DataSourceGuard(this.dataSource, true);
+    this.command = new LoginCommand(this.handler, this.guard);
+    this.command.execute(mock(MinecraftServer.class), sender, new String[] {"mcdostone", password});
     assertTrue(this.handler.isLogged(this.sender));
-  }
-
-  @Test
-  void testExecuteWrongUsername() throws AuthmodException {
-    when(this.sender.getDisplayNameString()).thenReturn("hacker");
-    this.registrator.register(io.chocorean.authmod.guard.PlayerFactory.createRegistrationFactoryFromPlayer(this.player));
-    this.loginCommand = new LoginCommand(this.handler, this.dataSourceStrategy, true);
-    this.loginCommand.execute(mock(MinecraftServer.class), sender, new String[] {player.getEmail(), player.getPassword()});
-    assertFalse(this.handler.isLogged(this.sender));
   }
 
   @Test
   void testExecuteBanned() {
     FileDataSourceStrategy mock  = mock(FileDataSourceStrategy.class);
-    when(mock.find(null, player.getUsername())).thenReturn(player.setBanned(true));
-    this.loginCommand = new LoginCommand(this.handler, mock, false);
-    this.loginCommand.execute(mock(MinecraftServer.class), sender, new String[] {player.getPassword()});
+    when(mock.find( player.getUsername())).thenReturn(new DataSourcePlayer(player).setBanned(true));
+    this.command = new LoginCommand(this.handler, new DataSourceGuard(mock));
+    this.command.execute(mock(MinecraftServer.class), sender, new String[] {password});
     assertFalse(this.handler.isLogged(this.sender));
   }
 
   @Test
-  void testExecutePlayerNotFound() throws AuthmodException {
-    this.registrator.register(io.chocorean.authmod.guard.PlayerFactory.createRegistrationFactoryFromPlayer(this.player));
-    this.loginCommand = new LoginCommand(this.handler, this.dataSourceStrategy, false);
+  void testExecutePlayerNotFound() {
     when(this.sender.getDisplayNameString()).thenReturn("not_exist");
-    this.loginCommand.execute(mock(MinecraftServer.class), sender, new String[] {player.getPassword()});
+    this.command.execute(mock(MinecraftServer.class), sender, new String[] {"ninja-turtles"});
     assertFalse(this.handler.isLogged(this.sender));
   }
 
   @Test
-  void testExecuteEmailRequiredIncorrect() throws AuthmodException {
-    this.registrator = new Registrator(this.dataSourceStrategy);
-    this.registrator.register(io.chocorean.authmod.guard.PlayerFactory.createRegistrationFactoryFromPlayer(this.player));
-
-    this.loginCommand = new LoginCommand(this.handler, this.dataSourceStrategy, true);
-    this.loginCommand.execute(mock(MinecraftServer.class), sender, new String[] {"wrongpass"});
+  void testExecuteEmailRequiredMissing() {
+    this.command = new LoginCommand(this.handler, new DataSourceGuard(this.dataSource, true));
+    this.command.execute(mock(MinecraftServer.class), sender, new String[] {"wrongpass"});
     assertFalse(this.handler.isLogged(this.sender));
   }
 
   @Test
-  void testExecuteAlreadyLogged() throws AuthmodException {
-    this.registrator.register(io.chocorean.authmod.guard.PlayerFactory.createRegistrationFactoryFromPlayer(this.player));
+  void testExecuteAlreadyLogged() {
     handler.authorizePlayer(sender);
     assertTrue(this.handler.isLogged(this.sender));
-    this.loginCommand.execute(mock(MinecraftServer.class), sender, new String[] {"wrongpass"});
+    this.command.execute(mock(MinecraftServer.class), sender, new String[] {"wrongpass"});
     assertTrue(this.handler.isLogged(this.sender));
-  }*/
+  }
 
   @Test
   void testGetName() {
-    assertNotNull(this.loginCommand.getName());
+    assertNotNull(this.command.getName());
   }
 
   @Test
   void testGetUsage() {
-    assertNotNull(this.loginCommand.getUsage(mock(ICommandSender.class)));
+    assertNotNull(this.command.getUsage(mock(ICommandSender.class)));
   }
 
   @Test
   void testGetAliases() {
-    assertNotNull(this.loginCommand.getAliases());
+    assertNotNull(this.command.getAliases());
   }
 
   @Test
   void testCheckPermissions() {
     assertTrue(
-        this.loginCommand.checkPermission(mock(MinecraftServer.class), mock(ICommandSender.class)));
+        this.command.checkPermission(mock(MinecraftServer.class), mock(ICommandSender.class)));
   }
 
   @Test
   void testGetTabCompletions() {
-    assertNotNull(this.loginCommand.getTabCompletions(mock(MinecraftServer.class), mock(ICommandSender.class), new String[] {}, mock(BlockPos.class)));
+    assertNotNull(this.command.getTabCompletions(mock(MinecraftServer.class), mock(ICommandSender.class), new String[] {}, mock(BlockPos.class)));
   }
 
   @Test
   void testisUsernameIndex() {
-    assertTrue(this.loginCommand.isUsernameIndex(new String[] {}, 0));
+    assertTrue(this.command.isUsernameIndex(new String[] {}, 0));
   }
 
   @Test
   void testCompareTo() {
-    assertEquals(0, this.loginCommand.compareTo(new LoginCommand(null, null)));
+    assertEquals(0, this.command.compareTo(new LoginCommand(null, null)));
   }
 }

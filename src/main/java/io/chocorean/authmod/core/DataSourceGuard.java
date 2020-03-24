@@ -3,8 +3,8 @@ package io.chocorean.authmod.core;
 import io.chocorean.authmod.core.datasource.DataSourcePlayer;
 import io.chocorean.authmod.core.datasource.DataSourcePlayerInterface;
 import io.chocorean.authmod.core.datasource.DataSourceStrategyInterface;
+import io.chocorean.authmod.core.exception.AuthmodError;
 import io.chocorean.authmod.core.exception.BannedPlayerError;
-import io.chocorean.authmod.core.exception.GuardError;
 import io.chocorean.authmod.core.exception.PlayerAlreadyExistError;
 import io.chocorean.authmod.core.exception.PlayerNotFoundError;
 import io.chocorean.authmod.core.validator.DataSourceLoginValidator;
@@ -15,7 +15,6 @@ public class DataSourceGuard implements GuardInterface {
 
   private final DataSourceStrategyInterface datasource;
   private final boolean identifierRequired;
-  private GuardError error;
 
   public DataSourceGuard(DataSourceStrategyInterface dataSourceStrategy, boolean identifierRequired) {
     this.datasource = dataSourceStrategy;
@@ -27,7 +26,7 @@ public class DataSourceGuard implements GuardInterface {
   }
 
   @Override
-  public boolean authenticate(PayloadInterface payload) throws GuardError {
+  public boolean authenticate(PayloadInterface payload) throws AuthmodError {
     ValidatorInterface validator = new DataSourceLoginValidator(this.identifierRequired);
     boolean payloadValid = validator.validate(payload);
     if(payloadValid) {
@@ -44,7 +43,7 @@ public class DataSourceGuard implements GuardInterface {
   }
 
   @Override
-  public boolean register(PayloadInterface payload) throws GuardError {
+  public boolean register(PayloadInterface payload) throws AuthmodError {
     ValidatorInterface validator = new DataSourceRegistrationValidator(this.identifierRequired);
     boolean payloadValid = validator.validate(payload);
     if(payloadValid) {

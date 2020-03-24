@@ -8,8 +8,8 @@ import java.util.concurrent.TimeUnit;
 
 import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.config.AuthModConfig;
-import io.chocorean.authmod.model.PlayerDescriptor;
-import io.chocorean.authmod.model.PlayerPos;
+import io.chocorean.authmod.core.PlayerDescriptor;
+import io.chocorean.authmod.core.PlayerPos;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;

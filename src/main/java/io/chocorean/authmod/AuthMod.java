@@ -7,6 +7,7 @@ import io.chocorean.authmod.command.RegisterCommand;
 import io.chocorean.authmod.config.AuthModConfig;
 import io.chocorean.authmod.core.DataSourceGuard;
 import io.chocorean.authmod.core.GuardInterface;
+import io.chocorean.authmod.core.datasource.BcryptPasswordHash;
 import io.chocorean.authmod.core.datasource.DataSourceStrategyInterface;
 import io.chocorean.authmod.core.datasource.DatabaseStrategy;
 import io.chocorean.authmod.core.datasource.FileDataSourceStrategy;
@@ -20,7 +21,6 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import org.apache.logging.log4j.Logger;
 
-import java.nio.MappedByteBuffer;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,9 +35,7 @@ public class AuthMod {
   static final String NAME = "AuthMod";
   static final String VERSION = "3.1";
   public static Logger LOGGER = FMLLog.log;
-  private Handler handler;
   private GuardInterface guard;
-
 
   @Mod.EventHandler
   public void preInit(FMLPreInitializationEvent event) throws Exception {
@@ -58,7 +56,7 @@ public class AuthMod {
         AuthModConfig.database.database,
         AuthModConfig.database.user,
         AuthModConfig.database.password);
-        datasource = new DatabaseStrategy(connectionFactory, columns);
+        datasource = new DatabaseStrategy(AuthModConfig.database.table, connectionFactory, columns, new BcryptPasswordHash());
         LOGGER.info("Now using DatabaseSourceStrategy.");
         break;
       case FILE:
@@ -67,24 +65,24 @@ public class AuthMod {
       default:
         LOGGER.info("Unknown guard strategy selected. Nothing will happen, using FileDataSourceStrategy by default");
     }
-    this.guard = new DataSourceGuard(datasource);
+    this.guard = new DataSourceGuard(datasource, AuthModConfig.identifierRequired);
   }
 
   @Mod.EventHandler
   public void serverStarting(FMLServerStartingEvent event) {
     if (AuthModConfig.dataSourceStrategy != null) {
-      this.handler = new Handler();
+      Handler handler = new Handler();
       if (enableAuthentication) {
         LOGGER.info("Registering AuthMod event handler");
-        MinecraftForge.EVENT_BUS.register(this.handler);
+        MinecraftForge.EVENT_BUS.register(handler);
         LOGGER.info("Registering AuthMod /login command");
-        event.registerServerCommand(new LoginCommand(this.handler, null));
+        event.registerServerCommand(new LoginCommand(handler, this.guard));
         LOGGER.info("Registering AuthMod /logged command");
-        event.registerServerCommand(new LoggedCommand(this.handler));
+        event.registerServerCommand(new LoggedCommand(handler));
       }
       if (enableRegistration) {
         LOGGER.info("Registering AuthMod /register command");
-        event.registerServerCommand(new RegisterCommand(this.handler, guard));
+        event.registerServerCommand(new RegisterCommand(handler, guard));
       }
     }
   }

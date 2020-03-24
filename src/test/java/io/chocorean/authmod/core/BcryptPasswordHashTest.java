@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class BcryptPasswordHashTest {
 
   private PasswordHashInterface passwordHash;
-  private String password = "my-very-l0ng-password";
+  private final String password = "my-very-l0ng-password";
 
   @BeforeEach
   void init() {

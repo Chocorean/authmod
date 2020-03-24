@@ -23,10 +23,10 @@ public class ExceptionToMessageMapper {
     messages.put(InvalidEmailError.class, AuthModConfig.i18n.loginInvalidEmail);
     messages.put(WrongLoginUsageError.class, AuthModConfig.i18n.loginUsage);
 
-    messages.put(GuardError.class, AuthModConfig.i18n.error);
+    messages.put(AuthmodError.class, AuthModConfig.i18n.error);
   }
 
-  public static String getMessage(GuardError e) {
+  public static String getMessage(AuthmodError e) {
     return messages.getOrDefault(e.getClass(), AuthModConfig.i18n.error);
   }
 }

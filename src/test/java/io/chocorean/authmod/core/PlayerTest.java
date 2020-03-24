@@ -1,7 +1,5 @@
 package io.chocorean.authmod.core;
 
-import io.chocorean.authmod.core.datasource.DataSourcePlayer;
-import io.chocorean.authmod.core.datasource.DataSourcePlayerInterface;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
