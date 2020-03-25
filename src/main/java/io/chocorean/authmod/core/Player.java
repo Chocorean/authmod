@@ -1,14 +1,10 @@
 package io.chocorean.authmod.core;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 public class Player implements PlayerInterface {
 
-  @Size(min = 36, max = 36)
   private String uuid;
 
-  @NotNull
   private String username;
 
   public Player() {

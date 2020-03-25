@@ -1,0 +1,19 @@
+{
+  "authmod.logged.yes": "yes",
+  "authmod.logged.no": "no",
+  "authmod.error": "Something was wrong. Please contact the admins.",
+  "authmod.welcome": "Use /register to sign up or /login to sign in.",
+  "authmod.wakeUp": "Wake up, you have only %s seconds to log in.",
+  "authmod.banned": "You've been banned. Please contact the admins.",
+  "authmod.login.usage": "/login <email> <password> - Allows you to authenticate on the server",
+  "authmod.login.notFound": "%s is not registered on this server.",
+  "authmod.login.wrongPassword": "Wrong password. Please try again.",
+  "authmod.login.success": "Have fun!",
+  "authmod.logged.usage": "/logged - tells you whether you are authenticated or not",
+  "authmod.login.wrongUUID": "Wrong UUID. Please be sure you use the same UUID when you registered your account.",
+  "authmod.login.wrongUsername": "Your username does not correspond to your credentials.",
+  "authmod.register.exist": "Someone has already registered with this username.",
+  "authmod.register.usage": "/register <email> <password> <password>- Be careful when choosing it, you'll be asked to login each time you play.",
+  "authmod.register.success": "You are registered and authenticated, have fun!",
+  "authmod.register.wrongConfirmation": "The password confirmation doesn't match. Please retry."
+}

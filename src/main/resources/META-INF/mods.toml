@@ -1,0 +1,11 @@
+modLoader="javafml"
+       loaderVersion="[31.1,)"
+
+       [[mods]]
+           modId="authmod"
+           version="${file.jarVersion}"
+           displayName="authMod"
+           displayURL="https://minecraft.curseforge.com/projects/authmod"
+           credits=""
+           authors="Chocorean, mcdostone"
+           description=""

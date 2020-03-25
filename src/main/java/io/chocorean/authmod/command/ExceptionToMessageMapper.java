@@ -11,6 +11,7 @@ public class ExceptionToMessageMapper {
   private final static Map<Class, String> messages = new HashMap<>();
 
   public static void init() {
+    /*
     messages.put(PlayerAlreadyExistError.class, AuthModConfig.i18n.registerExist);
     messages.put(WrongPasswordConfirmationError.class, AuthModConfig.i18n.registerWrongPasswordConfirmation);
     messages.put(InvalidPasswordError.class, AuthModConfig.i18n.registerPasswordTooShort);
@@ -24,9 +25,14 @@ public class ExceptionToMessageMapper {
     messages.put(WrongLoginUsageError.class, AuthModConfig.i18n.loginUsage);
 
     messages.put(AuthmodError.class, AuthModConfig.i18n.error);
+    */
   }
 
   public static String getMessage(AuthmodError e) {
-    return messages.getOrDefault(e.getClass(), AuthModConfig.i18n.error);
+    return messages.getOrDefault(e.getClass(), ""/*AuthModConfig.i18n.error*/);
+  }
+
+  public static String getMessage(Exception e) {
+    return e.getMessage();
   }
 }

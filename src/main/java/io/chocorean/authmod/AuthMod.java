@@ -5,6 +5,7 @@ import io.chocorean.authmod.command.LoggedCommand;
 import io.chocorean.authmod.command.LoginCommand;
 import io.chocorean.authmod.command.RegisterCommand;
 import io.chocorean.authmod.config.AuthModConfig;
+import io.chocorean.authmod.config.DatabaseConfig;
 import io.chocorean.authmod.core.DataSourceGuard;
 import io.chocorean.authmod.core.GuardInterface;
 import io.chocorean.authmod.core.datasource.BcryptPasswordHash;
@@ -14,76 +15,81 @@ import io.chocorean.authmod.core.datasource.FileDataSourceStrategy;
 import io.chocorean.authmod.core.datasource.db.ConnectionFactory;
 import io.chocorean.authmod.core.datasource.db.ConnectionFactoryInterface;
 import io.chocorean.authmod.event.Handler;
+import io.chocorean.authmod.util.text.ServerLanguageMap;
+import net.minecraft.util.text.LanguageMap;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.FMLLog;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
+import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
+import net.minecraftforge.fml.loading.FMLPaths;
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.chocorean.authmod.config.AuthModConfig.enableAuthentication;
-import static io.chocorean.authmod.config.AuthModConfig.enableRegistration;
+import static net.minecraftforge.fml.loading.LogMarkers.FORGEMOD;
 
-@Mod(modid = AuthMod.MODID, name = AuthMod.NAME, version = AuthMod.VERSION, serverSideOnly = true, acceptableRemoteVersions = "*")
+
+@Mod(AuthMod.MODID)
 public class AuthMod {
 
   public static final String MODID = "authmod";
-  static final String NAME = "AuthMod";
-  static final String VERSION = "3.1";
-  public static Logger LOGGER = FMLLog.log;
+  public static final Logger LOGGER = LogManager.getLogger();
+  private final Handler handler;
   private GuardInterface guard;
 
-  @Mod.EventHandler
-  public void preInit(FMLPreInitializationEvent event) throws Exception {
-    AuthMod.LOGGER = event.getModLog();
+  public AuthMod() throws IOException {
+    MinecraftForge.EVENT_BUS.addListener( this::serverStart );
+    AuthModConfig.register(ModLoadingContext.get());
+    ServerLanguageMap.init(AuthModConfig.get().language.get().name());
+    this.handler = new Handler();
+    this.guard = this.createGuard(AuthModConfig.get().dataSource.get());
     ExceptionToMessageMapper.init();
-    DataSourceStrategyInterface datasource = new FileDataSourceStrategy(Paths.get(event.getModConfigurationDirectory().getAbsolutePath(), MODID + "_players.csv").toFile());
-    switch (AuthModConfig.dataSourceStrategy) {
+  }
+
+  private void serverStart(FMLServerStartingEvent event) {
+    boolean identifierRequired = AuthModConfig.get().identifierRequired.get();
+    LOGGER.info("Registering /register command");
+    RegisterCommand.register(event.getCommandDispatcher(), this.handler, this.guard, identifierRequired);
+    LOGGER.info("Registering /login command");
+    LoginCommand.register(event.getCommandDispatcher(), this.handler, this.guard, identifierRequired);
+    LOGGER.info("Registering /logged command");
+    LoggedCommand.register(event.getCommandDispatcher(), this.handler);
+  }
+
+  private GuardInterface createGuard(AuthModConfig.DataSource ds) throws IOException {
+    DataSourceStrategyInterface datasource = null;
+    switch (ds) {
       case DATABASE:
         Map<String, String> columns = new HashMap<>();
-        columns.put(DatabaseStrategy.IDENTIFIER_COLUMN, AuthModConfig.database.identifierField);
-        columns.put(DatabaseStrategy.USERNAME_COLUMN, AuthModConfig.database.usernameField);
-        columns.put(DatabaseStrategy.PASSWORD_COLUMN, AuthModConfig.database.passwordField);
-        columns.put(DatabaseStrategy.BANNED_COLUMN, AuthModConfig.database.bannedField);
+        DatabaseConfig dbconfig = AuthModConfig.get().database;
+        columns.put(DatabaseStrategy.IDENTIFIER_COLUMN, dbconfig.columnIdentifier.get());
+        columns.put(DatabaseStrategy.USERNAME_COLUMN, dbconfig.columnUsername.get());
+        columns.put(DatabaseStrategy.PASSWORD_COLUMN, dbconfig.columnPassword.get());
+        columns.put(DatabaseStrategy.BANNED_COLUMN, dbconfig.columnBan.get());
         ConnectionFactoryInterface connectionFactory = new ConnectionFactory(
-        AuthModConfig.database.dialect,
-        AuthModConfig.database.host,
-        AuthModConfig.database.port,
-        AuthModConfig.database.database,
-        AuthModConfig.database.user,
-        AuthModConfig.database.password);
-        datasource = new DatabaseStrategy(AuthModConfig.database.table, connectionFactory, columns, new BcryptPasswordHash());
+          dbconfig.dialect.get(),
+          dbconfig.host.get(),
+          dbconfig.port.get(),
+          dbconfig.database.get(),
+          dbconfig.user.get(),
+          dbconfig.password.get());
+        datasource = new DatabaseStrategy(dbconfig.table.get(), connectionFactory, columns, new BcryptPasswordHash());
         LOGGER.info("Now using DatabaseSourceStrategy.");
         break;
       case FILE:
-        LOGGER.info("Now using FileDataSourceStrategy.");
-        break;
-      default:
-        LOGGER.info("Unknown guard strategy selected. Nothing will happen, using FileDataSourceStrategy by default");
+        datasource = new FileDataSourceStrategy(Paths.get(FMLPaths.CONFIGDIR.get().toString(), MODID + ".csv").toFile());
     }
-    this.guard = new DataSourceGuard(datasource, AuthModConfig.identifierRequired);
+    if(datasource == null) {
+      return null;
+    }
+    return new DataSourceGuard(datasource);
   }
 
-  @Mod.EventHandler
-  public void serverStarting(FMLServerStartingEvent event) {
-    if (AuthModConfig.dataSourceStrategy != null) {
-      Handler handler = new Handler();
-      if (enableAuthentication) {
-        LOGGER.info("Registering AuthMod event handler");
-        MinecraftForge.EVENT_BUS.register(handler);
-        LOGGER.info("Registering AuthMod /login command");
-        event.registerServerCommand(new LoginCommand(handler, this.guard));
-        LOGGER.info("Registering AuthMod /logged command");
-        event.registerServerCommand(new LoggedCommand(handler));
-      }
-      if (enableRegistration) {
-        LOGGER.info("Registering AuthMod /register command");
-        event.registerServerCommand(new RegisterCommand(handler, guard));
-      }
-    }
-  }
 }

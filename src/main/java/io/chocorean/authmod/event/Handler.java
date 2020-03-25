@@ -1,50 +1,41 @@
 package io.chocorean.authmod.event;
 
+import io.chocorean.authmod.config.AuthModConfig;
+import io.chocorean.authmod.core.PlayerDescriptor;
+import io.chocorean.authmod.core.PlayerPos;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.network.play.server.SDisconnectPacket;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraftforge.event.ServerChatEvent;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.item.ItemTossEvent;
+import net.minecraftforge.event.entity.living.*;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import io.chocorean.authmod.AuthMod;
-import io.chocorean.authmod.config.AuthModConfig;
-import io.chocorean.authmod.core.PlayerDescriptor;
-import io.chocorean.authmod.core.PlayerPos;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.play.server.SPacketDisconnect;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.common.config.Config;
-import net.minecraftforge.common.config.ConfigManager;
-import net.minecraftforge.event.CommandEvent;
-import net.minecraftforge.event.ServerChatEvent;
-import net.minecraftforge.event.entity.item.ItemTossEvent;
-import net.minecraftforge.event.entity.living.*;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
-
 @Mod.EventBusSubscriber
 public class Handler {
   private static final ScheduledExecutorService scheduler = new ScheduledThreadPoolExecutor(1);
-  private static final Map<EntityPlayer, PlayerDescriptor> descriptors = new HashMap<>();
-  private static final Map<EntityPlayer, Boolean> logged = new HashMap<>();
-  private static final String WELCOME = new TextComponentTranslation("welcome").getFormattedText();
-  private static final String WAKE_UP = new TextComponentTranslation("delay", AuthModConfig.delay).getFormattedText();
+  private static final Map<PlayerEntity, PlayerDescriptor> descriptors = new HashMap<>();
+  private static final Map<PlayerEntity, Boolean> logged = new HashMap<>();
+  private static final String WELCOME = ""; // TODO AuthModConfig.i18n.welcome;
+  private static final String WAKE_UP = ""; // TODO String.format(AuthModConfig.i18n.delay, Integer.toString(AuthModConfig.delay));
 
   @SubscribeEvent(priority = EventPriority.HIGHEST)
-  public static void onJoin(PlayerLoggedInEvent event) {
-    EntityPlayer entity = event.player;
+  public static void onJoin(PlayerEvent.PlayerLoggedInEvent event) {
+    PlayerEntity entity = event.getPlayer();
     // initializing timer for kicking player if he/she hasn't logged in a minute
     BlockPos pos = entity.getPosition();
     float yaw = entity.rotationYaw, pitch = entity.rotationPitch;
@@ -56,14 +47,14 @@ public class Handler {
           if (descriptors.containsKey(entity)) {
             descriptors.remove(entity);
             logged.remove(entity);
-            ((EntityPlayerMP) entity).connection.sendPacket(new SPacketDisconnect(new TextComponentString(WAKE_UP)));
+            // ((ServerPlayerEntity) event.getPlayer()).connection.sendPacket(new SDisconnectPacket(new StringTextComponent(WAKE_UP)));
           }
-        }, AuthModConfig.delay, TimeUnit.SECONDS);
+        }, AuthModConfig.get().delay.get(), TimeUnit.SECONDS);
   }
 
   @SubscribeEvent(priority = EventPriority.HIGHEST)
-  public static void onLeave(PlayerLoggedOutEvent event) {
-    logged.remove(event.player);
+  public static void onLeave(PlayerEvent.PlayerLoggedOutEvent event) {
+    logged.remove(event.getPlayer());
   }
 
   @SubscribeEvent
@@ -71,47 +62,47 @@ public class Handler {
     if (descriptors.containsKey(event.player)) {
       PlayerPos pp = descriptors.get(event.player).getPosition();
       BlockPos pos = pp.getPosition();
-      ((EntityPlayerMP) event.player).connection.setPlayerLocation(pos.getX(), pos.getY(), pos.getZ(), pp.getYaw(), pp.getPitch());
+      event.player.setLocationAndAngles(pos.getX(), pos.getY(), pos.getZ(), pp.getYaw(), pp.getPitch());
     }
   }
 
   @SubscribeEvent(priority = EventPriority.HIGHEST)
   public static void onPlayerEvent(PlayerEvent event) {
-    EntityPlayer entity = event.getEntityPlayer();
+    PlayerEntity entity = event.getPlayer();
     if (descriptors.containsKey(entity) && event.isCancelable()) {
       event.setCanceled(true);
-      entity.sendMessage(new TextComponentString(WELCOME));
+      // entity.sendMessage(new StringTextComponent(WELCOME));
     }
   }
 
-  @SubscribeEvent(priority = EventPriority.HIGHEST)
+  /*@SubscribeEvent(priority = EventPriority.HIGHEST)
   public static void onCommand(CommandEvent event) {
-    String name = event.getCommand().getName();
-    if (descriptors.containsKey(event.getSender())
+    String name = event.getParseResults().
+    if (descriptors.containsKey(event.getParseResults().)
         && !(name.equals("register") || name.equals("login") || name.equals("logged"))
         && event.getSender() instanceof EntityPlayer
         && event.isCancelable()) {
       event.setCanceled(true);
-      event.getSender().sendMessage(new TextComponentString(WELCOME));
+      event..sendMessage(new StringTextComponent(WELCOME));
     }
-  }
+  }*/
 
   @SubscribeEvent(priority = EventPriority.HIGHEST)
   public static void onChatEvent(ServerChatEvent event) {
-    EntityPlayerMP entity = event.getPlayer();
+    PlayerEntity entity = event.getPlayer();
     if (event.isCancelable() && descriptors.containsKey(entity)) {
       event.setCanceled(true);
-      event.getPlayer().sendMessage(new TextComponentString(WELCOME));
+      // event.getPlayer().sendMessage(new StringTextComponent(WELCOME));
     }
   }
 
   @SubscribeEvent(priority = EventPriority.HIGHEST)
   public static void onTossEvent(ItemTossEvent event) {
-    EntityPlayer entity = event.getPlayer();
+    PlayerEntity entity = event.getPlayer();
     if (event.isCancelable() && descriptors.containsKey(entity)) {
       event.setCanceled(true);
       entity.inventory.addItemStackToInventory(event.getEntityItem().getItem());
-      event.getPlayer().sendMessage(new TextComponentString(WELCOME));
+      // event.getPlayer().sendMessage(new StringTextComponent(WELCOME));
     }
   }
 
@@ -120,9 +111,9 @@ public class Handler {
   We cannot block every single LivingEvent because of LivingUpdateEvent (defined in LivingEvent)
    */
   private static void handleLivingEvents(LivingEvent event, Entity entity) {
-    if (event.getEntity() instanceof EntityPlayer && event.isCancelable() && descriptors.containsKey(entity)) {
+    if (event.getEntity() instanceof PlayerEntity && event.isCancelable() && descriptors.containsKey(entity)) {
       event.setCanceled(true);
-      entity.sendMessage(new TextComponentString(WELCOME));
+      // entity.sendMessage(new StringTextComponent(WELCOME));
     }
   }
 
@@ -138,7 +129,7 @@ public class Handler {
 
   @SubscribeEvent(priority = EventPriority.HIGHEST)
   public static void onLivingEntityUseItemEvent(LivingEntityUseItemEvent event) {
-    handleLivingEvents(event, event.getEntity());
+handleLivingEvents(event, event.getEntity());
   }
 
   @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -154,28 +145,18 @@ public class Handler {
   /* NOT CANCELABLE*/
   @SubscribeEvent(priority = EventPriority.HIGHEST)
   public static void onLivingSetTargetAttackEvent(LivingSetAttackTargetEvent event) {
-    if (event.getTarget() instanceof EntityPlayer && descriptors.containsKey(event.getTarget())) {
-      ((EntityLiving) event.getEntityLiving()).setAttackTarget(null);
+    if (event.getTarget() instanceof PlayerEntity && descriptors.containsKey(event.getTarget())) {
+      ((LivingEntity) event.getEntityLiving()).setRevengeTarget(null);
     }
   }
 
-  @SubscribeEvent
-  public static void onConfigChanged(final ConfigChangedEvent.OnConfigChangedEvent event) {
-    if (event.getModID().equals(AuthMod.MODID)) {
-      ConfigManager.sync(AuthMod.MODID, Config.Type.INSTANCE);
-    }
-  }
-
-  public void authorizePlayer(EntityPlayer player) {
+  public void authorizePlayer(PlayerEntity player) {
     logged.put(player, true);
     descriptors.remove(player);
   }
 
-  public boolean isLogged(EntityPlayer player) {
+  public boolean isLogged(PlayerEntity player) {
     return logged.getOrDefault(player, false);
   }
 
-  public ITextComponent getMessage(String key, Object... args) {
-    return new TextComponentString(new TextComponentTranslation(key, args).getUnformattedComponentText());
-  }
 }

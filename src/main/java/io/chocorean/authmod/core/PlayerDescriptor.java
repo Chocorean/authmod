@@ -1,17 +1,17 @@
 package io.chocorean.authmod.core;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 
 public class PlayerDescriptor {
-  private final EntityPlayer player;
+  private final PlayerEntity player;
   private final PlayerPos pos;
 
-  public PlayerDescriptor(EntityPlayer entity, PlayerPos position) {
+  public PlayerDescriptor(PlayerEntity entity, PlayerPos position) {
     this.player = entity;
     this.pos = position;
   }
 
-  public EntityPlayer getPlayer() {
+  public PlayerEntity getPlayer() {
     return this.player;
   }
 

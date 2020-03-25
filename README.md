@@ -21,22 +21,25 @@
     <img src="https://sonarcloud.io/api/project_badges/measure?project=authmod&metric=bugs" alt="bugs"/>
 </a>
 <a href="https://sonarcloud.io/dashboard?id=authmod">
-    <img src="https://sonarcloud.io/api/project_badges/measure?project=authmod&metric=code_smells" />
+    <img src="https://sonarcloud.io/api/project_badges/measure?project=authmod&metric=code_smells" alt="code smells"/>
 </a>
 <a href="https://sonarcloud.io/dashboard?id=authmod">
-    <img src="https://sonarcloud.io/api/project_badges/measure?project=authmod&metric=duplicated_lines_density" />
+    <img src="https://sonarcloud.io/api/project_badges/measure?project=authmod&metric=coverage" alt="code coverage" />
 </a>
 <a href="https://sonarcloud.io/dashboard?id=authmod">
-    <img src="https://sonarcloud.io/api/project_badges/measure?project=authmod&metric=sqale_rating" />
+    <img src="https://sonarcloud.io/api/project_badges/measure?project=authmod&metric=duplicated_lines_density" alt="duplicated lines" />
 </a>
 <a href="https://sonarcloud.io/dashboard?id=authmod">
-    <img src="https://sonarcloud.io/api/project_badges/measure?project=authmod&metric=vulnerabilities" />
+    <img src="https://sonarcloud.io/api/project_badges/measure?project=authmod&metric=sqale_rating" alt="maintainability" />
+</a>
+<a href="https://sonarcloud.io/dashboard?id=authmod">
+    <img src="https://sonarcloud.io/api/project_badges/measure?project=authmod&metric=vulnerabilities" alt="vulnerabilities" />
 </a>
 <a href="https://img.shields.io/badge/forge%20version-1.12.2-blue.svg">
-    <img src="https://img.shields.io/badge/forge%20version-1.12.2-blue.svg" />
+    <img src="https://img.shields.io/badge/forge%20version-1.12.2-blue.svg" alt="forge version"/>
 </a>
 <a href="https://img.shields.io/badge/java-1.8-blue.svg">
-    <img src="https://img.shields.io/badge/java-1.8-blue.svg" />
+    <img src="https://img.shields.io/badge/java-1.8-blue.svg" alt="java version" />
 </a>
 </p>
 
@@ -45,13 +48,14 @@
 ## Table of contents
 
 - [What is Authmod?](#what-is-authmod)
-- [How it works](#how-it-works)
+  - [How it works](#how-it-works)
 - [Getting started for developers](#getting-started-for-developers)
-- [Requirements](#requirements)
-- [Installation](#installation)
-- [Using the file strategy](#using-the-file-strategy)
-- [Using the database strategy](#using-the-database-strategy)
+  - [Requirements](#requirements)
+  - [Installation](#installation)
+  - [Using the file strategy](#using-the-file-strategy)
+  - [Using the database strategy](#using-the-database-strategy)
 - [Getting started for administrators](#getting-started-for-administrators)
+- [Limits](#limits)
 - [Issues](#issues)
 - [Website](#website)
 - [Resources](#resources)
@@ -64,9 +68,11 @@ _We are 2 students from TELECOM Nancy wanted to create a minecraft server for ou
 
 AuthMod is a server side Minecraft mod allowing you to accept premium or demo minecraft accounts safely. What is important to remind with this mod is **the mojang authentication cannot be used**. So if you rely on this, this mod is maybe not a good solution for you. Authmod proposes a set of interesting features:
 
-- Possibility to enable or disable the registration on the minecraft server.
-- Possibility to enable or disable the authentication on the minecraft server.
+- Possibility to enable or disable the registration on the server.
+- Possibility to enable or disable the authentication on the server.
 - Possibility to register a list of allowed users.
+- Possibility to ban a registered player.
+- Registration/authentication can require an email address.
 - Possibility to exclude a player if he's not logged after a certain delay.
 
 All the data related to the registration, the authentication... are stored either in a SQL database or a file.
@@ -85,13 +91,11 @@ The mod provides to the users a set of commands that can be used once connected 
 /login email@example.com password
 
 # Allow the user to register on the server
-/register email@example.com password
+/register email@example.com password password
 
 # Tell to the user whether authenticated
 /logged
 ```
-
-For the `/login` command, once this command is entered by the user, the mod will check whether **the email address, the password and the username** correspond to data stored in a database or a CSV file (it depends on the strategy you choose).
 
 ## Getting started for developers
 
@@ -146,14 +150,14 @@ Change the `authmod.cfg` configuration by modifying this:
 
 ```bash
 general {
-# ...
-# S:strategy=FILE
-S:strategy=DATABASE
+    # Valid values:
+    # FILE
+    # DATABASE
+    S:dataSourceStrategy=FILE
 }
 ```
 
 Don't forget to configure in this file all information related to the database (under the `database {...}` key).
-
 The last step is to init the database and a table `players`:
 
 ```sql
@@ -180,14 +184,22 @@ INSERT INTO minecraft.players (id, email, password, uuid, username, banned) VALU
 (2, 'linus.torvalds.linux.org', NULL, NULL, 'linux', 0);
 ```
 
+### Building authmod
+
+```bash
+./gradlew build
+ls ./build/libs/authmod-X.X.jar
+```
+
 ## Getting started for administrators
 
-1. stop your minecraft server.
+1. stop your server.
 2. Add `authmod-X.X.jar` in the `mods/` directory:
 
 ```bash
 # This command downloads the latest version of authmod
 # Execute it in the mods/ folder
+cd mods/
 curl -s https://api.github.com/repos/chocorean/authmod/releases/latest \
 | grep "browser_download_url.*jar" \
 | cut -d : -f 2,3 \
@@ -195,15 +207,23 @@ curl -s https://api.github.com/repos/chocorean/authmod/releases/latest \
 | wget -qi -
 ```
 
-3. Now, we configure authmod. Go under the `config` folder and download the cfg template file (you can also run the server once and the file will be generated):
+3. Now, we need to configure authmod. Go under the `config` folder and download the cfg template file (you can also run the server once and the file will be generated):
 
 ```bash
 # in the config/ folder
+cd config/
 wget https://raw.githubusercontent.com/Chocorean/authmod/master/src/main/resources/authmod.cfg
 ```
 
 4. Edit the `config/authmod.cfg` file depending on your needs.
 5. Restart the server and everything should be ok!
+
+
+## Limits
+It is important to understand that **authmod is not perfect**. During the development, we detected hacks that can cause hassle for players. Here the list of these problems:
+ - If two players connect with the same username, no matter if one of them is authenticated or not, the first that came on the server will be automatically disconnected. We don't know yet if this issue can be solved.
+ - TODO
+
 
 ## Issues
 

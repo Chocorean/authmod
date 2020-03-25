@@ -1,6 +1,7 @@
 buildscript {
     repositories {
         maven { url = 'https://files.minecraftforge.net/maven' }
+        maven { url  = 'https://plugins.gradle.org/m2/' }
         jcenter()
         mavenCentral()
     }
@@ -12,14 +13,14 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = "3.1"
-group = "io.chocorean.authmod"
-archivesBaseName = "authmod"
+version = '1.4'
+group = 'io.chocorean.authmod'
+archivesBaseName = 'authmod'
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
 minecraft {
-    mappings channel: 'snapshot', version: '20190719-1.14.3'
+    mappings channel: 'snapshot', version: '20200131-1.15.1'
     runs {
         client {
             workingDirectory project.file('run')
@@ -41,11 +42,13 @@ minecraft {
                 }
             }
         }
+
         data {
             workingDirectory project.file('run')
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
             args '--mod', 'examplemod', '--all', '--output', file('src/generated/resources/')
+
             mods {
                 examplemod {
                     source sourceSets.main
@@ -55,11 +58,23 @@ minecraft {
     }
 }
 
+repositories {
+    jcenter()
+
+    maven {
+        name = "jitpack"
+        url "https://jitpack.io"
+    }
+
+    maven { url = "https://maven.theillusivec4.top/" }
+
+}
+
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.15.2-31.1.0'
+    minecraft 'net.minecraftforge:forge:1.15.2-31.1.18'
     compile group: 'org.mindrot', name: 'jbcrypt', version: '0.4'
-    testCompile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.30.1'
     testCompile group: 'org.mockito', name: 'mockito-core', version: '3.3.3'
+    testCompile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.25.2'
     testCompile('org.junit.jupiter:junit-jupiter-api:5.6.1')
     testCompile('org.junit.jupiter:junit-jupiter-params:5.6.1')
     testRuntime('org.junit.jupiter:junit-jupiter-engine:5.6.1')
@@ -68,10 +83,31 @@ dependencies {
 jar {
     manifest {
         attributes([
-            "Specification-Title": project.name,
+            "Specification-Title": "pmmo",
+            "Specification-Vendor": "pmmosareus",
+            "Specification-Version": "1", 
             "Implementation-Title": project.name,
             "Implementation-Version": "${version}",
+            "Implementation-Vendor" :"examplemodsareus",
             "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
+    }
+}
+
+def reobfFile = file("$buildDir/reobfJar/output.jar")
+def reobfArtifact = artifacts.add('default', reobfFile) {
+    type 'jar'
+    builtBy 'reobfJar'
+}
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact reobfArtifact
+        }
+    }
+    repositories {
+        maven {
+            url "file:///${project.projectDir}/mcmodsrepo"
+        }
     }
 }
