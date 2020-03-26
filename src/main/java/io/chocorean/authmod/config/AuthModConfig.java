@@ -1,19 +1,18 @@
 package io.chocorean.authmod.config;
 
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.config.ModConfig;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.logging.log4j.LogManager;
+
+import static net.minecraftforge.fml.loading.LogMarkers.FORGEMOD;
 
 public class AuthModConfig {
 
   public final DatabaseConfig database;
-  private static AuthModConfig config;
-
   public enum DataSource {FILE, DATABASE}
-
   public enum Language {en_us, fr_fr}
-
   public final ForgeConfigSpec.BooleanValue identifierRequired;
   public final ForgeConfigSpec.BooleanValue enableLogin;
   public final ForgeConfigSpec.BooleanValue enableRegister;
@@ -42,7 +41,7 @@ public class AuthModConfig {
 
     this.language = builder
       .comment("lang file to use")
-      .defineEnum("dataSource", Language.en_us);
+      .defineEnum("language", Language.en_us);
 
     this.dataSource = builder.comment("The way you want to store player's data, choose between 'database' or 'file'. If the strategy is unknown, the server will be open for everyone.")
       .defineEnum("dataSource", DataSource.FILE);
@@ -51,14 +50,26 @@ public class AuthModConfig {
     this.database = new DatabaseConfig(builder);
   }
 
-  public static void register(final ModLoadingContext context) {
+  @SubscribeEvent
+  public static void onLoad(final ModConfig.Loading configEvent) {
+    LogManager.getLogger().debug(FORGEMOD, "Loaded forge config file {}", configEvent.getConfig().getFileName());
+  }
+
+  @SubscribeEvent
+  public static void onFileChange(final ModConfig.Reloading configEvent) {
+    LogManager.getLogger().debug(FORGEMOD, "Forge config just got changed on the file system!");
+  }
+
+  public static final ForgeConfigSpec serverSpec;
+  private static AuthModConfig SERVER;
+  static {
     final Pair<AuthModConfig, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(AuthModConfig::new);
-    context.registerConfig(ModConfig.Type.SERVER, specPair.getRight());
-    config = specPair.getLeft();
+    serverSpec = specPair.getRight();
+    SERVER = specPair.getLeft();
   }
 
   public static AuthModConfig get() {
-    return config;
+    return SERVER;
   }
 
 }

@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,12 +29,13 @@ class DatabaseStrategyTest {
   }
 
   @Test
-  void testConstructor() {
+  void testConstructor() throws SQLException {
     new DatabaseStrategy(this.connectionFactory);
+    assertTrue(false);
   }
 
   @Test
-  void testConstructorRenameColumns() {
+  void testConstructorRenameColumns() throws SQLException {
     Map<String, String> columns = new HashMap<>();
     columns.put(DatabaseStrategy.IDENTIFIER_COLUMN, "email");
     this.dataSource = new DatabaseStrategy("players", this.connectionFactory, columns, new BcryptPasswordHash());

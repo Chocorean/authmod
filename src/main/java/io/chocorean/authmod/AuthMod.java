@@ -17,19 +17,30 @@ import io.chocorean.authmod.core.datasource.db.ConnectionFactoryInterface;
 import io.chocorean.authmod.event.Handler;
 import io.chocorean.authmod.util.text.ServerLanguageMap;
 import net.minecraft.util.text.LanguageMap;
+import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.VillagerTradingManager;
+import net.minecraftforge.common.model.animation.CapabilityAnimation;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.VersionChecker;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
+import net.minecraftforge.items.CapabilityItemHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,29 +52,35 @@ public class AuthMod {
 
   public static final String MODID = "authmod";
   public static final Logger LOGGER = LogManager.getLogger();
-  private final Handler handler;
+  private Handler handler;
   private GuardInterface guard;
 
-  public AuthMod() throws IOException {
-    MinecraftForge.EVENT_BUS.addListener( this::serverStart );
-    AuthModConfig.register(ModLoadingContext.get());
-    ServerLanguageMap.init(AuthModConfig.get().language.get().name());
+  public AuthMod() {
+    final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
     this.handler = new Handler();
-    this.guard = this.createGuard(AuthModConfig.get().dataSource.get());
-    ExceptionToMessageMapper.init();
+    modEventBus.register(this);
+    modEventBus.register(AuthModConfig.class);
+    MinecraftForge.EVENT_BUS.addListener( this::serverStart );
+    ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, AuthModConfig.serverSpec);
   }
 
   private void serverStart(FMLServerStartingEvent event) {
-    boolean identifierRequired = AuthModConfig.get().identifierRequired.get();
-    LOGGER.info("Registering /register command");
-    RegisterCommand.register(event.getCommandDispatcher(), this.handler, this.guard, identifierRequired);
-    LOGGER.info("Registering /login command");
-    LoginCommand.register(event.getCommandDispatcher(), this.handler, this.guard, identifierRequired);
-    LOGGER.info("Registering /logged command");
-    LoggedCommand.register(event.getCommandDispatcher(), this.handler);
+    try {
+      ServerLanguageMap.init(AuthModConfig.get().language.get().name());
+      this.guard = this.createGuard(AuthModConfig.get().dataSource.get());
+      this.handler = new Handler();
+      ExceptionToMessageMapper.init();
+      boolean identifierRequired = AuthModConfig.get().identifierRequired.get();
+      LOGGER.info("Registering /register command");
+      RegisterCommand.register(event.getCommandDispatcher(), this.handler, this.guard, identifierRequired);
+      LOGGER.info("Registering /login command");
+      LoginCommand.register(event.getCommandDispatcher(), this.handler, this.guard, identifierRequired);
+      LOGGER.info("Registering /logged command");
+      LoggedCommand.register(event.getCommandDispatcher(), this.handler);
+    } catch(Exception e) { LOGGER.catching(e); }
   }
 
-  private GuardInterface createGuard(AuthModConfig.DataSource ds) throws IOException {
+  private GuardInterface createGuard(AuthModConfig.DataSource ds) throws Exception {
     DataSourceStrategyInterface datasource = null;
     switch (ds) {
       case DATABASE:
@@ -81,7 +98,6 @@ public class AuthMod {
           dbconfig.user.get(),
           dbconfig.password.get());
         datasource = new DatabaseStrategy(dbconfig.table.get(), connectionFactory, columns, new BcryptPasswordHash());
-        LOGGER.info("Now using DatabaseSourceStrategy.");
         break;
       case FILE:
         datasource = new FileDataSourceStrategy(Paths.get(FMLPaths.CONFIGDIR.get().toString(), MODID + ".csv").toFile());
@@ -89,6 +105,7 @@ public class AuthMod {
     if(datasource == null) {
       return null;
     }
+    LOGGER.info("Use " + datasource);
     return new DataSourceGuard(datasource);
   }
 

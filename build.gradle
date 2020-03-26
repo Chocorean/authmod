@@ -9,9 +9,15 @@ buildscript {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
     }
 }
+
+plugins {
+    id "org.sonarqube" version "2.7.1"
+}
+
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
+apply plugin: 'jacoco'
 
 version = '1.4'
 group = 'io.chocorean.authmod'
@@ -73,22 +79,26 @@ repositories {
 dependencies {
     minecraft 'net.minecraftforge:forge:1.15.2-31.1.18'
     compile group: 'org.mindrot', name: 'jbcrypt', version: '0.4'
-    testCompile group: 'org.mockito', name: 'mockito-core', version: '3.3.3'
     testCompile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.25.2'
-    testCompile('org.junit.jupiter:junit-jupiter-api:5.6.1')
-    testCompile('org.junit.jupiter:junit-jupiter-params:5.6.1')
-    testRuntime('org.junit.jupiter:junit-jupiter-engine:5.6.1')
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.3.3'
+    testImplementation('org.junit.jupiter:junit-jupiter-api:5.6.1')
+    testImplementation('org.junit.jupiter:junit-jupiter-params:5.6.1')
+    testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.6.1')
+}
+
+test {
+    useJUnitPlatform()
 }
 
 jar {
     manifest {
         attributes([
-            "Specification-Title": "pmmo",
-            "Specification-Vendor": "pmmosareus",
+            "Specification-Title": "AuthMod",
+            "Specification-Vendor": "Chocorean",
             "Specification-Version": "1", 
             "Implementation-Title": project.name,
             "Implementation-Version": "${version}",
-            "Implementation-Vendor" :"examplemodsareus",
+            "Implementation-Vendor" :"",
             "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
@@ -111,3 +121,12 @@ publishing {
         }
     }
 }
+
+jacocoTestReport {
+    reports {
+        html.enabled = true
+        xml.enabled true
+    }
+}
+
+check.dependsOn jacocoTestReport

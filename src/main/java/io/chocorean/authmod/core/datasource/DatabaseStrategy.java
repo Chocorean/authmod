@@ -18,7 +18,7 @@ public class DatabaseStrategy implements DataSourceStrategyInterface {
   private final PasswordHashInterface passwordHash;
   private final ConnectionFactoryInterface connectionFactory;
 
-  public DatabaseStrategy(String table, ConnectionFactoryInterface connectionFactory, Map<String, String> columns, PasswordHashInterface passwordHash) {
+  public DatabaseStrategy(String table, ConnectionFactoryInterface connectionFactory, Map<String, String> columns, PasswordHashInterface passwordHash) throws SQLException {
     this.table = table;
     this.connectionFactory = connectionFactory;
     this.columns = new HashMap<>();
@@ -34,7 +34,7 @@ public class DatabaseStrategy implements DataSourceStrategyInterface {
     this.checkTable();
   }
 
-  public DatabaseStrategy(ConnectionFactoryInterface connectionFactory) {
+  public DatabaseStrategy(ConnectionFactoryInterface connectionFactory) throws SQLException {
     this("players", connectionFactory, new HashMap<>(), new BcryptPasswordHash());
   }
 
@@ -86,8 +86,8 @@ public class DatabaseStrategy implements DataSourceStrategyInterface {
     return this.passwordHash;
   }
 
-  private void checkTable() {
-    try (Connection connection = this.connectionFactory.getConnection();
+  private void checkTable() throws SQLException {
+    Connection connection = this.connectionFactory.getConnection();
          PreparedStatement stmt =
            connection.prepareStatement(
              String.format(
@@ -97,11 +97,9 @@ public class DatabaseStrategy implements DataSourceStrategyInterface {
                this.columns.getOrDefault(PASSWORD_COLUMN, PASSWORD_COLUMN),
                this.columns.getOrDefault(USERNAME_COLUMN, USERNAME_COLUMN),
                this.columns.getOrDefault(UUID_COLUMN, UUID_COLUMN),
-               this.table))) {
+               this.table));
       stmt.executeQuery();
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
+      connection.close();
   }
 
   private DataSourcePlayerInterface createPlayer(ResultSet rs) throws SQLException {

@@ -65,7 +65,7 @@ public class DatabaseConfig {
 
     this.table = builder
       .comment("Table to be used")
-      .define("port","players");
+      .define("table","players");
 
 
     builder.pop();
