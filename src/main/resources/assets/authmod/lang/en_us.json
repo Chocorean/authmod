@@ -15,5 +15,5 @@
   "authmod.register.exist": "Someone has already registered with this username.",
   "authmod.register.usage": "/register <email> <password> <password>- Be careful when choosing it, you'll be asked to login each time you play.",
   "authmod.register.success": "You are registered and authenticated, have fun!",
-  "authmod.register.wrongConfirmation": "The password confirmation doesn't match. Please retry."
+  "authmod.register.wrongPassword": "The password confirmation doesn't match. Please retry."
 }

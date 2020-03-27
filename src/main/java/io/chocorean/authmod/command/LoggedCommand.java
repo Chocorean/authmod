@@ -22,7 +22,7 @@ public class LoggedCommand  {
   public static int execute(CommandSource source , Handler handler) {
     try {
       boolean logged = handler.isLogged(source.asPlayer());
-      String translationKey = "command.logged." + (logged ? "yes" : "no");
+      String translationKey = "logged." + (logged ? "yes" : "no");
       source.sendFeedback(new ServerTranslationTextComponent(translationKey), false);
     } catch (CommandSyntaxException e) { source.sendErrorMessage(new StringTextComponent(e.getMessage())); }
     return 1;

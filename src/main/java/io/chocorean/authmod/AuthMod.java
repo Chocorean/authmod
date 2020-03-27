@@ -66,10 +66,8 @@ public class AuthMod {
 
   private void serverStart(FMLServerStartingEvent event) {
     try {
-      ServerLanguageMap.init(AuthModConfig.get().language.get().name());
       this.guard = this.createGuard(AuthModConfig.get().dataSource.get());
       this.handler = new Handler();
-      ExceptionToMessageMapper.init();
       boolean identifierRequired = AuthModConfig.get().identifierRequired.get();
       LOGGER.info("Registering /register command");
       RegisterCommand.register(event.getCommandDispatcher(), this.handler, this.guard, identifierRequired);

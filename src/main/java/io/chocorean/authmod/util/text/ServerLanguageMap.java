@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import io.chocorean.authmod.AuthMod;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.Util;
 import org.apache.logging.log4j.LogManager;
@@ -74,6 +75,7 @@ public class ServerLanguageMap {
 
    private String tryTranslateKey(String key) {
       String s = this.languageList.get(key);
+      s = s == null ? this.languageList.get(AuthMod.MODID.concat(".").concat(key)) : s;
       return s == null ? key : s;
    }
 

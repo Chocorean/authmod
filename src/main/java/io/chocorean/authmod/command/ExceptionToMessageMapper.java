@@ -1,7 +1,7 @@
 package io.chocorean.authmod.command;
 
-import io.chocorean.authmod.config.AuthModConfig;
 import io.chocorean.authmod.core.exception.*;
+import io.chocorean.authmod.util.text.ServerLanguageMap;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,25 +11,17 @@ public class ExceptionToMessageMapper {
   private final static Map<Class, String> messages = new HashMap<>();
 
   public static void init() {
-    /*
-    messages.put(PlayerAlreadyExistError.class, AuthModConfig.i18n.registerExist);
-    messages.put(WrongPasswordConfirmationError.class, AuthModConfig.i18n.registerWrongPasswordConfirmation);
-    messages.put(InvalidPasswordError.class, AuthModConfig.i18n.registerPasswordTooShort);
-    messages.put(WrongRegisterUsageError.class, AuthModConfig.i18n.registerUsage);
-
-    messages.put(WrongUsernameError.class, AuthModConfig.i18n.loginWrongUsername);
-    messages.put(WrongPasswordError.class, AuthModConfig.i18n.loginWrongPassword);
-    messages.put(BannedPlayerError.class, AuthModConfig.i18n.loginBanned);
-    messages.put(PlayerNotFoundError.class, AuthModConfig.i18n.loginUnknown);
-    messages.put(InvalidEmailError.class, AuthModConfig.i18n.loginInvalidEmail);
-    messages.put(WrongLoginUsageError.class, AuthModConfig.i18n.loginUsage);
-
-    messages.put(AuthmodError.class, AuthModConfig.i18n.error);
-    */
+    messages.put(PlayerAlreadyExistError.class, ServerLanguageMap.getInstance().translateKey("register.exist"));
+    messages.put(WrongPasswordConfirmationError.class, ServerLanguageMap.getInstance().translateKey("register.wrongPassword"));
+    messages.put(WrongRegisterUsageError.class, ServerLanguageMap.getInstance().translateKey("register.exist"));
+    messages.put(WrongPasswordError.class, ServerLanguageMap.getInstance().translateKey("login.wrongPassword"));
+    messages.put(BannedPlayerError.class, ServerLanguageMap.getInstance().translateKey("banned"));
+    messages.put(WrongLoginUsageError.class, ServerLanguageMap.getInstance().translateKey("login.usage"));
+    messages.put(AuthmodError.class, ServerLanguageMap.getInstance().translateKey("error"));
   }
 
   public static String getMessage(AuthmodError e) {
-    return messages.getOrDefault(e.getClass(), ""/*AuthModConfig.i18n.error*/);
+    return messages.getOrDefault(e.getClass(), "Oupsss something goes wrong, see the server logs");
   }
 
   public static String getMessage(Exception e) {

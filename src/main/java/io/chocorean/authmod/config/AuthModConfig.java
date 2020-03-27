@@ -1,5 +1,7 @@
 package io.chocorean.authmod.config;
 
+import io.chocorean.authmod.command.ExceptionToMessageMapper;
+import io.chocorean.authmod.util.text.ServerLanguageMap;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.config.ModConfig;
@@ -11,6 +13,7 @@ import static net.minecraftforge.fml.loading.LogMarkers.FORGEMOD;
 public class AuthModConfig {
 
   public final DatabaseConfig database;
+  public final I18nConfig i18n;
   public enum DataSource {FILE, DATABASE}
   public enum Language {en_us, fr_fr}
   public final ForgeConfigSpec.BooleanValue identifierRequired;
@@ -48,15 +51,24 @@ public class AuthModConfig {
     builder.pop();
 
     this.database = new DatabaseConfig(builder);
+    this.i18n = new I18nConfig(builder);
+  }
+
+  private static void afterLoadedConfig() {
+    ServerLanguageMap.init(AuthModConfig.get().language.get().name());
+    ServerLanguageMap.replaceWith(AuthModConfig.get().i18n.getTranslations());
+    ExceptionToMessageMapper.init();
   }
 
   @SubscribeEvent
   public static void onLoad(final ModConfig.Loading configEvent) {
+    afterLoadedConfig();
     LogManager.getLogger().debug(FORGEMOD, "Loaded forge config file {}", configEvent.getConfig().getFileName());
   }
 
   @SubscribeEvent
   public static void onFileChange(final ModConfig.Reloading configEvent) {
+    afterLoadedConfig();
     LogManager.getLogger().debug(FORGEMOD, "Forge config just got changed on the file system!");
   }
 
