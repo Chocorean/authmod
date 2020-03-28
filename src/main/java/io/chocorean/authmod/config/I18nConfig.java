@@ -1,9 +1,7 @@
 package io.chocorean.authmod.config;
 
-import jdk.nashorn.internal.objects.ArrayBufferView;
 import net.minecraftforge.common.ForgeConfigSpec;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -44,10 +42,9 @@ public class I18nConfig {
   }
 
   public Map<String, String> getTranslations() {
-    Map<String, String> f = this.mappings.entrySet().stream()
+    return this.mappings.entrySet().stream()
       .filter(e -> !e.getValue().get().isEmpty())
       .collect(Collectors.toMap(Map.Entry::getKey,
       e -> e.getValue().get()));
-    return f;
   }
 }

@@ -19,7 +19,7 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 apply plugin: 'jacoco'
 
-version = '1.4'
+version = '3.0'
 group = 'io.chocorean.authmod'
 archivesBaseName = 'authmod'
 
@@ -88,6 +88,8 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    reports.junitXml.enabled = true
+    reports.html.enabled = true
 }
 
 jar {

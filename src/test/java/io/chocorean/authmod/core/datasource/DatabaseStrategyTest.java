@@ -2,8 +2,10 @@ package io.chocorean.authmod.core.datasource;
 
 
 import io.chocorean.authmod.core.Player;
+import io.chocorean.authmod.core.datasource.db.ConnectionFactory;
 import io.chocorean.authmod.core.datasource.db.ConnectionFactoryInterface;
 import io.chocorean.authmod.core.datasource.db.DBHelpers;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -31,11 +33,17 @@ class DatabaseStrategyTest {
   @Test
   void testConstructor() throws SQLException {
     new DatabaseStrategy(this.connectionFactory);
-    assertTrue(false);
   }
 
   @Test
-  void testConstructorRenameColumns() throws SQLException {
+  void testConstructorCannotConnect() {
+    this.connectionFactory = new ConnectionFactory("jdbc:mongodb:");
+    Assertions.assertThrows(SQLException.class, () -> new DatabaseStrategy(this.connectionFactory));
+  }
+
+  @Test
+  void testConstructorRenameColumns() throws Exception {
+    DBHelpers.initTable(this.connectionFactory, "email");
     Map<String, String> columns = new HashMap<>();
     columns.put(DatabaseStrategy.IDENTIFIER_COLUMN, "email");
     this.dataSource = new DatabaseStrategy("players", this.connectionFactory, columns, new BcryptPasswordHash());

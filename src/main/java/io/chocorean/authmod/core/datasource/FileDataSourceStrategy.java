@@ -63,7 +63,7 @@ public class FileDataSourceStrategy implements DataSourceStrategyInterface {
   }
 
   private void saveFile() {
-    try (BufferedWriter bw = new BufferedWriter(new FileWriter(this.file))) {
+    try (BufferedWriter bw = new BufferedWriter(new FileWriter(this.file, true))) {
       bw.write(String.join(SEPARATOR, "# Identifier", " username", " hashed password", " is banned ?"));
       bw.newLine();
       for (DataSourcePlayerInterface entry : this.players) {

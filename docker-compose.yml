@@ -10,6 +10,7 @@ services:
       - 3306:3306
     environment:
       - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=minecraft
       - TZ=Europe/Paris
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
 
@@ -25,12 +26,12 @@ services:
     image: itzg/minecraft-server:latest
     container_name: minecraft
     volumes:
-      - ./build/libs/authmod-3.0.jar:/data/mods/authmod-3.0.jar
-      - ./src/main/resources/authmod.cfg:/config/authmod.cfg
+      - ./data/minecraft/server:/data
+      - ./build/libs/authmod-1.4.jar:/mods/authmod.jar
     ports:
       - 25565:25565
     environment:
       - EULA=TRUE
       - ONLINE_MODE=FALSE
       - TYPE=FORGE
-      - FORGE_INSTALLER_URL=https://files.minecraftforge.net/maven/net/minecraftforge/forge/1.12.2-14.23.4.2705/forge-1.12.2-14.23.4.2705-installer.jar
+      - FORGE_INSTALLER_URL=https://files.minecraftforge.net/maven/net/minecraftforge/forge/1.15.2-31.1.18/forge-1.15.2-31.1.18-installer.jar

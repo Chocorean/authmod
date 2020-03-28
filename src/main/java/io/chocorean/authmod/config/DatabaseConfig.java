@@ -32,7 +32,7 @@ public class DatabaseConfig {
       .define("colummUsername", "username");
 
     this.columnUuid = builder
-      .comment("Column for UUIF")
+      .comment("Column for UUID")
       .define("colummUuid", "uuid");
 
     this.columnPassword = builder

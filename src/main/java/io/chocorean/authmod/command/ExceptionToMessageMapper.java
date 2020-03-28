@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class ExceptionToMessageMapper {
 
-  private final static Map<Class, String> messages = new HashMap<>();
+  private final static Map<Class<? extends AuthmodError>, String> messages = new HashMap<>();
 
   public static void init() {
     messages.put(PlayerAlreadyExistError.class, ServerLanguageMap.getInstance().translateKey("register.exist"));
@@ -20,11 +20,8 @@ public class ExceptionToMessageMapper {
     messages.put(AuthmodError.class, ServerLanguageMap.getInstance().translateKey("error"));
   }
 
-  public static String getMessage(AuthmodError e) {
-    return messages.getOrDefault(e.getClass(), "Oupsss something goes wrong, see the server logs");
+  public static String getMessage(Exception e) {
+    return messages.getOrDefault(e.getClass(), "Something goes wrong, see the server logs");
   }
 
-  public static String getMessage(Exception e) {
-    return e.getMessage();
-  }
 }

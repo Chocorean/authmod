@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 
 public class DBHelpers {
+
   public static File file;
 
   public static void initDatabaseFile() throws IOException {
@@ -41,13 +42,16 @@ public class DBHelpers {
   }
 
   private static void initTable(ConnectionFactoryInterface connectionFactory) throws Exception {
-    initTable("players", connectionFactory);
-  }
-
-  private static void initTable(String table, ConnectionFactoryInterface connectionFactory) throws Exception {
     Connection connection = connectionFactory.getConnection();
     Statement stmt = connection.createStatement();
-    stmt.executeUpdate(getCreationTableQuery().replace("players", table));
+    stmt.executeUpdate(getCreationTableQuery());
+  }
+
+  public static void initTable(ConnectionFactoryInterface connectionFactory, String identifier) throws Exception {
+    initDatabaseFile();
+    Connection connection = connectionFactory.getConnection();
+    Statement stmt = connection.createStatement();
+    stmt.executeUpdate(getCreationTableQuery().replace("identifier", identifier));
   }
 
   public static ConnectionFactoryInterface initDatabase() throws Exception {
@@ -56,4 +60,5 @@ public class DBHelpers {
     initTable(connectionFactory);
     return connectionFactory;
   }
+
 }

@@ -4,14 +4,12 @@ import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 import io.chocorean.authmod.AuthMod;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.Util;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -26,10 +24,11 @@ public class ServerLanguageMap {
    private static ServerLanguageMap INSTANCE;
    private final Map<String, String> languageList = Maps.newHashMap();
    private long lastUpdateTimeInMilliseconds;
+   private final static String DEFAULT_LANG = "en_us";
 
    private ServerLanguageMap(String language) {
-     this.loadLangFile("en_us");
-     if(language != null && !language.equals("en_us")) {
+     this.loadLangFile(DEFAULT_LANG);
+     if(language != null && !language.equals(DEFAULT_LANG)) {
        this.loadLangFile(language);
      }
    }
@@ -44,8 +43,8 @@ public class ServerLanguageMap {
          this.languageList.put(entry.getKey(), s);
        }
        this.lastUpdateTimeInMilliseconds = Util.milliTime();
-     } catch (JsonParseException | IOException ioexception) {
-       LOGGER.error("Couldn't read strings from " + path, ioexception);
+     } catch (Exception exception) {
+       LOGGER.error("Couldn't read strings from " + path, exception);
      }
    }
 
@@ -60,11 +59,15 @@ public class ServerLanguageMap {
    }
 
   public static synchronized void replaceWith(Map<String, String> dict) {
-    INSTANCE.languageList.putAll(dict);
-    INSTANCE.lastUpdateTimeInMilliseconds = Util.milliTime();
+     if(INSTANCE != null) {
+       INSTANCE.languageList.putAll(dict);
+       INSTANCE.lastUpdateTimeInMilliseconds = Util.milliTime();
+     }
   }
 
    public static ServerLanguageMap getInstance() {
+     if(INSTANCE == null)
+       init();
       return INSTANCE;
    }
 

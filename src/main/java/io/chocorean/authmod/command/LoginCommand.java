@@ -6,54 +6,49 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.core.GuardInterface;
-import io.chocorean.authmod.core.Payload;
-import io.chocorean.authmod.core.Player;
-import io.chocorean.authmod.core.PlayerInterface;
+import io.chocorean.authmod.core.PayloadInterface;
 import io.chocorean.authmod.core.exception.AuthmodError;
 import io.chocorean.authmod.event.Handler;
+import io.chocorean.authmod.util.text.ServerTranslationTextComponent;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import org.apache.logging.log4j.Logger;
 
 public class LoginCommand {
 
-  private static final Logger LOGGER = AuthMod.LOGGER;
-
   public static void register(CommandDispatcher<CommandSource> dispatcher, Handler handler, GuardInterface guard, boolean identifierRequired) {
-    LiteralArgumentBuilder<CommandSource> builder = Commands.literal("login")
-      .requires(cs -> cs.hasPermissionLevel(0));
+    LiteralArgumentBuilder<CommandSource> builder  = Commands.literal("login");
     if(identifierRequired) {
       builder.then(Commands.argument("id", StringArgumentType.word()));
     }
-    builder.then(Commands.argument("password", StringArgumentType.greedyString()))
-      .executes(ctx -> execute(
-        ctx.getSource(),
-        handler,
-        guard,
-        StringArgumentType.getString(ctx, "id"),
-        StringArgumentType.getString(ctx, "password")
-      ));
+    builder.then(
+      Commands.argument("password", StringArgumentType.string())
+        .executes(ctx -> execute(
+          ctx.getSource(),
+          handler,
+          guard,
+          AuthMod.toPayload(
+            ctx.getSource().asPlayer(),
+            identifierRequired ? StringArgumentType.getString(ctx, "id") : null,
+            StringArgumentType.getString(ctx, "password")
+            ))
+        )
+    );
     dispatcher.register(builder);
   }
 
-  public static int execute(CommandSource source, Handler handler, GuardInterface guard, String identifier, String password) {
+  public static int execute(CommandSource source, Handler handler, GuardInterface guard, PayloadInterface payload) {
     try {
       PlayerEntity player = source.asPlayer();
       if (!handler.isLogged(player)) {
-        PlayerInterface playerData = new Player(player.getDisplayName().toString(), player.getGameProfile().getId().toString());
-        LOGGER.info(playerData.getUsername() + " is authenticating");
-        if (guard.authenticate(new Payload(playerData, new String[]{identifier, password}))) {
+        AuthMod.LOGGER.info(payload.getPlayer().getUsername() + " is authenticating");
+        if (guard.authenticate(payload)) {
           handler.authorizePlayer(player);
-          player.sendMessage(new TranslationTextComponent("command.login.success"));
+          player.sendMessage(new ServerTranslationTextComponent("login.success"));
         }
       }
-    } catch (AuthmodError e) {
-      source.sendFeedback(new StringTextComponent(e.getMessage()), false);
-    } catch (CommandSyntaxException e) {
-      e.printStackTrace();
+    } catch (AuthmodError | CommandSyntaxException e) {
+      source.sendFeedback(new ServerTranslationTextComponent(ExceptionToMessageMapper.getMessage(e)), false);
     }
     return 1;
   }

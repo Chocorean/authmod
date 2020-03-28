@@ -14,7 +14,7 @@ public class AuthModConfig {
 
   public final DatabaseConfig database;
   public final I18nConfig i18n;
-  public enum DataSource {FILE, DATABASE}
+  public enum DataSource {FILE, DATABASE, NONE}
   public enum Language {en_us, fr_fr}
   public final ForgeConfigSpec.BooleanValue identifierRequired;
   public final ForgeConfigSpec.BooleanValue enableLogin;
@@ -73,7 +73,7 @@ public class AuthModConfig {
   }
 
   public static final ForgeConfigSpec serverSpec;
-  private static AuthModConfig SERVER;
+  private static final AuthModConfig SERVER;
   static {
     final Pair<AuthModConfig, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(AuthModConfig::new);
     serverSpec = specPair.getRight();
