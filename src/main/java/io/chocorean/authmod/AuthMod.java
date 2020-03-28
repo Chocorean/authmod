@@ -71,18 +71,18 @@ public class AuthMod {
       case DATABASE:
         Map<String, String> columns = new HashMap<>();
         DatabaseConfig dbconfig = AuthModConfig.get().database;
-        columns.put(DatabaseStrategy.IDENTIFIER_COLUMN, dbconfig.columnIdentifier.get());
-        columns.put(DatabaseStrategy.USERNAME_COLUMN, dbconfig.columnUsername.get());
-        columns.put(DatabaseStrategy.PASSWORD_COLUMN, dbconfig.columnPassword.get());
-        columns.put(DatabaseStrategy.BANNED_COLUMN, dbconfig.columnBan.get());
+        columns.put(DatabaseStrategy.IDENTIFIER_COLUMN, dbconfig.columnIdentifier.get().trim());
+        columns.put(DatabaseStrategy.USERNAME_COLUMN, dbconfig.columnUsername.get().trim());
+        columns.put(DatabaseStrategy.PASSWORD_COLUMN, dbconfig.columnPassword.get().trim());
+        columns.put(DatabaseStrategy.BANNED_COLUMN, dbconfig.columnBan.get().trim());
         ConnectionFactoryInterface connectionFactory = new ConnectionFactory(
-          dbconfig.dialect.get(),
-          dbconfig.host.get(),
+          dbconfig.dialect.get().trim(),
+          dbconfig.host.get().trim(),
           dbconfig.port.get(),
-          dbconfig.database.get(),
-          dbconfig.user.get(),
+          dbconfig.database.get().trim(),
+          dbconfig.user.get().trim(),
           dbconfig.password.get());
-        datasource = new DatabaseStrategy(dbconfig.table.get(), connectionFactory, columns, new BcryptPasswordHash());
+        datasource = new DatabaseStrategy(dbconfig.table.get().trim(), connectionFactory, columns, new BcryptPasswordHash());
         break;
       case FILE:
         datasource = new FileDataSourceStrategy(Paths.get(FMLPaths.CONFIGDIR.get().toString(), MODID + ".csv").toFile());

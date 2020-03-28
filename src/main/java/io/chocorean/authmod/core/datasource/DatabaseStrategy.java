@@ -40,8 +40,8 @@ public class DatabaseStrategy implements DataSourceStrategyInterface {
 
   @Override
   public DataSourcePlayerInterface find(String identifier) {
-    try (Connection conn = this.connectionFactory.getConnection()) {
-      PreparedStatement stmt = conn.prepareStatement(String.format("SELECT * FROM %s WHERE %s = ?", this.table, this.columns.get(IDENTIFIER_COLUMN)));
+    try (Connection conn = this.connectionFactory.getConnection();
+      PreparedStatement stmt = conn.prepareStatement(String.format("SELECT * FROM %s WHERE %s = ?", this.table, this.columns.get(IDENTIFIER_COLUMN)))) {
       stmt.setString(1, identifier);
       ResultSet rs = stmt.executeQuery();
       return this.createPlayer(rs);
@@ -87,19 +87,19 @@ public class DatabaseStrategy implements DataSourceStrategyInterface {
   }
 
   private void checkTable() throws SQLException {
-    Connection connection = this.connectionFactory.getConnection();
-         PreparedStatement stmt =
-           connection.prepareStatement(
-             String.format(
-               "SELECT %s,%s,%s,%s,%s FROM %s",
-               this.columns.getOrDefault(IDENTIFIER_COLUMN, IDENTIFIER_COLUMN),
-               this.columns.getOrDefault(BANNED_COLUMN, BANNED_COLUMN),
-               this.columns.getOrDefault(PASSWORD_COLUMN, PASSWORD_COLUMN),
-               this.columns.getOrDefault(USERNAME_COLUMN, USERNAME_COLUMN),
-               this.columns.getOrDefault(UUID_COLUMN, UUID_COLUMN),
-               this.table));
+    try(Connection connection = this.connectionFactory.getConnection();
+        PreparedStatement stmt =
+          connection.prepareStatement(
+            String.format(
+              "SELECT %s,%s,%s,%s,%s FROM %s",
+              this.columns.getOrDefault(IDENTIFIER_COLUMN, IDENTIFIER_COLUMN),
+              this.columns.getOrDefault(BANNED_COLUMN, BANNED_COLUMN),
+              this.columns.getOrDefault(PASSWORD_COLUMN, PASSWORD_COLUMN),
+              this.columns.getOrDefault(USERNAME_COLUMN, USERNAME_COLUMN),
+              this.columns.getOrDefault(UUID_COLUMN, UUID_COLUMN),
+              this.table))) {
       stmt.executeQuery();
-      connection.close();
+    }
   }
 
   private DataSourcePlayerInterface createPlayer(ResultSet rs) throws SQLException {

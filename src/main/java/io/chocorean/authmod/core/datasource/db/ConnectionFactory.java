@@ -1,14 +1,10 @@
 package io.chocorean.authmod.core.datasource.db;
 
-import io.chocorean.authmod.AuthMod;
-import org.apache.logging.log4j.Logger;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConnectionFactory implements ConnectionFactoryInterface {
-  private static final Logger LOGGER = AuthMod.LOGGER;
   private final String url;
   private final String user;
   private final String password;
@@ -35,14 +31,9 @@ public class ConnectionFactory implements ConnectionFactoryInterface {
 
   @Override
   public Connection getConnection() throws SQLException {
-    try {
-      return user == null
-          ? DriverManager.getConnection(this.url)
-          : DriverManager.getConnection(this.url, this.user, this.password);
-    } catch (SQLException ex) {
-      LOGGER.error(ex.getStackTrace());
-      throw new SQLException(ex);
-    }
+    return user == null
+      ? DriverManager.getConnection(this.url)
+      : DriverManager.getConnection(this.url, this.user, this.password);
   }
 
   @Override
