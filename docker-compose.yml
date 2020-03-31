@@ -27,7 +27,8 @@ services:
     container_name: minecraft
     volumes:
       - ./data/minecraft/server:/data
-      - ./build/reobfShadowJar/output.jar:/mods/authmod.jar
+      - ./build/reobfJar/output.jar:/mods/authmod.jar
+      #- ./build/libs/authmod-3.0.jar:/mods/authmod.jar
     ports:
       - 25565:25565
     environment:
