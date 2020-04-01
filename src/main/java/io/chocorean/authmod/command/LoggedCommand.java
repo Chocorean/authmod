@@ -1,5 +1,6 @@
 package io.chocorean.authmod.command;
 
+import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.config.AuthModConfig;
 import io.chocorean.authmod.event.Handler;
 import net.minecraft.command.ICommand;
@@ -8,12 +9,15 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class LoggedCommand implements ICommand {
+  private static final Logger LOGGER = AuthMod.LOGGER;
+
   private final List<String> aliases;
   private final Handler handler;
   private final String no;
@@ -45,6 +49,7 @@ public class LoggedCommand implements ICommand {
   @Override
   public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
     EntityPlayer player = (EntityPlayer) sender;
+    LOGGER.info(String.format("%s is using /logged", player.getDisplayNameString()));
     boolean logged = this.handler.isLogged(player);
     sender.sendMessage(new TextComponentString(logged ? this.yes : this.no));
   }

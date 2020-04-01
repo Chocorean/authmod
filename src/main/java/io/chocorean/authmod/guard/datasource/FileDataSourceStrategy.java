@@ -101,7 +101,8 @@ public class FileDataSourceStrategy implements IDataSourceStrategy {
     IPlayer p =
         this.players
             .stream()
-            .filter(tmp -> player.getEmail().equals(tmp.getEmail()) || player.getUsername().equals(tmp.getUsername()))
+            .filter(tmp -> (player.getEmail().equals(tmp.getEmail()) &&  !tmp.getEmail().equals("")) ||
+                (player.getUsername().equals(tmp.getUsername()) && !tmp.getUsername().equals("")))
             .findFirst()
             .orElse(null);
     return p != null;

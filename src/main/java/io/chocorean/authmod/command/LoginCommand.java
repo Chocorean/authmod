@@ -56,6 +56,7 @@ public class LoginCommand implements ICommand {
   @Override
   public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
     EntityPlayer player = (EntityPlayer) sender;
+    LOGGER.info(String.format("%s is using /login", player.getDisplayNameString()));
     if (args.length == (this.emailRequired ? 2 : 1)) {
       if (!this.handler.isLogged(player)) {
         LoginPayload payload = createPayload(this.emailRequired, player, args);

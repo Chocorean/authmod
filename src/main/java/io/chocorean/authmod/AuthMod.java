@@ -25,7 +25,7 @@ import static io.chocorean.authmod.config.AuthModConfig.enableRegistration;
 public class AuthMod {
   public static final String MODID = "authmod";
   static final String NAME = "AuthMod";
-  static final String VERSION = "3.1";
+  static final String VERSION = "3.2";
   public static Logger LOGGER = FMLLog.log;
 
   private Handler handler;

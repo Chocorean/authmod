@@ -62,11 +62,16 @@ public class RegisterCommand implements ICommand {
   @Override
   public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
     EntityPlayer player = (EntityPlayer) sender;
+    String playerName = player.getDisplayNameString();
+    LOGGER.info(String.format("%s is using /register", playerName));
     if (args.length == (this.emailRequired ? 3 : 2)) {
       if (!this.handler.isLogged(player)) {
         try {
+          LOGGER.info(String.format("Forging payload for player %s", playerName));
           RegistrationPayload payload = this.createPayload(player, args);
+          LOGGER.info(String.format("Registering payload for player %s", playerName));
           this.registrator.register(payload);
+          LOGGER.info(String.format("Authorizing player %s", playerName));
           this.handler.authorizePlayer(player);
           sender.sendMessage(new TextComponentString(AuthModConfig.i18n.registerSuccess));
         } catch (ArrayIndexOutOfBoundsException e) {
