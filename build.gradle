@@ -11,7 +11,6 @@ buildscript {
 }
 
 plugins {
-    id 'com.github.johnrengelman.shadow' version '5.2.0'
     id "org.sonarqube" version "2.7.1"
 }
 
@@ -116,9 +115,10 @@ jar {
                 'ContainedDeps': configurations.embedded.files.collect { it.name }.join(' ')
         ])
     }
-    into('META-INF/libraries/') {
-        from configurations.embedded
-    }
+    from { configurations.embedded.collect { zipTree(it) } }
+    // into('META-INF/libraries/') {
+    //     from configurations.embedded
+    // }
 }
 
 jar.finalizedBy('reobfJar')

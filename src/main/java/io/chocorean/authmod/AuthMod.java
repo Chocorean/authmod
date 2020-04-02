@@ -81,7 +81,8 @@ public class AuthMod {
           dbconfig.port.get(),
           dbconfig.database.get().trim(),
           dbconfig.user.get().trim(),
-          dbconfig.password.get());
+          dbconfig.password.get(),
+          dbconfig.driver.get());
         datasource = new DatabaseStrategy(dbconfig.table.get().trim(), connectionFactory, columns, new BcryptPasswordHash());
         break;
       case FILE:

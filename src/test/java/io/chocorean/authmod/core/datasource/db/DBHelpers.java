@@ -56,7 +56,7 @@ public class DBHelpers {
 
   public static ConnectionFactoryInterface initDatabase() throws Exception {
     initDatabaseFile();
-    ConnectionFactoryInterface connectionFactory = new ConnectionFactory("jdbc:sqlite:" + file.getAbsolutePath());
+    ConnectionFactoryInterface connectionFactory = new ConnectionFactory("jdbc:sqlite:" + file.getAbsolutePath(),"org.sqlite.JDBC");
     initTable(connectionFactory);
     return connectionFactory;
   }

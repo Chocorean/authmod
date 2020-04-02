@@ -16,6 +16,7 @@ public class DatabaseConfig {
   public final ForgeConfigSpec.ConfigValue<String> password;
   public final ForgeConfigSpec.IntValue port;
   public final ForgeConfigSpec.ConfigValue<String> table;
+  public final ForgeConfigSpec.ConfigValue<String> driver;
 
   public DatabaseConfig(ForgeConfigSpec.Builder builder) {
     builder.push("Database");
@@ -50,6 +51,9 @@ public class DatabaseConfig {
     this.host = builder
       .comment("Server hosting the database")
       .define("host", "localhost");
+
+    this.driver = builder.comment("JDBC driver to use")
+      .define("driver", "org.mariadb.jdbc.Driver");
 
     this.user = builder
       .comment("Database user")

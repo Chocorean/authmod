@@ -18,7 +18,7 @@ public class DatabaseStrategy implements DataSourceStrategyInterface {
   private final PasswordHashInterface passwordHash;
   private final ConnectionFactoryInterface connectionFactory;
 
-  public DatabaseStrategy(String table, ConnectionFactoryInterface connectionFactory, Map<String, String> columns, PasswordHashInterface passwordHash) throws SQLException {
+  public DatabaseStrategy(String table, ConnectionFactoryInterface connectionFactory, Map<String, String> columns, PasswordHashInterface passwordHash) throws Exception {
     this.table = table;
     this.connectionFactory = connectionFactory;
     this.columns = new HashMap<>();
@@ -34,7 +34,7 @@ public class DatabaseStrategy implements DataSourceStrategyInterface {
     this.checkTable();
   }
 
-  public DatabaseStrategy(ConnectionFactoryInterface connectionFactory) throws SQLException {
+  public DatabaseStrategy(ConnectionFactoryInterface connectionFactory) throws Exception {
     this("players", connectionFactory, new HashMap<>(), new BcryptPasswordHash());
   }
 
@@ -86,7 +86,7 @@ public class DatabaseStrategy implements DataSourceStrategyInterface {
     return this.passwordHash;
   }
 
-  private void checkTable() throws SQLException {
+  private void checkTable() throws Exception {
     try(Connection connection = this.connectionFactory.getConnection();
         PreparedStatement stmt =
           connection.prepareStatement(

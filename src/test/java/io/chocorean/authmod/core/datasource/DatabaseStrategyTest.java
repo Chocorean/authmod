@@ -31,7 +31,7 @@ class DatabaseStrategyTest {
   }
 
   @Test
-  void testConstructor() throws SQLException {
+  void testConstructor() throws Exception {
     new DatabaseStrategy(this.connectionFactory);
   }
 

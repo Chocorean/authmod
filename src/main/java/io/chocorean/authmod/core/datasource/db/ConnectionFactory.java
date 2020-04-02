@@ -15,8 +15,15 @@ public class ConnectionFactory implements ConnectionFactoryInterface {
     this.user = null;
   }
 
+  public ConnectionFactory(String url, String driver) throws ClassNotFoundException {
+    this.url = url;
+    this.password = null;
+    this.user = null;
+    Class.forName(driver);
+  }
+
   public ConnectionFactory(
-      String dialect, String host, int port, String database, String user, String password) {
+      String dialect, String host, int port, String database, String user, String password, String driver) throws ClassNotFoundException {
     StringBuilder urlBuilder = new StringBuilder();
     urlBuilder.append("jdbc:").append(dialect);
     if (host != null) {
@@ -27,6 +34,7 @@ public class ConnectionFactory implements ConnectionFactoryInterface {
     this.url = urlBuilder.toString();
     this.user = user;
     this.password = password;
+    Class.forName(driver);
   }
 
   @Override

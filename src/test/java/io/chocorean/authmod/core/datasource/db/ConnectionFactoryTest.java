@@ -9,6 +9,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ConnectionFactoryTest {
 
+  private String driver = "org.sqlite.JDBC";
+
   @Test
   void testConstructorUrl() throws Exception {
     ConnectionFactoryInterface connectionFactory = DBHelpers.initDatabase();
@@ -25,33 +27,33 @@ class ConnectionFactoryTest {
           0,
           DBHelpers.file.getAbsolutePath(),
           null,
-          null);
+          null, driver);
     Connection connection = connectionFactory.getConnection();
     assertNotNull(connection, "Connection should be configured correctly");
     assertEquals("jdbc:sqlite:" + DBHelpers.file.getAbsolutePath(), connection.getMetaData().getURL(),"JDBC URL is malformed for SQLite");
   }
 
   @Test
-  void testConstructorParamsMariadb() {
+  void testConstructorParamsMariadb() throws Exception {
     ConnectionFactoryInterface connectionFactory = new ConnectionFactory(
       "mariadb",
       "localhost",
       3306,
       "minecraft",
       null,
-      null);
+      null, driver);
     assertEquals("jdbc:mariadb://localhost:3306/minecraft", connectionFactory.getURL(),"JDBC URL is malformed for mariadb");
   }
 
   @Test
-  void testGetConnectionSQLError() {
+  void testGetConnectionSQLError() throws Exception {
     ConnectionFactoryInterface connectionFactory = new ConnectionFactory(
       "unknown-dialect",
       "localhost",
       3306,
       "minecraft",
       "awesome",
-      "password");
+      "password", driver);
     assertThrows(SQLException.class, connectionFactory::getConnection);
   }
 }
