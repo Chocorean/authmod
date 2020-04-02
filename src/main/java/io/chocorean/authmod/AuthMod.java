@@ -33,8 +33,9 @@ import java.util.Objects;
 
 @Mod(AuthMod.MODID)
 public class AuthMod {
-
   public static final String MODID = "authmod";
+  static final String NAME = "AuthMod";
+  static final String VERSION = "3.2";
   public static final Logger LOGGER = LogManager.getLogger();
   private Handler handler;
 

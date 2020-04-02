@@ -7,6 +7,7 @@ import io.chocorean.authmod.event.Handler;
 import io.chocorean.authmod.util.text.ServerTranslationTextComponent;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
+import net.minecraft.entity.player.PlayerEntity;
 
 public class LoggedCommand  {
 
@@ -16,7 +17,9 @@ public class LoggedCommand  {
 
   public static int execute(CommandSource source , Handler handler) {
     try {
-      boolean logged = handler.isLogged(source.asPlayer());
+      PlayerEntity player = source.asPlayer();
+      AuthMod.LOGGER.info(String.format("%s is using /logged", player.getDisplayName().toString()));
+      boolean logged = handler.isLogged(player);
       String translationKey = "logged." + (logged ? "yes" : "no");
       source.sendFeedback(new ServerTranslationTextComponent(translationKey), false);
     } catch (CommandSyntaxException e) {

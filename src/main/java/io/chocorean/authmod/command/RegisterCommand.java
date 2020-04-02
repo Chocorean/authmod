@@ -13,47 +13,48 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.entity.player.PlayerEntity;
 
-public class RegisterCommand  {
+public class RegisterCommand {
 
   public static void register(CommandDispatcher<CommandSource> dispatcher,
                               Handler handler,
                               GuardInterface guard,
                               boolean identifierRequired) {
-    LiteralArgumentBuilder<CommandSource> builder  = Commands.literal("register");
-    if(identifierRequired) {
+    LiteralArgumentBuilder<CommandSource> builder = Commands.literal("register");
+    if (identifierRequired) {
       builder.then(Commands.argument("id", StringArgumentType.word()));
     }
     builder.then(
       Commands.argument("password", StringArgumentType.string())
-       .then(
-         Commands.argument("confirmation", StringArgumentType.string())
-           .executes(ctx -> execute(
-             ctx.getSource(),
-             handler,
-             guard,
-             AuthMod.toPayload(
-               ctx.getSource().asPlayer(),
-               identifierRequired ? StringArgumentType.getString(ctx, "id") : null,
-               StringArgumentType.getString(ctx, "password"),
-               StringArgumentType.getString(ctx, "confirmation"))))
-       )
+        .then(
+          Commands.argument("confirmation", StringArgumentType.string())
+            .executes(ctx -> execute(
+              ctx.getSource(),
+              handler,
+              guard,
+              AuthMod.toPayload(
+                ctx.getSource().asPlayer(),
+                identifierRequired ? StringArgumentType.getString(ctx, "id") : null,
+                StringArgumentType.getString(ctx, "password"),
+                StringArgumentType.getString(ctx, "confirmation"))))
+        )
     );
     dispatcher.register(builder);
   }
 
   public static int execute(CommandSource source, Handler handler, GuardInterface guard, PayloadInterface payload) {
     try {
+      AuthMod.LOGGER.info(String.format("%s is using /logged", payload.getPlayer().getUsername()));
       PlayerEntity player = source.asPlayer();
-      AuthMod.LOGGER.info(payload.getPlayer().getUsername() + " is registering");
       if (guard.register(payload)) {
-        if (!handler.isLogged(source.asPlayer())){
+        if (!handler.isLogged(source.asPlayer())) {
           handler.authorizePlayer(player);
           source.sendFeedback(new ServerTranslationTextComponent("register.success"), true);
         }
       }
-    } catch(AuthmodError | CommandSyntaxException e) {
+    } catch (AuthmodError | CommandSyntaxException e) {
       source.sendFeedback(new ServerTranslationTextComponent(ExceptionToMessageMapper.getMessage(e)), true);
     }
     return 1;
   }
 }
+

@@ -22,7 +22,6 @@ apply plugin: 'jacoco'
 version = '3.0'
 group = 'io.chocorean.authmod'
 archivesBaseName = 'authmod'
-
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
 minecraft {
