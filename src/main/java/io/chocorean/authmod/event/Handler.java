@@ -5,7 +5,7 @@ import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.config.AuthModConfig;
 import io.chocorean.authmod.core.PlayerDescriptor;
 import io.chocorean.authmod.core.PlayerPos;
-import io.chocorean.authmod.util.text.ServerLanguageMap;
+import io.chocorean.authmod.util.text.ServerTranslationTextComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -33,8 +33,8 @@ public class Handler {
   private static final ScheduledExecutorService scheduler = new ScheduledThreadPoolExecutor(1);
   private static final Map<PlayerEntity, PlayerDescriptor> descriptors = new HashMap<>();
   private static final Map<PlayerEntity, Boolean> logged = new HashMap<>();
-  private static final String WELCOME = ServerLanguageMap.getInstance().translateKey("welcome");
-  private static final String WAKE_UP = String.format(ServerLanguageMap.getInstance().translateKey("wakeUp"), AuthModConfig.get().delay.get());
+
+
 
   @SubscribeEvent(priority = EventPriority.HIGHEST)
   public static void onJoin(PlayerEvent.PlayerLoggedInEvent event) {
@@ -50,7 +50,7 @@ public class Handler {
           if (descriptors.containsKey(entity)) {
             descriptors.remove(entity);
             logged.remove(entity);
-            ((ServerPlayerEntity) event.getPlayer()).connection.sendPacket(new SDisconnectPacket(new StringTextComponent(WAKE_UP)));
+            ((ServerPlayerEntity) event.getPlayer()).connection.sendPacket(new SDisconnectPacket(wakeUp()));
           }
         }, AuthModConfig.get().delay.get(), TimeUnit.SECONDS);
   }
@@ -76,7 +76,7 @@ public class Handler {
     PlayerEntity entity = event.getPlayer();
     if (descriptors.containsKey(entity) && event.isCancelable()) {
       event.setCanceled(true);
-      entity.sendMessage(new StringTextComponent(WELCOME));
+      sayWelcome(entity);
     }
   }
 
@@ -89,7 +89,7 @@ public class Handler {
         && !(name.equals("register") || name.equals("login") || name.equals("logged"))
         && event.isCancelable()) {
         event.setCanceled(true);
-        event.getParseResults().getContext().getSource().sendFeedback(new StringTextComponent(WELCOME), false);
+        event.getParseResults().getContext().getSource().sendFeedback(new ServerTranslationTextComponent("welcome"), false);
       }
     } catch (CommandSyntaxException e) {
       AuthMod.LOGGER.catching(e);
@@ -101,7 +101,7 @@ public class Handler {
     PlayerEntity entity = event.getPlayer();
     if (event.isCancelable() && descriptors.containsKey(entity)) {
       event.setCanceled(true);
-      event.getPlayer().sendMessage(new StringTextComponent(WELCOME));
+      sayWelcome(entity);
     }
   }
 
@@ -111,14 +111,14 @@ public class Handler {
     if (event.isCancelable() && descriptors.containsKey(entity)) {
       event.setCanceled(true);
       entity.inventory.addItemStackToInventory(event.getEntityItem().getItem());
-      event.getPlayer().sendMessage(new StringTextComponent(WELCOME));
+      sayWelcome(entity);
     }
   }
 
   private static void handleLivingEvents(LivingEvent event, Entity entity) {
     if (event.getEntity() instanceof PlayerEntity && event.isCancelable() && descriptors.containsKey(entity)) {
       event.setCanceled(true);
-      entity.sendMessage(new StringTextComponent(WELCOME));
+      sayWelcome(entity);
     }
   }
 
@@ -158,6 +158,14 @@ public class Handler {
   public void authorizePlayer(PlayerEntity player) {
     logged.put(player, true);
     descriptors.remove(player);
+  }
+
+  private static void sayWelcome(Entity playerEntity) {
+    playerEntity.sendMessage(new ServerTranslationTextComponent("welcome"));
+  }
+
+  private static ServerTranslationTextComponent wakeUp() {
+    return new ServerTranslationTextComponent("wakeUp", AuthModConfig.get().delay.get());
   }
 
   public boolean isLogged(PlayerEntity player) {

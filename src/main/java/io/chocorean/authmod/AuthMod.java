@@ -41,7 +41,6 @@ public class AuthMod {
 
   public AuthMod() {
     final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-    this.handler = new Handler();
     modEventBus.register(this);
     modEventBus.register(AuthModConfig.class);
     MinecraftForge.EVENT_BUS.addListener( this::serverStart );
@@ -50,25 +49,27 @@ public class AuthMod {
   }
 
   private void serverStart(FMLServerStartingEvent event) {
-    try {
-      GuardInterface guard = this.createGuard(AuthModConfig.get().dataSource.get());
-      if(guard != null) {
+    if(AuthModConfig.get().enableAuthmod()) {
+      try {
+        GuardInterface guard = this.createGuard(AuthModConfig.get().dataSource.get());
         this.handler = new Handler();
-        boolean identifierRequired = AuthModConfig.get().identifierRequired.get();
-        if (AuthModConfig.get().enableRegister.get()) {
-          LOGGER.info("Registering /register command");
-          RegisterCommand.register(event.getCommandDispatcher(), this.handler, guard, identifierRequired);
+        if(guard != null) {
+          boolean identifierRequired = AuthModConfig.get().identifierRequired.get();
+          if (AuthModConfig.get().enableRegister.get()) {
+            LOGGER.info("Registering /register command");
+            RegisterCommand.register(event.getCommandDispatcher(), this.handler, guard, identifierRequired);
+          }
+          if (AuthModConfig.get().enableLogin.get()) {
+            LOGGER.info("Registering /login command");
+            LoginCommand.register(event.getCommandDispatcher(), this.handler, guard, identifierRequired);
+            LOGGER.info("Registering /logged command");
+            LoggedCommand.register(event.getCommandDispatcher(), this.handler);
+          }
+        } else {
+          LOGGER.warn(AuthMod.MODID + " is disabled because guard is NULL");
         }
-        if (AuthModConfig.get().enableLogin.get()) {
-          LOGGER.info("Registering /login command");
-          LoginCommand.register(event.getCommandDispatcher(), this.handler, guard, identifierRequired);
-          LOGGER.info("Registering /logged command");
-          LoggedCommand.register(event.getCommandDispatcher(), this.handler);
-        }
-      } else {
-        LOGGER.warn(AuthMod.MODID + " is disabled because guard is NULL");
-      }
-    } catch(Exception e) { LOGGER.catching(e); }
+      } catch(Exception e) { LOGGER.catching(e); }
+    }
   }
 
   private GuardInterface createGuard(AuthModConfig.DataSource ds) throws Exception {

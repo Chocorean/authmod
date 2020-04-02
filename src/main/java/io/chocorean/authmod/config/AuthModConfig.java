@@ -40,7 +40,7 @@ public class AuthModConfig {
 
     this.delay = builder
       .comment("delay in seconds a player can authenticate before being automatically kicked from the server.")
-      .defineInRange("delay", 640, 1, 1024);
+      .defineInRange("delay", 60, 1, 1024);
 
     this.language = builder
       .comment("lang file to use")
@@ -70,6 +70,10 @@ public class AuthModConfig {
   public static void onFileChange(final ModConfig.Reloading configEvent) {
     afterLoadedConfig();
     LogManager.getLogger().debug(FORGEMOD, "Forge config just got changed on the file system!");
+  }
+
+  public boolean enableAuthmod() {
+    return this.enableLogin.get() || this.enableRegister.get();
   }
 
   public static final ForgeConfigSpec serverSpec;
