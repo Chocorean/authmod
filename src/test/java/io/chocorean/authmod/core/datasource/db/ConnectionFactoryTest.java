@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ConnectionFactoryTest {
 
-  private String driver = "org.sqlite.JDBC";
+  private final String driver = "org.sqlite.JDBC";
 
   @Test
   void testConstructorUrl() throws Exception {

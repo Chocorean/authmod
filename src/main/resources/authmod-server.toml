@@ -1,0 +1,74 @@
+
+#Server configuration settings
+[server]
+	#Identifier must be provided for registration and authentication
+	identifierRequired = false
+	#Enable or disable the /login command. If disabled, the server will be opened to everyone).
+	enableLogin = false
+	#Enable or disable the /register command.
+	enableRegister = false
+	#delay in seconds a player can authenticate before being automatically kicked from the server.
+	#Range: 1 ~ 1024
+	delay = 640
+	#lang file to use
+	#Allowed Values: en_us, fr_fr
+	language = "en_us"
+	#The way you want to store player's data, choose between 'database' or 'file'. If the strategy is unknown, the server will be open for everyone.
+	#Allowed Values: FILE, DATABASE, NONE
+	dataSource = "FILE"
+
+[Database]
+	#Column for the identifier
+	columnIdentifier = "email"
+	#Column telling whether the player is banned
+	columnBan = "banned"
+	#Column for the username
+	colummUsername = "username"
+	#Column for UUID
+	colummUuid = "uuid"
+	#Column for the encrypted password
+	columnPassword = "password"
+	#Name of the database
+	database = "minecraft"
+	#SQL dialect
+	dialect = "mariadb"
+	#Server hosting the database
+	host = "localhost"
+	#JDBC driver to use
+	driver = "org.mariadb.jdbc.Driver"
+	#Database user
+	user = "user"
+	#Database users's password
+	password = "user"
+	#Port to be used
+	#Range: 1024 ~ 65535
+	port = 3306
+	#Table to be used
+	table = "players"
+
+[I18n]
+	#Message displayed when an unknown error occurs.
+	error = ""
+	#Message displayed to a player when he/she joins the server.
+	welcome = ""
+	#Message displayed when a banned player tries to connect.
+	banned = ""
+	#Usage for /login
+	loginUsage = ""
+	#Message when the player successfully signed in.
+	loginSuccess = ""
+	#Message when the player entered a wrong password.
+	loginWrongpassword = ""
+	#Message when a player tries to sign up but am account already exists.
+	registerExist = ""
+	#Usage for /register
+	registerUsage = ""
+	#Message when the player successfully registered.
+	registerSuccess = ""
+	#The passwords doesn't match. Please retry
+	registerWrongpassword = ""
+	#Message when the player is logged
+	loggedYes = ""
+	#Usage for /logged
+	loggedNo = ""
+

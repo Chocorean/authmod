@@ -22,7 +22,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class LoginCommandTest {
-  private RegisterCommand command;
   private Handler handler;
   private DataSourceStrategyInterface dataSource;
   private GuardInterface guard;

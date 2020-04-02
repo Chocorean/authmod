@@ -35,7 +35,7 @@ import java.util.Objects;
 public class AuthMod {
   public static final String MODID = "authmod";
   static final String NAME = "AuthMod";
-  static final String VERSION = "3.2";
+  static final String VERSION = "4.0";
   public static final Logger LOGGER = LogManager.getLogger();
   private Handler handler;
 
@@ -46,6 +46,7 @@ public class AuthMod {
     modEventBus.register(AuthModConfig.class);
     MinecraftForge.EVENT_BUS.addListener( this::serverStart );
     ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, AuthModConfig.serverSpec);
+    LOGGER.info(String.format("%s %s", NAME, VERSION));
   }
 
   private void serverStart(FMLServerStartingEvent event) {
@@ -54,12 +55,16 @@ public class AuthMod {
       if(guard != null) {
         this.handler = new Handler();
         boolean identifierRequired = AuthModConfig.get().identifierRequired.get();
-        LOGGER.info("Registering /register command");
-        RegisterCommand.register(event.getCommandDispatcher(), this.handler, guard, identifierRequired);
-        LOGGER.info("Registering /login command");
-        LoginCommand.register(event.getCommandDispatcher(), this.handler, guard, identifierRequired);
-        LOGGER.info("Registering /logged command");
-        LoggedCommand.register(event.getCommandDispatcher(), this.handler);
+        if (AuthModConfig.get().enableRegister.get()) {
+          LOGGER.info("Registering /register command");
+          RegisterCommand.register(event.getCommandDispatcher(), this.handler, guard, identifierRequired);
+        }
+        if (AuthModConfig.get().enableLogin.get()) {
+          LOGGER.info("Registering /login command");
+          LoginCommand.register(event.getCommandDispatcher(), this.handler, guard, identifierRequired);
+          LOGGER.info("Registering /logged command");
+          LoggedCommand.register(event.getCommandDispatcher(), this.handler);
+        }
       } else {
         LOGGER.warn(AuthMod.MODID + " is disabled because guard is NULL");
       }
@@ -74,6 +79,7 @@ public class AuthMod {
         DatabaseConfig dbconfig = AuthModConfig.get().database;
         columns.put(DatabaseStrategy.IDENTIFIER_COLUMN, dbconfig.columnIdentifier.get().trim());
         columns.put(DatabaseStrategy.USERNAME_COLUMN, dbconfig.columnUsername.get().trim());
+        columns.put(DatabaseStrategy.UUID_COLUMN, dbconfig.columnUuid.get().trim());
         columns.put(DatabaseStrategy.PASSWORD_COLUMN, dbconfig.columnPassword.get().trim());
         columns.put(DatabaseStrategy.BANNED_COLUMN, dbconfig.columnBan.get().trim());
         ConnectionFactoryInterface connectionFactory = new ConnectionFactory(
@@ -89,8 +95,6 @@ public class AuthMod {
       case FILE:
         datasource = new FileDataSourceStrategy(Paths.get(FMLPaths.CONFIGDIR.get().toString(), MODID + ".csv").toFile());
         break;
-      case NONE:
-        datasource = null;
     }
     if(datasource == null) {
       return null;
