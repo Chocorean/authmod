@@ -97,13 +97,11 @@ test {
 }
 
 jacocoTestReport {
+    dependsOn test
     reports {
-        html.enabled = true
         xml.enabled true
     }
 }
-
-check.dependsOn jacocoTestReport
 
 jar {
     manifest {

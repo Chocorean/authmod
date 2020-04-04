@@ -23,8 +23,7 @@ script:
     -Dsonar.junit.reportPaths=build/test-results/test/TEST-*.xml \
     -Dsonar.java.coveragePlugin=jacoco \
     -Dsonar.jacoco.reportPaths=build/jacoco/test.exec
-  - ./gradlew test
-  - ./gradlew build jacocoTestReport
+
 
 after_script:
   - JACOCO_SOURCE_PATH=src/main/java ./cc-test-reporter format-coverage -d -t jacoco build/reports/jacoco/test/jacocoTestReport.xml
