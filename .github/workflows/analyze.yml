@@ -19,9 +19,8 @@ jobs:
     - name: ./gradlew sonarqube
       run: |
         ./gradlew --scan sonarqube \
-        -Dsonar.projectKey=Mcdostone_authmod \
-        -Dsonar.organization=mcdostone-github \
+        -Dsonar.projectKey=authmod \
+        -Dsonar.organization=chocorean \
         -Dsonar.host.url=https://sonarcloud.io \
         -Dsonar.login=${SONAR_TOKEN} \
         -Dsonar.branch.name=${GITHUB_REF##*/}
-

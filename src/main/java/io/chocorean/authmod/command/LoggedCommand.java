@@ -18,10 +18,10 @@ public class LoggedCommand  {
   public static int execute(CommandSource source , Handler handler) {
     try {
       PlayerEntity player = source.asPlayer();
-      AuthMod.LOGGER.info(String.format("%s is using /logged", player.getDisplayName().toString()));
+      AuthMod.LOGGER.info(String.format("%s is using /logged", player.getDisplayName().getString()));
       boolean logged = handler.isLogged(player);
       String translationKey = "logged." + (logged ? "yes" : "no");
-      source.sendFeedback(new ServerTranslationTextComponent(translationKey), false);
+      source.sendFeedback(new ServerTranslationTextComponent(translationKey), true);
     } catch (CommandSyntaxException e) {
       AuthMod.LOGGER.catching(e);
       source.sendErrorMessage(new ServerTranslationTextComponent(ExceptionToMessageMapper.getMessage(e)));

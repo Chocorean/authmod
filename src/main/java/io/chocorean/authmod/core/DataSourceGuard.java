@@ -30,16 +30,20 @@ public class DataSourceGuard implements GuardInterface {
     ValidatorInterface validator = new DataSourceLoginValidator(this.identifierRequired);
     boolean payloadValid = validator.validate(payload);
     if(payloadValid) {
-      String password = payload.getArgs()[payload.getArgs().length - 1];
-      DataSourcePlayerInterface foundPlayer = this.datasource.find(new DataSourcePlayer(payload.getPlayer()).getIdentifier());
+      DataSourcePlayerInterface foundPlayer = this.datasource.find(this.getIdentifier(payload));
       if(foundPlayer == null)
         throw new PlayerNotFoundError();
       if(foundPlayer.isBanned()) {
         throw new BannedPlayerError();
       }
+      String password = payload.getArgs()[payload.getArgs().length - 1];
       return this.datasource.getHashPassword().check(foundPlayer.getPassword(), password);
     }
     return false;
+  }
+
+  private String getIdentifier(PayloadInterface payload) {
+    return this.identifierRequired ? payload.getArgs()[0] : payload.getPlayer().getUsername();
   }
 
   @Override
@@ -48,6 +52,9 @@ public class DataSourceGuard implements GuardInterface {
     boolean payloadValid = validator.validate(payload);
     if(payloadValid) {
       DataSourcePlayerInterface playerProxy = new DataSourcePlayer(payload.getPlayer());
+      if(identifierRequired) {
+        playerProxy.setIdentifier(payload.getArgs()[0]);
+      }
       if(this.datasource.exist(new DataSourcePlayer(payload.getPlayer()))) {
         throw new PlayerAlreadyExistError();
       }

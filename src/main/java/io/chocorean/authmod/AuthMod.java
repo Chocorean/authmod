@@ -51,10 +51,10 @@ public class AuthMod {
   private void serverStart(FMLServerStartingEvent event) {
     if(AuthModConfig.get().enableAuthmod()) {
       try {
-        GuardInterface guard = this.createGuard(AuthModConfig.get().dataSource.get());
+        boolean identifierRequired = AuthModConfig.get().identifierRequired.get();
+        GuardInterface guard = this.createGuard(AuthModConfig.get().dataSource.get(), identifierRequired);
         this.handler = new Handler();
         if(guard != null) {
-          boolean identifierRequired = AuthModConfig.get().identifierRequired.get();
           if (AuthModConfig.get().enableRegister.get()) {
             LOGGER.info("Registering /register command");
             RegisterCommand.register(event.getCommandDispatcher(), this.handler, guard, identifierRequired);
@@ -72,7 +72,7 @@ public class AuthMod {
     }
   }
 
-  private GuardInterface createGuard(AuthModConfig.DataSource ds) throws Exception {
+  private GuardInterface createGuard(AuthModConfig.DataSource ds, boolean identifierRequired) throws Exception {
     DataSourceStrategyInterface datasource = null;
     switch (ds) {
       case DATABASE:
@@ -101,11 +101,15 @@ public class AuthMod {
       return null;
     }
     LOGGER.info("Use guard " + datasource);
-    return new DataSourceGuard(datasource);
+    return new DataSourceGuard(datasource, identifierRequired);
   }
 
   public static PayloadInterface toPayload(PlayerEntity entity, String ...args) {
-    return new Payload(new Player(entity.getDisplayName().getString(), entity.getGameProfile().getId().toString()),
+    String uuid = null;
+    // TODO when offline, UUID is not the mojang UUID
+    uuid = entity.getUUID(entity.getGameProfile()).toString();
+    AuthMod.LOGGER.info(uuid);
+    return new Payload(new Player(entity.getDisplayName().getString(), uuid),
       Arrays.stream(args).filter(Objects::nonNull).toArray(String[]::new));
   }
 

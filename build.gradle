@@ -11,7 +11,7 @@ buildscript {
 }
 
 plugins {
-    id "org.sonarqube" version "2.7.1"
+    id "org.sonarqube" version "2.8"
 }
 
 apply plugin: 'net.minecraftforge.gradle'
@@ -25,7 +25,7 @@ archivesBaseName = 'authmod'
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
 minecraft {
-    mappings channel: 'snapshot', version: '20200131-1.15.1'
+    mappings channel: 'snapshot', version: '20200225-1.15.1'
     runs {
         client {
             workingDirectory project.file('run')
@@ -80,7 +80,7 @@ configurations {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.15.2-31.1.18'
+    minecraft 'net.minecraftforge:forge:1.15.2-31.1.36'
     embedded group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.6.0'
     embedded group: 'org.mindrot', name: 'jbcrypt', version: '0.4'
     testCompile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.25.2'

@@ -3,6 +3,7 @@ package io.chocorean.authmod.command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.core.GuardInterface;
@@ -18,11 +19,7 @@ public class LoginCommand {
 
   public static void register(CommandDispatcher<CommandSource> dispatcher, Handler handler, GuardInterface guard, boolean identifierRequired) {
     LiteralArgumentBuilder<CommandSource> builder  = Commands.literal("login");
-    if(identifierRequired) {
-      builder.then(Commands.argument("id", StringArgumentType.word()));
-    }
-    builder.then(
-      Commands.argument("password", StringArgumentType.string())
+    builder.then(Commands.argument("password", StringArgumentType.string())
         .executes(ctx -> execute(
           ctx.getSource(),
           handler,
@@ -31,9 +28,9 @@ public class LoginCommand {
             ctx.getSource().asPlayer(),
             identifierRequired ? StringArgumentType.getString(ctx, "id") : null,
             StringArgumentType.getString(ctx, "password")
-            ))
+          ))
         )
-    );
+      );
     dispatcher.register(builder);
   }
 
@@ -42,14 +39,13 @@ public class LoginCommand {
       AuthMod.LOGGER.info(String.format("%s is using /login", payload.getPlayer().getUsername()));
       PlayerEntity player = source.asPlayer();
       if (!handler.isLogged(player)) {
-        AuthMod.LOGGER.info(payload.getPlayer().getUsername() + " is authenticating");
         if (guard.authenticate(payload)) {
           handler.authorizePlayer(player);
-          player.sendMessage(new ServerTranslationTextComponent("login.success"));
+          source.sendFeedback(new ServerTranslationTextComponent("login.success"), true);
         }
       }
     } catch (AuthmodError | CommandSyntaxException e) {
-      source.sendFeedback(new ServerTranslationTextComponent(ExceptionToMessageMapper.getMessage(e)), false);
+      source.sendFeedback(new ServerTranslationTextComponent(ExceptionToMessageMapper.getMessage(e), payload.getPlayer().getUsername()), false);
     }
     return 1;
   }

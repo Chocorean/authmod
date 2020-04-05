@@ -1,5 +1,6 @@
 package io.chocorean.authmod.command;
 
+import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.core.exception.*;
 import io.chocorean.authmod.util.text.ServerLanguageMap;
 
@@ -17,10 +18,14 @@ public class ExceptionToMessageMapper {
     messages.put(WrongPasswordError.class, ServerLanguageMap.getInstance().translateKey("login.wrongPassword"));
     messages.put(BannedPlayerError.class, ServerLanguageMap.getInstance().translateKey("banned"));
     messages.put(WrongLoginUsageError.class, ServerLanguageMap.getInstance().translateKey("login.usage"));
+    messages.put(PlayerNotFoundError.class, ServerLanguageMap.getInstance().translateKey("login.notFound"));
     messages.put(AuthmodError.class, ServerLanguageMap.getInstance().translateKey("error"));
   }
 
   public static String getMessage(Exception e) {
+    if(e instanceof AuthmodError) {
+      AuthMod.LOGGER.catching(e);
+    }
     return messages.getOrDefault(e.getClass(), "Something goes wrong, see the server logs");
   }
 

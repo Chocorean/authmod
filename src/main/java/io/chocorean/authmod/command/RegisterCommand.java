@@ -43,7 +43,7 @@ public class RegisterCommand {
 
   public static int execute(CommandSource source, Handler handler, GuardInterface guard, PayloadInterface payload) {
     try {
-      AuthMod.LOGGER.info(String.format("%s is using /logged", payload.getPlayer().getUsername()));
+      AuthMod.LOGGER.info(String.format("%s is using /register", payload.getPlayer().getUsername()));
       PlayerEntity player = source.asPlayer();
       if (guard.register(payload)) {
         if (!handler.isLogged(source.asPlayer())) {
@@ -52,6 +52,7 @@ public class RegisterCommand {
         }
       }
     } catch (AuthmodError | CommandSyntaxException e) {
+      AuthMod.LOGGER.catching(e);
       source.sendFeedback(new ServerTranslationTextComponent(ExceptionToMessageMapper.getMessage(e)), true);
     }
     return 1;
