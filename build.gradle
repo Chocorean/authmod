@@ -1,3 +1,5 @@
+buildScan { termsOfServiceUrl = 'https://gradle.com/terms-of-service'; termsOfServiceAgree = 'yes' }
+
 buildscript {
     repositories {
         maven { url = 'https://files.minecraftforge.net/maven' }
