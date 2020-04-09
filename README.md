@@ -1,7 +1,7 @@
 <div align="center">
 <br>
 <img
-    alt="DEV"
+    alt="AuthMod"
     src="./src/main/resources/logo.png"
     width=200px
 />
