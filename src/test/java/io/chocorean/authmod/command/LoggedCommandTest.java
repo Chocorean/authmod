@@ -1,6 +1,7 @@
 package io.chocorean.authmod.command;
 
 import com.mojang.authlib.GameProfile;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.chocorean.authmod.core.Player;
 import io.chocorean.authmod.core.PlayerInterface;
 import io.chocorean.authmod.event.Handler;
@@ -40,17 +41,17 @@ class LoggedCommandTest {
   }
 
   @Test
-  void testExecute() {
-    int res = LoggedCommand.execute(this.source, this.handler);
+  void testExecute() throws Exception {
+    int res = LoggedCommand.execute(this.source, this.source.asPlayer(), this.handler);
     assertEquals(1, res);
     assertFalse(this.handler.isLogged(this.playerEntity));
   }
 
   @Test
-  void testExecuteAlreadyLogged() {
+  void testExecuteAlreadyLogged() throws Exception {
     handler.authorizePlayer(this.playerEntity);
     assertTrue(this.handler.isLogged(this.playerEntity));
-    int res = LoggedCommand.execute(this.source, this.handler);
+    int res = LoggedCommand.execute(this.source, this.source.asPlayer(), this.handler);
     assertEquals(1, res);
     assertTrue(this.handler.isLogged(this.playerEntity));
   }

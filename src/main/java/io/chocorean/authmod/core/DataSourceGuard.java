@@ -28,40 +28,34 @@ public class DataSourceGuard implements GuardInterface {
   @Override
   public boolean authenticate(PayloadInterface payload) throws AuthmodError {
     ValidatorInterface validator = new DataSourceLoginValidator(this.identifierRequired);
-    boolean payloadValid = validator.validate(payload);
-    if(payloadValid) {
-      DataSourcePlayerInterface foundPlayer = this.datasource.find(this.getIdentifier(payload));
-      if(foundPlayer == null)
-        throw new PlayerNotFoundError();
-      if(foundPlayer.isBanned()) {
-        throw new BannedPlayerError();
-      }
-      String password = payload.getArgs()[payload.getArgs().length - 1];
-      return this.datasource.getHashPassword().check(foundPlayer.getPassword(), password);
+    validator.validate(payload);
+    DataSourcePlayerInterface foundPlayer = this.datasource.find(this.getIdentifier(payload));
+    if(foundPlayer == null)
+      throw new PlayerNotFoundError();
+    if(foundPlayer.isBanned()) {
+      throw new BannedPlayerError();
     }
-    return false;
-  }
-
-  private String getIdentifier(PayloadInterface payload) {
-    return this.identifierRequired ? payload.getArgs()[0] : payload.getPlayer().getUsername();
+    String password = payload.getArgs()[payload.getArgs().length - 1];
+    return this.datasource.getHashPassword().check(foundPlayer.getPassword(), password);
   }
 
   @Override
   public boolean register(PayloadInterface payload) throws AuthmodError {
     ValidatorInterface validator = new DataSourceRegistrationValidator(this.identifierRequired);
-    boolean payloadValid = validator.validate(payload);
-    if(payloadValid) {
-      DataSourcePlayerInterface playerProxy = new DataSourcePlayer(payload.getPlayer());
-      if(identifierRequired) {
-        playerProxy.setIdentifier(payload.getArgs()[0]);
-      }
-      if(this.datasource.exist(new DataSourcePlayer(payload.getPlayer()))) {
-        throw new PlayerAlreadyExistError();
-      }
-      playerProxy.setPassword(this.datasource.getHashPassword().hash(payload.getArgs()[payload.getArgs().length - 1]));
-      return this.datasource.add(playerProxy);
+    validator.validate(payload);
+    DataSourcePlayerInterface playerProxy = new DataSourcePlayer(payload.getPlayer());
+    if(identifierRequired) {
+      playerProxy.setIdentifier(payload.getArgs()[0]);
     }
-    return false;
+    if(this.datasource.exist(new DataSourcePlayer(payload.getPlayer()))) {
+      throw new PlayerAlreadyExistError();
+    }
+    playerProxy.setPassword(this.datasource.getHashPassword().hash(payload.getArgs()[payload.getArgs().length - 1]));
+    return this.datasource.add(playerProxy);
+  }
+
+  private String getIdentifier(PayloadInterface payload) {
+    return this.identifierRequired ? payload.getArgs()[0] : payload.getPlayer().getUsername();
   }
 
 }

@@ -25,4 +25,10 @@ class ExceptionToMessageMapperTest {
     assertNotNull(ExceptionToMessageMapper.getMessage(new AuthmodError()));
   }
 
+  @Test
+  public void testGetDefaultOther() {
+    ExceptionToMessageMapper.init();
+    assertNotNull(ExceptionToMessageMapper.getMessage(new Exception()));
+  }
+
 }

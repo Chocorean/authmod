@@ -12,9 +12,8 @@ public class BcryptPasswordHash implements PasswordHashInterface {
   public boolean check(String hashedPassword, String password) {
     if (hashedPassword == null || password == null)
       return false;
-    if(hashedPassword.equals("")) {
+    if(hashedPassword.equals(""))
       return false;
-    }
     return BCrypt.checkpw(password, hashedPassword);
   }
 

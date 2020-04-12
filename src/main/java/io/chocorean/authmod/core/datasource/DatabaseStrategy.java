@@ -66,10 +66,12 @@ public class DatabaseStrategy implements DataSourceStrategyInterface {
       stmt.setString(1, player.getIdentifier());
       stmt.setString(2, player.getPassword());
       stmt.setString(3, player.getUsername());
-      if (player.getUuid() == null || player.getUuid().length() == 0)
+      if (player.isPremium())
+         stmt.setString(4, player.getUuid());
+      else
         stmt.setNull(4, Types.VARCHAR);
-      else stmt.setString(4, player.getUuid());
-      return stmt.executeUpdate() == 1;
+      stmt.executeUpdate();
+      return true;
     } catch(Exception e) {
       e.printStackTrace();
     }

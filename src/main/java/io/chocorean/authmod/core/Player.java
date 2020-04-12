@@ -8,8 +8,7 @@ public class Player implements PlayerInterface {
   private String username;
 
   public Player() {
-    this.uuid = "";
-    this.username = "";
+    this("", "");
   }
 
   public Player(String username, String uuid) {
@@ -18,25 +17,23 @@ public class Player implements PlayerInterface {
   }
 
   public String getUuid() {
-    return uuid;
+    return this.uuid;
   }
 
   public Player setUuid(String uuid) {
-    if (uuid == null) {
-      this.uuid = "";
-    } else {
-      if (uuid.length() == 32) {
-        uuid =
-          String.format(
-            "%s-%s-%s-%s-%s",
-            uuid.substring(0, 8),
-            uuid.substring(8, 12),
-            uuid.substring(12, 16),
-            uuid.substring(16, 20),
-            uuid.substring(20, 32));
-      }
-      this.uuid = uuid.length() == 36 ? uuid : "";
+    if(uuid == null)
+      uuid = "";
+    if (uuid.length() == 32) {
+      uuid =
+        String.format(
+          "%s-%s-%s-%s-%s",
+          uuid.substring(0, 8),
+          uuid.substring(8, 12),
+          uuid.substring(12, 16),
+          uuid.substring(16, 20),
+          uuid.substring(20, 32));
     }
+    this.uuid = uuid.length() == 36 ? uuid : "";
     return this;
   }
 

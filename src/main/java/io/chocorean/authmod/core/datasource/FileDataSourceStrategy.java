@@ -46,7 +46,11 @@ public class FileDataSourceStrategy implements DataSourceStrategyInterface {
   public boolean add(DataSourcePlayerInterface player) {
     if(!this.exist(player)) {
       this.players.add(player);
-      this.saveFile();
+      try {
+        this.saveFile();
+      } catch(Exception e) {
+        return false;
+      }
       return true;
     }
     return false;
@@ -62,7 +66,7 @@ public class FileDataSourceStrategy implements DataSourceStrategyInterface {
     return this.passwordHash;
   }
 
-  private void saveFile() {
+  private void saveFile() throws IOException {
     try (BufferedWriter bw = new BufferedWriter(new FileWriter(this.file, true))) {
       bw.write(String.join(SEPARATOR, "# Identifier", " username", " hashed password", " is banned ?"));
       bw.newLine();
@@ -71,8 +75,6 @@ public class FileDataSourceStrategy implements DataSourceStrategyInterface {
         bw.newLine();
       }
       this.lastModification = Files.getLastModifiedTime(this.file.toPath()).toMillis();
-    } catch (IOException e) {
-      e.printStackTrace();
     }
   }
 
@@ -81,7 +83,7 @@ public class FileDataSourceStrategy implements DataSourceStrategyInterface {
     this.file.createNewFile();
     try (BufferedReader bf = new BufferedReader(new FileReader(this.file))) {
       String line;
-      while ((line = bf.readLine()) != null && line.trim().length() > 0) {
+      while ((line = bf.readLine()) != null) {
         if (!line.trim().startsWith("#")) {
           String[] parts = line.trim().split(SEPARATOR);
           if(parts.length == 4) {

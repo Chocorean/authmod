@@ -42,8 +42,18 @@ class BcryptPasswordHashTest {
   }
 
   @Test
-  public void testCheckNullParam() {
+  public void testCheckNullParams() {
     assertFalse(this.passwordHash.check(null, null));
+  }
+
+  @Test
+  public void testCheckNullParam1() {
+    assertFalse(this.passwordHash.check("hash", null));
+  }
+
+  @Test
+  public void testCheckNullParam2() {
+    assertFalse(this.passwordHash.check(null, this.password));
   }
 
 }
