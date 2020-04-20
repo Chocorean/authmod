@@ -38,7 +38,7 @@ public class FileDataSourceStrategy implements DataSourceStrategyInterface {
           .orElse(null);
       }
     } catch (IOException e) {
-      AuthMod.LOGGER.catching(e)
+      AuthMod.LOGGER.catching(e);
     }
     return null;
   }
