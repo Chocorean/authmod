@@ -1,6 +1,7 @@
 package io.chocorean.authmod.core.datasource;
 
 import io.chocorean.authmod.core.datasource.db.ConnectionFactoryInterface;
+import io.chocorean.authmod.AuthMod;
 
 import java.sql.*;
 import java.util.HashMap;
@@ -46,7 +47,7 @@ public class DatabaseStrategy implements DataSourceStrategyInterface {
       ResultSet rs = stmt.executeQuery();
       return this.createPlayer(rs);
     } catch(Exception e) {
-      e.printStackTrace();
+      AuthMod.LOGGER.catching(e);
     }
     return null;
   }
@@ -73,7 +74,7 @@ public class DatabaseStrategy implements DataSourceStrategyInterface {
       stmt.executeUpdate();
       return true;
     } catch(Exception e) {
-      e.printStackTrace();
+      AuthMod.LOGGER.catching(e);
     }
     return false;
   }
