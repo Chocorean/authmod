@@ -1,7 +1,6 @@
 package io.chocorean.authmod.command;
 
 import com.mojang.authlib.GameProfile;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.chocorean.authmod.core.Player;
 import io.chocorean.authmod.core.PlayerInterface;
 import io.chocorean.authmod.event.Handler;

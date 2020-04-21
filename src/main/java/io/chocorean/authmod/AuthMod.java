@@ -96,6 +96,8 @@ public class AuthMod {
       case FILE:
         datasource = new FileDataSourceStrategy(Paths.get(FMLPaths.CONFIGDIR.get().toString(), MODID + ".csv").toFile());
         break;
+      case NONE:
+        return null;
     }
     if(datasource == null) {
       return null;
