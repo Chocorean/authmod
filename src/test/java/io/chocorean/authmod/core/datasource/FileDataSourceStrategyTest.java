@@ -26,8 +26,8 @@ class FileDataSourceStrategyTest {
 
   @BeforeEach
   void init() throws Exception {
-    file = Paths.get(System.getProperty("java.io.tmpdir"), "authmod.csv").toFile();
-    this.dataSource = new FileDataSourceStrategy(file);
+    this.file = Paths.get(System.getProperty("java.io.tmpdir"), "authmod.csv").toFile();
+    this.dataSource = new FileDataSourceStrategy(this.file);
     clean();
     this.player = new DataSourcePlayer(new Player().setUsername("Whitney"));
   }
