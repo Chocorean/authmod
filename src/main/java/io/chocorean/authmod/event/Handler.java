@@ -1,22 +1,16 @@
 package io.chocorean.authmod.event;
 
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.brigadier.tree.CommandNode;
-
 import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.config.AuthModConfig;
 import io.chocorean.authmod.core.PlayerDescriptor;
 import io.chocorean.authmod.core.PlayerPos;
 import io.chocorean.authmod.util.text.ServerTranslationTextComponent;
-import net.minecraft.command.CommandSource;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.play.server.SDisconnectPacket;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.TickEvent;

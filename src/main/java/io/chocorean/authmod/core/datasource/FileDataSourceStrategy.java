@@ -1,6 +1,7 @@
 package io.chocorean.authmod.core.datasource;
 
 import io.chocorean.authmod.core.Player;
+import io.chocorean.authmod.core.exception.PlayerNotFoundError;
 import io.chocorean.authmod.AuthMod;
 
 import java.io.*;
@@ -49,10 +50,10 @@ public class FileDataSourceStrategy implements DataSourceStrategyInterface {
       this.players.add(player);
       try {
         this.saveFile();
+        return true;
       } catch(Exception e) {
-        return false;
+        AuthMod.LOGGER.catching(e);
       }
-      return true;
     }
     return false;
   }
@@ -61,6 +62,21 @@ public class FileDataSourceStrategy implements DataSourceStrategyInterface {
   public boolean exist(DataSourcePlayerInterface player) {
     return this.find(player.getIdentifier()) != null;
   }
+  
+  @Override
+  public boolean update(DataSourcePlayerInterface player) {
+    try {
+      this.reloadFile();
+      if (this.exist(player)) {
+        int index = this.players.indexOf(this.find(player.getIdentifier()));
+        this.players.remove(index);
+        return this.add(player);
+      }
+    } catch (Exception e) {
+      AuthMod.LOGGER.catching(e);
+    }
+    return false;
+  }
 
   @Override
   public PasswordHashInterface getHashPassword() {
@@ -68,7 +84,7 @@ public class FileDataSourceStrategy implements DataSourceStrategyInterface {
   }
 
   private void saveFile() throws IOException {
-    try (BufferedWriter bw = new BufferedWriter(new FileWriter(this.file, true))) {
+    try (BufferedWriter bw = new BufferedWriter(new FileWriter(this.file, false))) {
       bw.write(String.join(SEPARATOR, "# Identifier", " username", " hashed password", " is banned ?"));
       bw.newLine();
       for (DataSourcePlayerInterface entry : this.players) {

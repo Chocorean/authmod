@@ -22,6 +22,7 @@ public class AuthModConfig {
   public final ForgeConfigSpec.BooleanValue identifierRequired;
   public final ForgeConfigSpec.BooleanValue enableLogin;
   public final ForgeConfigSpec.BooleanValue enableRegister;
+  public final ForgeConfigSpec.BooleanValue enableChangePassword;
   public final ForgeConfigSpec.EnumValue<Language> language;
   public final ForgeConfigSpec.IntValue delay;
   public final ForgeConfigSpec.EnumValue<DataSource> dataSource;
@@ -41,6 +42,10 @@ public class AuthModConfig {
     this.enableRegister = builder
       .comment("Enable or disable the /register command.")
       .define("enableRegister", false);
+
+    this.enableChangePassword = builder
+      .comment("Enable or disable the /changepassword command.")
+      .define("enableChangePassword", false);
 
     this.delay = builder
       .comment("delay in seconds a player can authenticate before being automatically kicked from the server.")

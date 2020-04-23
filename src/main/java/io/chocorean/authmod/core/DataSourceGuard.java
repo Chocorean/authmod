@@ -7,6 +7,9 @@ import io.chocorean.authmod.core.exception.AuthmodError;
 import io.chocorean.authmod.core.exception.BannedPlayerError;
 import io.chocorean.authmod.core.exception.PlayerAlreadyExistError;
 import io.chocorean.authmod.core.exception.PlayerNotFoundError;
+import io.chocorean.authmod.core.exception.SamePasswordError;
+import io.chocorean.authmod.core.exception.WrongOldPasswordError;
+import io.chocorean.authmod.core.exception.WrongPasswordConfirmationError;
 import io.chocorean.authmod.core.validator.DataSourceLoginValidator;
 import io.chocorean.authmod.core.validator.DataSourceRegistrationValidator;
 import io.chocorean.authmod.core.validator.ValidatorInterface;
@@ -58,4 +61,29 @@ public class DataSourceGuard implements GuardInterface {
     return this.identifierRequired ? payload.getArgs()[0] : payload.getPlayer().getUsername();
   }
 
+  @Override
+  public boolean update(PayloadInterface oldPayload, PayloadInterface newPayload) throws AuthmodError {
+    // Checking old password
+    ValidatorInterface validator = new DataSourceLoginValidator(false);
+    validator.validate(oldPayload);
+    DataSourcePlayerInterface foundPlayer = this.datasource.find(this.getIdentifier(oldPayload));
+    // both might never happen but still
+    if(foundPlayer == null)
+      throw new PlayerNotFoundError();
+    if(foundPlayer.isBanned())
+      throw new BannedPlayerError();
+    String oldPassword = oldPayload.getArgs()[oldPayload.getArgs().length - 1];
+    if (!this.datasource.getHashPassword().check(foundPlayer.getPassword(), oldPassword))
+      throw new WrongOldPasswordError();
+    // Checking new password
+    validator = new DataSourceRegistrationValidator(false);
+    validator.validate(newPayload);
+    String newPassword = newPayload.getArgs()[newPayload.getArgs().length - 1];
+    if (oldPassword == newPassword)
+      throw new SamePasswordError();
+    // Updating password
+    DataSourcePlayerInterface playerProxy = new DataSourcePlayer(newPayload.getPlayer());
+    playerProxy.setPassword(this.datasource.getHashPassword().hash(newPassword));
+    return this.datasource.update(playerProxy);
+  }
 }

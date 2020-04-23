@@ -1,5 +1,6 @@
 package io.chocorean.authmod;
 
+import io.chocorean.authmod.command.ChangePasswordCommand;
 import io.chocorean.authmod.command.LoggedCommand;
 import io.chocorean.authmod.command.LoginCommand;
 import io.chocorean.authmod.command.RegisterCommand;
@@ -86,6 +87,10 @@ public class AuthMod {
             LoginCommand.register(event.getCommandDispatcher(), this.handler, guard, identifierRequired);
             LOGGER.info("Registering /logged command");
             LoggedCommand.register(event.getCommandDispatcher(), this.handler);
+          }
+          if (AuthModConfig.get().enableChangePassword.get()) {
+            LOGGER.info("Registering /changepassword command");
+            ChangePasswordCommand.register(event.getCommandDispatcher(), this.handler, guard);
           }
         } else {
           LOGGER.warn(AuthMod.MODID + " is disabled because guard is NULL");

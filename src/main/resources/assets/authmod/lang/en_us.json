@@ -15,5 +15,10 @@
   "authmod.register.exist": "Someone has already registered with this username.",
   "authmod.register.usage": "/register <email> <password> <password>- Be careful when choosing it, you'll be asked to login each time you play.",
   "authmod.register.success": "You are registered and authenticated, have fun!",
-  "authmod.register.wrongPassword": "The password confirmation doesn't match. Please retry."
+  "authmod.register.wrongPassword": "The password confirmation doesn't match. Please retry.",
+  "authmod.changepassword.success": "Password changed!",
+  "authmod.changepassword.failure_old": "Wrong password.",
+  "authmod.changepassword.failure_new": "New password is not valid.",
+  "authmod.changepassword.same_password": "New password should be different than the previous one.",
+  "authmod.changepassword.usage": "/changepassword <old_password> <new_password> <new_password> - Change your password."
 }
