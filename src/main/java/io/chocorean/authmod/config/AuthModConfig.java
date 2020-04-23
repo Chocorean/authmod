@@ -7,6 +7,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.config.ModConfig;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import static net.minecraftforge.fml.loading.LogMarkers.FORGEMOD;
 
@@ -22,8 +25,9 @@ public class AuthModConfig {
   public final ForgeConfigSpec.EnumValue<Language> language;
   public final ForgeConfigSpec.IntValue delay;
   public final ForgeConfigSpec.EnumValue<DataSource> dataSource;
+  public final ForgeConfigSpec.ConfigValue<List<? extends String>> commandWhitelist;
 
-  public AuthModConfig(ForgeConfigSpec.Builder builder) {
+  public AuthModConfig(final ForgeConfigSpec.Builder builder) {
     builder.comment("Server configuration settings").push("server");
 
     this.identifierRequired = builder
@@ -48,6 +52,11 @@ public class AuthModConfig {
 
     this.dataSource = builder.comment("The way you want to store player's data, choose between 'database' or 'file'. If the strategy is unknown, the server will be open for everyone.")
       .defineEnum("dataSource", DataSource.FILE);
+
+    String[] whitelist = { "register", "login", "logged", "help" };
+    this.commandWhitelist = builder
+      .comment("Whitelisted commands (can be used without being logged)")
+      .defineList("whitelist",  Arrays.asList(whitelist), x -> true);
     builder.pop();
 
     this.database = new DatabaseConfig(builder);

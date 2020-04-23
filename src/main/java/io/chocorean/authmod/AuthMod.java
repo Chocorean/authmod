@@ -36,7 +36,7 @@ public class AuthMod {
   public static final String MODID = "authmod";
   static final String NAME = "AuthMod";
   static final String VERSION = "4.0";
-  public static final Logger LOGGER = LogManager.getLogger();
+  public static final Logger LOGGER = LogManager.getLogger("AuthMod");
   private Handler handler;
 
   public AuthMod() {
