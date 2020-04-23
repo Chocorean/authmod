@@ -41,7 +41,8 @@ public class LoginCommand {
         if (guard.authenticate(payload)) {
           handler.authorizePlayer(player);
           source.sendFeedback(new ServerTranslationTextComponent("login.success"), true);
-        }
+        } else
+          source.sendFeedback(new ServerTranslationTextComponent("login.wrongPassword"), true);
       }
     } catch (AuthmodError | CommandSyntaxException e) {
       source.sendFeedback(new ServerTranslationTextComponent(ExceptionToMessageMapper.getMessage(e), payload.getPlayer().getUsername()), false);
