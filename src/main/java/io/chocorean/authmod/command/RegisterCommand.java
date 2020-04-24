@@ -7,6 +7,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.core.*;
 import io.chocorean.authmod.core.exception.AuthmodError;
+import io.chocorean.authmod.core.exception.PlayerAlreadyExistError;
 import io.chocorean.authmod.event.Handler;
 import io.chocorean.authmod.util.text.ServerTranslationTextComponent;
 import net.minecraft.command.CommandSource;
@@ -51,6 +52,8 @@ public class RegisterCommand {
           source.sendFeedback(new ServerTranslationTextComponent("register.success"), true);
         }
       }
+    } catch (PlayerAlreadyExistError e) {
+      source.sendFeedback(new ServerTranslationTextComponent(ExceptionToMessageMapper.getMessage(e)), true);
     } catch (AuthmodError | CommandSyntaxException e) {
       AuthMod.LOGGER.catching(e);
       source.sendFeedback(new ServerTranslationTextComponent(ExceptionToMessageMapper.getMessage(e)), true);
