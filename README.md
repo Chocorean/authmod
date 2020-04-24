@@ -50,14 +50,13 @@
 - [Getting started for developers](#getting-started-for-developers)
   - [Building the mod](#building-the-mod)
   - [SQL snippets](#sql-snippets)
-- [Issues](#issues)
 - [Contact](#contact)
 - [Contributors](#contributors)
 
 
 # Authmod
 
-AuthMod is a server side Minecraft mod allowing you to accept premium or demo minecraft accounts safely. What is important to remind with this mod is **the mojang authentication cannot be used**. So if you rely on this, this mod is maybe not a good solution for you. Authmod proposes a set of interesting features:
+AuthMod is a server side Minecraft mod allowing you to accept either premium and demo minecraft accounts safely. What is important to remind with this mod is **the mojang authentication cannot be used**. So if you rely on this, this mod is maybe not a good solution for you. Authmod proposes a set of interesting features:
 
 - Enable or disable the registration on the server.
 - Enable or disable the authentication on the server.
@@ -66,7 +65,7 @@ AuthMod is a server side Minecraft mod allowing you to accept premium or demo mi
 - Registration/authentication can require an identifier (email for instance).
 - Exclude a player if he's not logged after a certain delay.
 
-All the data related to the registration, the authentication... are stored either in a SQL database or a file.
+All the data related to the registration, the authentication... are stored in either a SQL database or a file.
 
 | Features       | File strategy | Database strategy |
 | -------------- | :-----------: | :---------------: |
@@ -83,6 +82,7 @@ All the data related to the registration, the authentication... are stored eithe
 
 # Tell to the user whether authenticated
 /logged
+
 # Change password
 /changepassword old_password new_password new_password
 ```
@@ -106,13 +106,9 @@ curl -s https://api.github.com/repos/chocorean/authmod/releases/latest \
 4. Edit the `authmod-server.toml` file depending on your needs.
 5. Restart the server and you're all set!
 
-
-## Limits
-It is important to understand that **authmod is not perfect**. During the development, we detected hacks that can cause hassle for players. Here the list of these problems:
- - If two players connect with the same username, no matter if one of them is authenticated or not, the first that came on the server will be automatically disconnected. We don't know yet if this issue can be solved.
-
-
 ## Getting started for developers
+
+Please refer to the [Forge documentation](https://mcforge.readthedocs.io/en/latest/gettingstarted/) for setting your development environment.
 
 ### Building the mod
 
@@ -120,7 +116,6 @@ It is important to understand that **authmod is not perfect**. During the develo
 ./gradlew build
 ls ./build/libs/authmod-X.jar
 ```
-
 
 ### SQL snippets
 
@@ -148,19 +143,7 @@ INSERT INTO minecraft.players (id, email, password, uuid, username, banned) VALU
 (2, 'linus.torvalds.linux.org', NULL, NULL, 'linux', 0);
 ```
 
-
-## Issues
-
-[Right here](https://github.com/Chocorean/authmod/issues).
-
-
-## Contact
-
-- [Mail](mailto:baptiste.chocot@gmail.com)
-- Discord: `Sunser#7808`
-
-
 ## Contributors
 
-- Baptiste Chocot ([@Chocorean](https://www.github.com/Chocorean/))
+- Baptiste Chocot ([@Chocorean](https://www.github.com/Chocorean/)) or `Sunser#7808` (Discord)
 - Yann Prono ([@Mcdostone](https://www.github.com/Mcdostone/))
