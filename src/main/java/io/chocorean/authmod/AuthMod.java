@@ -62,12 +62,10 @@ public class AuthMod {
 	        version += new String(dataBuffer);
 	    }
 	    in.close();
-	    if (version != "") {
-	      String pattern = "[^a-zA-Z0-9.]";
-	      version = version.replaceAll(pattern, "");
-	      if (!version.contentEquals(VERSION))
-	        LOGGER.warn(String.format("An update is available! '%s' -> '%s'", VERSION, version));
-	    }
+	    String pattern = "[^a-zA-Z0-9.]";
+	    version = version.replaceAll(pattern, "");
+	    if (!version.contentEquals(VERSION))
+	      LOGGER.warn(String.format("An update is available! '%s' -> '%s'", VERSION, version));
 	} catch (Exception e) {
 		LOGGER.catching(e);
 	}
