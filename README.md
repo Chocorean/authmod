@@ -11,32 +11,32 @@
 </div>
 <br/>
 <p align="center">
-<a href="https://www.curseforge.com/minecraft/mc-mods/authmod">
+<a href="https://www.curseforge.com/minecraft/mc-mods/authmod" target="_blank">
     <img src="https://img.shields.io/badge/curseforge-authmod-blueviolet" alt="curseforge page"/>
 </a>
-<a href="https://img.shields.io/badge/forge%20version-1.15.1-blue.svg">
+<a href="https://img.shields.io/badge/forge%20version-1.15.1-blue.svg" target="_blank">
     <img src="https://img.shields.io/badge/forge%20version-1.15.1-blue.svg" alt="forge version"/>
 </a>
-<a href="https://img.shields.io/badge/java-1.8-blue.svg">
+<a href="https://img.shields.io/badge/java-1.8-blue.svg" target="_blank">
     <img src="https://img.shields.io/badge/java-1.8-blue.svg" alt="java version" />
 </a>
-<a href="https://travis-ci.com/Chocorean/authmod">
+<a href="https://travis-ci.com/Chocorean/authmod" target="_blank">
     <img src="https://travis-ci.com/Chocorean/authmod.svg?branch=master" alt="build status"/>
 </a>
 
-<a href="https://sonarcloud.io/dashboard?id=Chocorean_authmod">
+<a href="https://sonarcloud.io/dashboard?id=Chocorean_authmod" target="_blank">
     <img src="https://sonarcloud.io/api/project_badges/measure?project=Chocorean_authmod&metric=alert_status" alt="build status on sonarcloud"/>
 </a>
-<a href="https://sonarcloud.io/dashboard?id=Chocorean_authmod">
+<a href="https://sonarcloud.io/dashboard?id=Chocorean_authmod" target="_blank">
     <img src="https://sonarcloud.io/api/project_badges/measure?project=Chocorean_authmod&metric=bugs" alt="bugs"/>
 </a>
-<a href="https://sonarcloud.io/dashboard?id=Chocorean_authmod">
+<a href="https://sonarcloud.io/dashboard?id=Chocorean_authmod" target="_blank">
     <img src="https://sonarcloud.io/api/project_badges/measure?project=Chocorean_authmod&metric=code_smells" alt="code smells"/>
 </a>
-<a href="https://sonarcloud.io/dashboard?id=Chocorean_authmod">
+<a href="https://sonarcloud.io/dashboard?id=Chocorean_authmod" target="_blank">
     <img src="https://sonarcloud.io/api/project_badges/measure?project=Chocorean_authmod&metric=sqale_rating" alt="maintainability" />
 </a>
-<a href="https://sonarcloud.io/dashboard?id=Chocorean_authmod">
+<a href="https://sonarcloud.io/dashboard?id=Chocorean_authmod" target="_blank">
     <img src="https://sonarcloud.io/api/project_badges/measure?project=Chocorean_authmod&metric=vulnerabilities" alt="vulnerabilities" />
 </a>
 </p>
