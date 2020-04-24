@@ -47,12 +47,10 @@ public class DataSourceGuard implements GuardInterface {
     ValidatorInterface validator = new DataSourceRegistrationValidator(this.identifierRequired);
     validator.validate(payload);
     DataSourcePlayerInterface playerProxy = new DataSourcePlayer(payload.getPlayer());
-    if(identifierRequired) {
+    if(identifierRequired)
       playerProxy.setIdentifier(payload.getArgs()[0]);
-    }
-    if(this.datasource.exist(new DataSourcePlayer(payload.getPlayer()))) {
+    if(this.datasource.exist(new DataSourcePlayer(payload.getPlayer())))
       throw new PlayerAlreadyExistError();
-    }
     playerProxy.setPassword(this.datasource.getHashPassword().hash(payload.getArgs()[payload.getArgs().length - 1]));
     return this.datasource.add(playerProxy);
   }
@@ -67,11 +65,6 @@ public class DataSourceGuard implements GuardInterface {
     ValidatorInterface validator = new DataSourceLoginValidator(false);
     validator.validate(oldPayload);
     DataSourcePlayerInterface foundPlayer = this.datasource.find(this.getIdentifier(oldPayload));
-    // both might never happen but still
-    if(foundPlayer == null)
-      throw new PlayerNotFoundError();
-    if(foundPlayer.isBanned())
-      throw new BannedPlayerError();
     String oldPassword = oldPayload.getArgs()[oldPayload.getArgs().length - 1];
     if (!this.datasource.getHashPassword().check(foundPlayer.getPassword(), oldPassword))
       throw new WrongOldPasswordError();
@@ -84,6 +77,7 @@ public class DataSourceGuard implements GuardInterface {
     // Updating password
     DataSourcePlayerInterface playerProxy = new DataSourcePlayer(newPayload.getPlayer());
     playerProxy.setPassword(this.datasource.getHashPassword().hash(newPassword));
+    // OU ICI
     return this.datasource.update(playerProxy);
   }
 }

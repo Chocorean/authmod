@@ -30,5 +30,10 @@ class ImARobotGuardTest {
   public void testRegister() throws AuthmodError {
     assertTrue(this.guard.register(null));
   }
+  
+  @Test
+  public void testUpdate() throws AuthmodError {
+    assertTrue(this.guard.update(null, null));
+  }
 
 }

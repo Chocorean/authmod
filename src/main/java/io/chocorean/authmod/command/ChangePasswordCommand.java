@@ -9,6 +9,7 @@ import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.core.GuardInterface;
 import io.chocorean.authmod.core.PayloadInterface;
 import io.chocorean.authmod.core.exception.AuthmodError;
+import io.chocorean.authmod.core.exception.PlayerNotFoundError;
 import io.chocorean.authmod.core.exception.SamePasswordError;
 import io.chocorean.authmod.core.exception.WrongOldPasswordError;
 import io.chocorean.authmod.core.exception.WrongPasswordConfirmationError;
@@ -56,21 +57,22 @@ public class ChangePasswordCommand  {
             guard.update(oldPayload, newPayload);
           } catch (WrongOldPasswordError e) {
             source.sendFeedback(new ServerTranslationTextComponent("changepassword.failure_old"), true);
-            return 1;
+            return 0;
           } catch (WrongPasswordConfirmationError e) {
             source.sendFeedback(new ServerTranslationTextComponent("changepassword.failure_new"), true);
-            return 1;
+            return 0;
           } catch (SamePasswordError e) {
             source.sendFeedback(new ServerTranslationTextComponent("changepassword.same_password"), true);
+            return 0;
           } catch (AuthmodError e) {
             AuthMod.LOGGER.catching(e);
-            return 1;
+            return 0;
           }
           source.sendFeedback(new ServerTranslationTextComponent("changepassword.success"), true);
-          return 0;
+          return 1;
       } else {
         source.sendFeedback(new ServerTranslationTextComponent("welcome"), true);
-        return 1;
+        return 0;
       }
     } catch (CommandSyntaxException e) {
       source.sendFeedback(new ServerTranslationTextComponent(ExceptionToMessageMapper.getMessage(e), oldPayload.getPlayer().getUsername()), false);
