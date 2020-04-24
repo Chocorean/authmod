@@ -90,14 +90,12 @@ public class Handler {
   public static void onCommand(CommandEvent event) { 
     try {
       List<? extends String> whitelist = AuthModConfig.get().commandWhitelist.get();
-      String list = whitelist.toString();
       PlayerEntity playerEntity = event.getParseResults().getContext().getSource().asPlayer();
       String name = event.getParseResults().getContext().getNodes().get(0).getNode().getName();
       boolean isCommandAllowed = whitelist.contains(name);
       if (descriptors.containsKey(playerEntity))
         if (!isCommandAllowed && event.isCancelable()) {
-    	  if (!isCommandAllowed)
-    	    AuthMod.LOGGER.info(String.format("Player %s tried to execute /%s without being logged in.", playerEntity.getName().getString(), name));
+    	  AuthMod.LOGGER.info(String.format("Player %s tried to execute /%s without being logged in.", playerEntity.getName().getString(), name));
     	  event.setCanceled(true);
           event.getParseResults().getContext().getSource().sendFeedback(new ServerTranslationTextComponent("welcome"), false);
         }

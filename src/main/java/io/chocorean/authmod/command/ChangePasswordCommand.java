@@ -9,7 +9,6 @@ import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.core.GuardInterface;
 import io.chocorean.authmod.core.PayloadInterface;
 import io.chocorean.authmod.core.exception.AuthmodError;
-import io.chocorean.authmod.core.exception.PlayerNotFoundError;
 import io.chocorean.authmod.core.exception.SamePasswordError;
 import io.chocorean.authmod.core.exception.WrongOldPasswordError;
 import io.chocorean.authmod.core.exception.WrongPasswordConfirmationError;

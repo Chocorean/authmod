@@ -8,7 +8,6 @@ import net.minecraftforge.fml.config.ModConfig;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import static net.minecraftforge.fml.loading.LogMarkers.FORGEMOD;

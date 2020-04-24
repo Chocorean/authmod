@@ -9,7 +9,6 @@ import io.chocorean.authmod.core.exception.PlayerAlreadyExistError;
 import io.chocorean.authmod.core.exception.PlayerNotFoundError;
 import io.chocorean.authmod.core.exception.SamePasswordError;
 import io.chocorean.authmod.core.exception.WrongOldPasswordError;
-import io.chocorean.authmod.core.exception.WrongPasswordConfirmationError;
 import io.chocorean.authmod.core.validator.DataSourceLoginValidator;
 import io.chocorean.authmod.core.validator.DataSourceRegistrationValidator;
 import io.chocorean.authmod.core.validator.ValidatorInterface;
