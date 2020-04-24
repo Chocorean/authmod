@@ -96,24 +96,23 @@ public class FileDataSourceStrategy implements DataSourceStrategyInterface {
 
   private void readFile() throws IOException {
     this.players.clear();
-    if (this.file.createNewFile()) {
-      try (BufferedReader bf = new BufferedReader(new FileReader(this.file))) {
-        String line;
-        while ((line = bf.readLine()) != null) {
-          if (!line.trim().startsWith("#")) {
-            String[] parts = line.trim().split(SEPARATOR);
-            if(parts.length == 4) {
-              DataSourcePlayerInterface p = new DataSourcePlayer(new Player());
-              p.setIdentifier(parts[0].trim());
-              p.setUsername(parts[1].trim());
-              p.setPassword(parts[2]);
-              p.setBanned(Boolean.parseBoolean(parts[3].trim()));
-              this.players.add(p);
-            }
+    if (!this.file.createNewFile()) AuthMod.LOGGER.info("Re-using existing authentication register.");
+    try (BufferedReader bf = new BufferedReader(new FileReader(this.file))) {
+      String line;
+      while ((line = bf.readLine()) != null) {
+        if (!line.trim().startsWith("#")) {
+          String[] parts = line.trim().split(SEPARATOR);
+          if(parts.length == 4) {
+            DataSourcePlayerInterface p = new DataSourcePlayer(new Player());
+            p.setIdentifier(parts[0].trim());
+            p.setUsername(parts[1].trim());
+            p.setPassword(parts[2]);
+            p.setBanned(Boolean.parseBoolean(parts[3].trim()));
+            this.players.add(p);
           }
         }
-        this.lastModification = this.file.lastModified();
       }
+      this.lastModification = this.file.lastModified();
     }
   }
 
