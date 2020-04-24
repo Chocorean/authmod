@@ -40,8 +40,8 @@ public class AuthMod {
   public static final String MODID = "authmod";
   static final String NAME = "AuthMod";
   static final String VERSION = "4.0";
-  private final String versionURL = "https://raw.githubusercontent.com/Chocorean/authmod/master/VERSION";
-  public static final Logger LOGGER = LogManager.getLogger("AuthMod");
+  private static final String versionURL = "https://raw.githubusercontent.com/Chocorean/authmod/master/VERSION";
+  public static final Logger LOGGER = LogManager.getLogger(NAME);
   private Handler handler;
 
   public AuthMod() {
