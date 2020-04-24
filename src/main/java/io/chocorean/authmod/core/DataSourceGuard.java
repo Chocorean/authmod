@@ -72,7 +72,7 @@ public class DataSourceGuard implements GuardInterface {
     validator = new DataSourceRegistrationValidator(false);
     validator.validate(newPayload);
     String newPassword = newPayload.getArgs()[newPayload.getArgs().length - 1];
-    if (oldPassword == newPassword)
+    if (oldPassword.contentEquals(newPassword))
       throw new SamePasswordError();
     // Updating password
     DataSourcePlayerInterface playerProxy = new DataSourcePlayer(newPayload.getPlayer());

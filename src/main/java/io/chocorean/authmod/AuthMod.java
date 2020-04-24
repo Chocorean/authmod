@@ -54,14 +54,12 @@ public class AuthMod {
     ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, AuthModConfig.serverSpec);
     LOGGER.info(String.format("%s %s", NAME, VERSION));
     // Checking if a new version is available
-    try {
-		BufferedInputStream in = new BufferedInputStream(new URL(versionURL).openStream());
+    try (BufferedInputStream in = new BufferedInputStream(new URL(versionURL).openStream())) {
 		byte dataBuffer[] = new byte[1024];
 	    String version = "";
 	    while ((in.read(dataBuffer, 0, 1024)) != -1) {
 	        version += new String(dataBuffer);
 	    }
-	    in.close();
 	    String pattern = "[^a-zA-Z0-9.]";
 	    version = version.replaceAll(pattern, "");
 	    if (!version.contentEquals(VERSION))
