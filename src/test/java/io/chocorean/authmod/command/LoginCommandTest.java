@@ -50,7 +50,7 @@ class LoginCommandTest {
     when(this.source.asPlayer()).thenReturn(this.playerEntity);
     this.dataSource = new FileDataSourceStrategy(file);
     this.guard = new DataSourceGuard(this.dataSource);
-    this.guard.register(new Payload(this.player, new String[]{password, password}));
+    this.guard.register(new Payload(this.player, new String[]{this.password, this.password}));
   }
 
   @Test
