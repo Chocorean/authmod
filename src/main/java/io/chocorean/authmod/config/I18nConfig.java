@@ -26,7 +26,11 @@ public class I18nConfig {
     this.put(builder, "register.wrongPassword","The passwords doesn't match. Please retry");
     this.put(builder, "logged.yes","Message when the player is logged");
     this.put(builder, "logged.no","Message when the player is not logged");
-    this.put(builder, "logged.no","Usage for /logged");
+    this.put(builder, "logged.usage","Usage for /logged");
+    this.put(builder, "changepassword.success", "Message when the player successfully change password.");
+    this.put(builder, "changepassword.failure_old", "Message when the player fails to change password due to old password.");
+    this.put(builder, "changepassword.failure_new", "Message when the player fails to change password due to new password.");
+    this.put(builder, "changepassword.usage", "Usage for /changepassword");
     builder.pop();
   }
 

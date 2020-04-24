@@ -1,10 +1,13 @@
 package io.chocorean.authmod.command;
 
 import com.mojang.authlib.GameProfile;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+
 import io.chocorean.authmod.core.*;
 import io.chocorean.authmod.core.datasource.DataSourcePlayer;
 import io.chocorean.authmod.core.datasource.DataSourceStrategyInterface;
 import io.chocorean.authmod.core.datasource.FileDataSourceStrategy;
+import io.chocorean.authmod.core.exception.AuthmodError;
 import io.chocorean.authmod.event.Handler;
 import net.minecraft.command.CommandSource;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -13,6 +16,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.UUID;
@@ -32,7 +36,7 @@ class LoginCommandTest {
   private PlayerInterface player;
 
   @BeforeEach
-  void init() throws Exception {
+  void init() throws IOException, CommandSyntaxException, AuthmodError {
     File file = Paths.get(System.getProperty("java.io.tmpdir"), "authmod.csv").toFile();
     Files.deleteIfExists(file.toPath());
     this.handler = new Handler();
@@ -46,7 +50,7 @@ class LoginCommandTest {
     when(this.source.asPlayer()).thenReturn(this.playerEntity);
     this.dataSource = new FileDataSourceStrategy(file);
     this.guard = new DataSourceGuard(this.dataSource);
-    this.guard.register(new Payload(this.player, new String[]{password, password}));
+    this.guard.register(new Payload(this.player, new String[]{this.password, this.password}));
   }
 
   @Test

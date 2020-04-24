@@ -83,6 +83,28 @@ public class DatabaseStrategy implements DataSourceStrategyInterface {
   public boolean exist(DataSourcePlayerInterface player) {
     return this.find(player.getIdentifier()) != null;
   }
+  
+  @Override
+  public boolean update(DataSourcePlayerInterface player) {
+    if (this.exist(player)) {
+      String query =
+          String.format(
+            "UPDATE %s SET %s = ? WHERE %s = ?;",
+            this.table,
+            this.columns.get(PASSWORD_COLUMN),
+            this.columns.get(USERNAME_COLUMN));
+      try (Connection conn = this.connectionFactory.getConnection();
+      PreparedStatement stmt = conn.prepareStatement(query)) {
+        stmt.setString(1, player.getPassword());
+        stmt.setString(2, player.getUsername());
+        stmt.executeUpdate();
+        return true;
+      } catch (Exception e) {
+        AuthMod.LOGGER.catching(e);
+      }
+    }
+    return false;
+  }
 
   @Override
   public PasswordHashInterface getHashPassword() {
@@ -90,7 +112,7 @@ public class DatabaseStrategy implements DataSourceStrategyInterface {
   }
 
   private void checkTable() throws Exception {
-    try(Connection connection = this.connectionFactory.getConnection();
+    try (Connection connection = this.connectionFactory.getConnection();
         PreparedStatement stmt =
           connection.prepareStatement(
             String.format(

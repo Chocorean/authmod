@@ -89,6 +89,8 @@ All the data related to the registration, the authentication... are stored eithe
 
 # Tell to the user whether authenticated
 /logged
+# Change password
+/changepassword old_password new_password new_password
 ```
 
 

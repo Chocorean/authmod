@@ -15,5 +15,10 @@
   "authmod.register.exist": "Quelqu'un a déjà utilisé cet identifiant.",
   "authmod.register.usage": "/register <ID> <password> <confirmation> - Permet de vous enregistrer sur ce serveur.",
   "authmod.register.success": "Tu es enregistré, have fun!",
-  "authmod.register.wrongPassword": "Les mots de passe ne correspondent pas."
+  "authmod.register.wrongPassword": "Les mots de passe ne correspondent pas.",
+  "authmod.changepassword.success": "Mot de passe changé!",
+  "authmod.changepassword.failure_old": "Mauvais mot de passe.",
+  "authmod.changepassword.failure_new": "Nouveau mot de passe invalide.",
+  "authmod.changepassword.same_password": "Le nouveau mot de passe doit être différent du précédent.",
+  "authmod.changepassword.usage": "/changepassword <old_password> <new_password> <new_password> - Change votre mot de passe."
 }

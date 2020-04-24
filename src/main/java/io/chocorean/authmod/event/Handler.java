@@ -23,6 +23,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -86,16 +87,20 @@ public class Handler {
   }
 
   @SubscribeEvent(priority = EventPriority.HIGHEST)
-  public static void onCommand(CommandEvent event) {
+  public static void onCommand(CommandEvent event) { 
     try {
+      List<? extends String> whitelist = AuthModConfig.get().commandWhitelist.get();
+      String list = whitelist.toString();
       PlayerEntity playerEntity = event.getParseResults().getContext().getSource().asPlayer();
       String name = event.getParseResults().getContext().getNodes().get(0).getNode().getName();
-      if (descriptors.containsKey(playerEntity)
-        && !(name.equals("register") || name.equals("login") || name.equals("logged") || name.equals("help"))
-        && event.isCancelable()) {
-        event.setCanceled(true);
-        event.getParseResults().getContext().getSource().sendFeedback(new ServerTranslationTextComponent("welcome"), false);
-      }
+      boolean isCommandAllowed = whitelist.contains(name);
+      if (descriptors.containsKey(playerEntity))
+        if (!isCommandAllowed && event.isCancelable()) {
+    	  if (!isCommandAllowed)
+    	    AuthMod.LOGGER.info(String.format("Player %s tried to execute /%s without being logged in.", playerEntity.getName().getString(), name));
+    	  event.setCanceled(true);
+          event.getParseResults().getContext().getSource().sendFeedback(new ServerTranslationTextComponent("welcome"), false);
+        }
     } catch (CommandSyntaxException e) {
       AuthMod.LOGGER.catching(e);
     }
@@ -160,6 +165,8 @@ public class Handler {
     }
   }
 
+  /*
+   * Unused so far
   private static void cancelEventAndSayHello(PlayerEvent event) {
     PlayerEntity entity = event.getPlayer();
     if (event.isCancelable() && descriptors.containsKey(entity)) {
@@ -167,6 +174,7 @@ public class Handler {
       sayWelcome(entity);
     }
   }
+  */
 
   public void authorizePlayer(PlayerEntity player) {
     logged.put(player, true);

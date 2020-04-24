@@ -8,6 +8,8 @@ public interface DataSourceStrategyInterface {
 
   boolean exist(DataSourcePlayerInterface player);
 
+  boolean update(DataSourcePlayerInterface player);
+
   PasswordHashInterface getHashPassword();
 
 }

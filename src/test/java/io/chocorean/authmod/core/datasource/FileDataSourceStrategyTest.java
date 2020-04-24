@@ -3,14 +3,12 @@ package io.chocorean.authmod.core.datasource;
 
 import io.chocorean.authmod.core.Player;
 import io.chocorean.authmod.core.PlayerInterface;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
