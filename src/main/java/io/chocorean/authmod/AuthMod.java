@@ -23,6 +23,8 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -55,16 +57,16 @@ public class AuthMod {
     try {
 		BufferedInputStream in = new BufferedInputStream(new URL(versionURL).openStream());
 		byte dataBuffer[] = new byte[1024];
-	    int bytesRead;
 	    String version = "";
-	    while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
+	    while ((in.read(dataBuffer, 0, 1024)) != -1) {
 	        version += new String(dataBuffer);
 	    }
 	    in.close();
 	    if (version != "") {
-	      if (version != VERSION) {
-	        LOGGER.warn(String.format("An update is available! %s -> %s", VERSION, version));
-	      }
+	      String pattern = "[^a-zA-Z0-9.]";
+	      version = version.replaceAll(pattern, "");
+	      if (!version.contentEquals(VERSION))
+	        LOGGER.warn(String.format("An update is available! '%s' -> '%s'", VERSION, version));
 	    }
 	} catch (Exception e) {
 		LOGGER.catching(e);
