@@ -34,12 +34,6 @@
     <img src="https://sonarcloud.io/api/project_badges/measure?project=Chocorean_authmod&metric=code_smells" alt="code smells"/>
 </a>
 <a href="https://sonarcloud.io/dashboard?id=Chocorean_authmod">
-    <img src="https://sonarcloud.io/api/project_badges/measure?project=Chocorean_authmod&metric=coverage" alt="code coverage" />
-</a>
-<a href="https://sonarcloud.io/dashboard?id=Chocorean_authmod">
-    <img src="https://sonarcloud.io/api/project_badges/measure?project=Chocorean_authmod&metric=duplicated_lines_density" alt="duplicated lines" />
-</a>
-<a href="https://sonarcloud.io/dashboard?id=Chocorean_authmod">
     <img src="https://sonarcloud.io/api/project_badges/measure?project=Chocorean_authmod&metric=sqale_rating" alt="maintainability" />
 </a>
 <a href="https://sonarcloud.io/dashboard?id=Chocorean_authmod">
