@@ -12,7 +12,7 @@
 <br/>
 <p align="center">
 <a href="https://www.curseforge.com/minecraft/mc-mods/authmod" target="_blank">
-    <img src="https://img.shields.io/badge/curseforge-authmod-blueviolet" alt="curseforge page"/>
+    <img src="http://cf.way2muchnoise.eu/full_authmod_downloads(555-FF4C05-FFF-00000000-FFF).svg" alt="curseforge page"/>
 </a>
 <a href="https://img.shields.io/badge/forge%20version-1.15.1-blue.svg" target="_blank">
     <img src="https://img.shields.io/badge/forge%20version-1.15.1-blue.svg" alt="forge version"/>
