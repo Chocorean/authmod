@@ -22,6 +22,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.loading.FMLPaths;
 
 import org.apache.logging.log4j.LogManager;
@@ -40,7 +41,7 @@ public class AuthMod {
   public static final String MODID = "authmod";
   static final String NAME = "AuthMod";
   static final String VERSION = "4.0";
-  private static final String versionURL = "https://raw.githubusercontent.com/Chocorean/authmod/master/VERSION";
+  private static final String versionUrl = "https://raw.githubusercontent.com/Chocorean/authmod/master/VERSION";
   public static final Logger LOGGER = LogManager.getLogger(NAME);
   private Handler handler;
 
@@ -52,8 +53,8 @@ public class AuthMod {
     ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, AuthModConfig.serverSpec);
     LOGGER.info(String.format("%s %s", NAME, VERSION));
     // Checking if a new version is available
-    try (BufferedInputStream in = new BufferedInputStream(new URL(versionURL).openStream())) {
-		byte dataBuffer[] = new byte[1024];
+    try (BufferedInputStream in = new BufferedInputStream(new URL(versionUrl).openStream())) {
+		byte[] dataBuffer = new byte[1024];
 	    String version = "";
 	    while ((in.read(dataBuffer, 0, 1024)) != -1) {
 	        version += new String(dataBuffer);
@@ -68,30 +69,32 @@ public class AuthMod {
   }
 
   private void serverStart(FMLServerStartingEvent event) {
-    if(AuthModConfig.get().enableAuthmod()) {
-      try {
-        boolean identifierRequired = AuthModConfig.get().identifierRequired.get();
-        GuardInterface guard = this.createGuard(AuthModConfig.get().dataSource.get(), identifierRequired);
-        this.handler = new Handler();
-        if(guard != null) {
-          if (AuthModConfig.get().enableRegister.get()) {
-            LOGGER.info("Registering /register command");
-            RegisterCommand.register(event.getCommandDispatcher(), this.handler, guard, identifierRequired);
+    if (FMLEnvironment.dist.isDedicatedServer()) {
+      if(AuthModConfig.get().enableAuthmod()) {
+        try {
+          boolean identifierRequired = AuthModConfig.get().identifierRequired.get();
+          GuardInterface guard = this.createGuard(AuthModConfig.get().dataSource.get(), identifierRequired);
+          this.handler = new Handler();
+          if(guard != null) {
+            if (AuthModConfig.get().enableRegister.get().booleanValue()) {
+              LOGGER.info("Registering /register command");
+              RegisterCommand.register(event.getCommandDispatcher(), this.handler, guard, identifierRequired);
+            }
+            if (AuthModConfig.get().enableLogin.get().booleanValue()) {
+              LOGGER.info("Registering /login command");
+              LoginCommand.register(event.getCommandDispatcher(), this.handler, guard, identifierRequired);
+              LOGGER.info("Registering /logged command");
+              LoggedCommand.register(event.getCommandDispatcher(), this.handler);
+            }
+            if (AuthModConfig.get().enableChangePassword.get().booleanValue()) {
+              LOGGER.info("Registering /changepassword command");
+              ChangePasswordCommand.register(event.getCommandDispatcher(), this.handler, guard);
+            }
+          } else {
+            LOGGER.warn(AuthMod.MODID + " is disabled because guard is NULL");
           }
-          if (AuthModConfig.get().enableLogin.get()) {
-            LOGGER.info("Registering /login command");
-            LoginCommand.register(event.getCommandDispatcher(), this.handler, guard, identifierRequired);
-            LOGGER.info("Registering /logged command");
-            LoggedCommand.register(event.getCommandDispatcher(), this.handler);
-          }
-          if (AuthModConfig.get().enableChangePassword.get()) {
-            LOGGER.info("Registering /changepassword command");
-            ChangePasswordCommand.register(event.getCommandDispatcher(), this.handler, guard);
-          }
-        } else {
-          LOGGER.warn(AuthMod.MODID + " is disabled because guard is NULL");
-        }
-      } catch(Exception e) { LOGGER.catching(e); }
+        } catch(Exception e) { LOGGER.catching(e); }
+      }
     }
   }
 
