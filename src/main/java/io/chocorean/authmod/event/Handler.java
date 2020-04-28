@@ -20,6 +20,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.HashMap;
@@ -63,14 +64,14 @@ public class Handler {
   @SubscribeEvent
   public static void onPlayerInteractEvent(PlayerInteractEvent event) {
     PlayerEntity player = event.getPlayer();
-    if (descriptors.containsKey(player)) {
+    if (descriptors.containsKey(player) && event.getSide() == LogicalSide.SERVER) {
       event.setCanceled(true);
     }
   }
 
   @SubscribeEvent
   public static void onPlayerTickEvent(TickEvent.PlayerTickEvent event) {
-    if (descriptors.containsKey(event.player)) {
+    if (descriptors.containsKey(event.player) && event.side == LogicalSide.SERVER) {
       PlayerPos pp = descriptors.get(event.player).getPosition();
       BlockPos pos = pp.getPosition();
       ((ServerPlayerEntity) event.player).connection.setPlayerLocation(pos.getX(), pos.getY(), pos.getZ(), 0, 0);
