@@ -14,8 +14,8 @@
 <a href="https://www.curseforge.com/minecraft/mc-mods/authmod" target="_blank">
     <img src="http://cf.way2muchnoise.eu/full_authmod_downloads(555-FF4C05-FFF-00000000-FFF).svg" alt="curseforge page"/>
 </a>
-<a href="https://img.shields.io/badge/forge%20version-1.15.1-blue.svg" target="_blank">
-    <img src="https://img.shields.io/badge/forge%20version-1.15.1-blue.svg" alt="forge version"/>
+<a href="https://img.shields.io/badge/forge%20version-1.15.2-blue.svg" target="_blank">
+    <img src="https://img.shields.io/badge/forge%20version-1.15.2-blue.svg" alt="forge version"/>
 </a>
 <a href="https://img.shields.io/badge/java-1.8-blue.svg" target="_blank">
     <img src="https://img.shields.io/badge/java-1.8-blue.svg" alt="java version" />
