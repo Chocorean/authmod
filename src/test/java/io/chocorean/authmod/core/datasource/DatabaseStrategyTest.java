@@ -31,8 +31,8 @@ class DatabaseStrategyTest {
   }
 
   @Test
-  void testConstructor() throws Exception {
-    new DatabaseStrategy(this.connectionFactory);
+  void testConstructor() {
+    assertDoesNotThrow(() -> new DatabaseStrategy(this.connectionFactory));
   }
 
   @Test
@@ -47,6 +47,7 @@ class DatabaseStrategyTest {
     Map<String, String> columns = new HashMap<>();
     columns.put(DatabaseStrategy.IDENTIFIER_COLUMN, "email");
     this.dataSource = new DatabaseStrategy("players", this.connectionFactory, columns, new BcryptPasswordHash());
+    assertTrue(this.dataSource.add(this.player));
   }
 
   @Test
@@ -55,7 +56,7 @@ class DatabaseStrategyTest {
   }
 
   @Test
-  void testSQLError() throws Exception {
+  void testAddSQLError() throws Exception {
     this.dataSource.add(this.player);
     Files.deleteIfExists(Paths.get(this.connectionFactory.getURL().split("sqlite:")[1]));
     assertNull(this.dataSource.find("test@test.com"), "The player should not exist");
@@ -95,6 +96,13 @@ class DatabaseStrategyTest {
   void testFindNullParams() {
     this.dataSource.add(this.player);
     assertNull(this.dataSource.find(null), "It should return null");
+  }
+
+  @Test
+  void testupdateSQLError() throws Exception {
+    this.dataSource.add(this.player);
+    Files.deleteIfExists(Paths.get(this.connectionFactory.getURL().split("sqlite:")[1]));
+    assertFalse(this.dataSource.update(this.player));
   }
 
 }

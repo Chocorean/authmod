@@ -9,9 +9,6 @@ import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.core.GuardInterface;
 import io.chocorean.authmod.core.PayloadInterface;
 import io.chocorean.authmod.core.exception.AuthmodError;
-import io.chocorean.authmod.core.exception.SamePasswordError;
-import io.chocorean.authmod.core.exception.WrongOldPasswordError;
-import io.chocorean.authmod.core.exception.WrongPasswordConfirmationError;
 import io.chocorean.authmod.event.Handler;
 import io.chocorean.authmod.util.text.ServerTranslationTextComponent;
 import net.minecraft.command.CommandSource;
@@ -35,12 +32,10 @@ public class ChangePasswordCommand  {
                 		guard,
                 		AuthMod.toPayload(
                 		    ctx.getSource().asPlayer(),
-                	        null,
                 	        StringArgumentType.getString(ctx, "old_password")
                 	    ),
                 		AuthMod.toPayload(
                           ctx.getSource().asPlayer(),
-                          null,
                           StringArgumentType.getString(ctx, "new_password"),
                           StringArgumentType.getString(ctx, "confirmation")
       ))))));
@@ -52,30 +47,15 @@ public class ChangePasswordCommand  {
       AuthMod.LOGGER.info(String.format("%s is using /changepassword", oldPayload.getPlayer().getUsername()));
       PlayerEntity player = source.asPlayer();
       if (handler.isLogged(player)) {
-          try {
-            guard.update(oldPayload, newPayload);
-          } catch (WrongOldPasswordError e) {
-            source.sendFeedback(new ServerTranslationTextComponent("changepassword.failure_old"), true);
-            return 0;
-          } catch (WrongPasswordConfirmationError e) {
-            source.sendFeedback(new ServerTranslationTextComponent("changepassword.failure_new"), true);
-            return 0;
-          } catch (SamePasswordError e) {
-            source.sendFeedback(new ServerTranslationTextComponent("changepassword.same_password"), true);
-            return 0;
-          } catch (AuthmodError e) {
-            AuthMod.LOGGER.catching(e);
-            return 0;
-          }
-          source.sendFeedback(new ServerTranslationTextComponent("changepassword.success"), true);
-          return 1;
+        guard.update(oldPayload, newPayload);
+        source.sendFeedback(new ServerTranslationTextComponent("changepassword.success"), true);
+        return 1;
       } else {
         source.sendFeedback(new ServerTranslationTextComponent("welcome"), true);
-        return 0;
       }
-    } catch (CommandSyntaxException e) {
-      source.sendFeedback(new ServerTranslationTextComponent(ExceptionToMessageMapper.getMessage(e), oldPayload.getPlayer().getUsername()), false);
-      return 1;
+    } catch (AuthmodError | CommandSyntaxException e) {
+      source.sendFeedback(new ServerTranslationTextComponent(ExceptionToMessageMapper.getMessage(e)), true);
     }
+    return 0;
   }
 }

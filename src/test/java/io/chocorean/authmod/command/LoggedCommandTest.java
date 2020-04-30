@@ -42,7 +42,7 @@ class LoggedCommandTest {
   @Test
   void testExecute() throws Exception {
     int res = LoggedCommand.execute(this.source, this.source.asPlayer(), this.handler);
-    assertEquals(1, res);
+    assertEquals(0, res);
     assertFalse(this.handler.isLogged(this.playerEntity));
   }
 
@@ -51,7 +51,7 @@ class LoggedCommandTest {
     handler.authorizePlayer(this.playerEntity);
     assertTrue(this.handler.isLogged(this.playerEntity));
     int res = LoggedCommand.execute(this.source, this.source.asPlayer(), this.handler);
-    assertEquals(1, res);
+    assertEquals(0, res);
     assertTrue(this.handler.isLogged(this.playerEntity));
   }
 

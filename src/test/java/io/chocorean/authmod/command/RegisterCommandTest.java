@@ -48,7 +48,7 @@ class RegisterCommandTest {
   @Test
   void testExecute() {
     int res = RegisterCommand.execute(this.source, this.handler, this.guard, this.payload);
-    assertEquals(1, res);
+    assertEquals(0, res);
     assertTrue(this.handler.isLogged(this.playerEntity));
   }
 
@@ -73,7 +73,7 @@ class RegisterCommandTest {
     this.payload = new Payload(this.player, new String[]{"elliotalderson@protonmail.ch", "MrRobot", "MrRobot"});
     this.guard = new DataSourceGuard(this.dataSource, true);
     int res = RegisterCommand.execute(this.source, this.handler, this.guard, this.payload);
-    assertEquals(1, res);
+    assertEquals(0, res);
     assertTrue(this.handler.isLogged(this.playerEntity));
   }
 
@@ -90,7 +90,7 @@ class RegisterCommandTest {
     handler.authorizePlayer(this.playerEntity);
     assertTrue(this.handler.isLogged(this.playerEntity));
     int res = RegisterCommand.execute(this.source, this.handler, this.guard, this.payload);
-    assertEquals(1, res);
+    assertEquals(0, res);
     assertTrue(this.handler.isLogged(this.playerEntity));
   }
 
@@ -118,7 +118,7 @@ class RegisterCommandTest {
     CommandSource secondSource = mock(CommandSource.class);
     when(secondSource.asPlayer()).thenReturn(secondPlayerEntity);
     int res = RegisterCommand.execute(secondSource, this.handler, this.guard, secondPayload);
-    assertEquals(1, res);
+    assertEquals(0, res);
     assertTrue(this.handler.isLogged(secondPlayerEntity));
   }
 }

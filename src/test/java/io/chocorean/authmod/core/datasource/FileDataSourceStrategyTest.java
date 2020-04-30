@@ -99,6 +99,20 @@ class FileDataSourceStrategyTest {
     assertFalse(res);
   }
 
+  @Test
+  void testUpdateNotExist() {
+    boolean res = this.dataSource.update(new DataSourcePlayer());
+    assertFalse(res);
+  }
+
+  @Test
+  void testUpdateFileFailed() throws Exception {
+    this.file.delete();
+    this.file.mkdirs();
+    boolean res = this.dataSource.update(null);
+    clean();
+    assertFalse(res);
+  }
 
   @Test
   void testWrongDataFile() throws Exception {

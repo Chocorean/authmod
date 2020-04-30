@@ -14,11 +14,17 @@ public class LoggedCommand  {
     dispatcher.register(Commands.literal("logged").executes(ctx -> execute(ctx.getSource(), ctx.getSource().asPlayer(), handler)));
   }
 
+  /**
+   * @param source
+   * @param player
+   * @param handler
+   * @return 0
+   */
   public static int execute(CommandSource source, PlayerEntity player, Handler handler) {
     AuthMod.LOGGER.info(String.format("%s is using /logged", player.getDisplayName().getString()));
     boolean logged = handler.isLogged(player);
     String translationKey = "logged." + (logged ? "yes" : "no");
     source.sendFeedback(new ServerTranslationTextComponent(translationKey), true);
-    return 1;
+    return 0;
   }
 }

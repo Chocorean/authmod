@@ -3,12 +3,7 @@ package io.chocorean.authmod.core;
 import io.chocorean.authmod.core.datasource.DataSourcePlayer;
 import io.chocorean.authmod.core.datasource.DataSourcePlayerInterface;
 import io.chocorean.authmod.core.datasource.DataSourceStrategyInterface;
-import io.chocorean.authmod.core.exception.AuthmodError;
-import io.chocorean.authmod.core.exception.BannedPlayerError;
-import io.chocorean.authmod.core.exception.PlayerAlreadyExistError;
-import io.chocorean.authmod.core.exception.PlayerNotFoundError;
-import io.chocorean.authmod.core.exception.SamePasswordError;
-import io.chocorean.authmod.core.exception.WrongOldPasswordError;
+import io.chocorean.authmod.core.exception.*;
 import io.chocorean.authmod.core.validator.DataSourceLoginValidator;
 import io.chocorean.authmod.core.validator.DataSourceRegistrationValidator;
 import io.chocorean.authmod.core.validator.ValidatorInterface;
@@ -38,7 +33,10 @@ public class DataSourceGuard implements GuardInterface {
       throw new BannedPlayerError();
     }
     String password = payload.getArgs()[payload.getArgs().length - 1];
-    return this.datasource.getHashPassword().check(foundPlayer.getPassword(), password);
+    if(!this.datasource.getHashPassword().check(foundPlayer.getPassword(), password)) {
+      throw new WrongPasswordError();
+    }
+    return true;
   }
 
   @Override

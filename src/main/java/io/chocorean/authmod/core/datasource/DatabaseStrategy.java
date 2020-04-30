@@ -42,7 +42,7 @@ public class DatabaseStrategy implements DataSourceStrategyInterface {
   @Override
   public DataSourcePlayerInterface find(String identifier) {
     try (Connection conn = this.connectionFactory.getConnection();
-      PreparedStatement stmt = conn.prepareStatement(String.format("SELECT * FROM %s WHERE %s = ?", this.table, this.columns.get(IDENTIFIER_COLUMN)))) {
+         PreparedStatement stmt = conn.prepareStatement(String.format("SELECT * FROM %s WHERE %s = ?", this.table, this.columns.get(IDENTIFIER_COLUMN)))) {
       stmt.setString(1, identifier);
       ResultSet rs = stmt.executeQuery();
       return this.createPlayer(rs);
@@ -68,7 +68,7 @@ public class DatabaseStrategy implements DataSourceStrategyInterface {
       stmt.setString(2, player.getPassword());
       stmt.setString(3, player.getUsername());
       if (player.isPremium())
-         stmt.setString(4, player.getUuid());
+        stmt.setString(4, player.getUuid());
       else
         stmt.setNull(4, Types.VARCHAR);
       stmt.executeUpdate();
@@ -83,25 +83,22 @@ public class DatabaseStrategy implements DataSourceStrategyInterface {
   public boolean exist(DataSourcePlayerInterface player) {
     return this.find(player.getIdentifier()) != null;
   }
-  
+
   @Override
   public boolean update(DataSourcePlayerInterface player) {
-    if (this.exist(player)) {
-      String query =
-          String.format(
-            "UPDATE %s SET %s = ? WHERE %s = ?;",
-            this.table,
-            this.columns.get(PASSWORD_COLUMN),
-            this.columns.get(USERNAME_COLUMN));
-      try (Connection conn = this.connectionFactory.getConnection();
-      PreparedStatement stmt = conn.prepareStatement(query)) {
-        stmt.setString(1, player.getPassword());
-        stmt.setString(2, player.getUsername());
-        stmt.executeUpdate();
-        return true;
-      } catch (Exception e) {
-        AuthMod.LOGGER.catching(e);
-      }
+    String query =
+      String.format(
+        "UPDATE %s SET %s = ? WHERE %s = ?;",
+        this.table,
+        this.columns.get(PASSWORD_COLUMN),
+        this.columns.get(USERNAME_COLUMN));
+    try (Connection conn = this.connectionFactory.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(query)) {
+      stmt.setString(1, player.getPassword());
+      stmt.setString(2, player.getUsername());
+      return stmt.executeUpdate() == 1;
+    } catch (Exception e) {
+      AuthMod.LOGGER.catching(e);
     }
     return false;
   }
@@ -113,16 +110,16 @@ public class DatabaseStrategy implements DataSourceStrategyInterface {
 
   private void checkTable() throws Exception {
     try (Connection connection = this.connectionFactory.getConnection();
-        PreparedStatement stmt =
-          connection.prepareStatement(
-            String.format(
-              "SELECT %s,%s,%s,%s,%s FROM %s",
-              this.columns.getOrDefault(IDENTIFIER_COLUMN, IDENTIFIER_COLUMN),
-              this.columns.getOrDefault(BANNED_COLUMN, BANNED_COLUMN),
-              this.columns.getOrDefault(PASSWORD_COLUMN, PASSWORD_COLUMN),
-              this.columns.getOrDefault(USERNAME_COLUMN, USERNAME_COLUMN),
-              this.columns.getOrDefault(UUID_COLUMN, UUID_COLUMN),
-              this.table))) {
+         PreparedStatement stmt =
+           connection.prepareStatement(
+             String.format(
+               "SELECT %s,%s,%s,%s,%s FROM %s",
+               this.columns.getOrDefault(IDENTIFIER_COLUMN, IDENTIFIER_COLUMN),
+               this.columns.getOrDefault(BANNED_COLUMN, BANNED_COLUMN),
+               this.columns.getOrDefault(PASSWORD_COLUMN, PASSWORD_COLUMN),
+               this.columns.getOrDefault(USERNAME_COLUMN, USERNAME_COLUMN),
+               this.columns.getOrDefault(UUID_COLUMN, UUID_COLUMN),
+               this.table))) {
       stmt.executeQuery();
     }
   }

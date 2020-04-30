@@ -67,8 +67,7 @@ public class FileDataSourceStrategy implements DataSourceStrategyInterface {
     try {
       this.reloadFile();
       if (this.exist(player)) {
-        int index = this.players.indexOf(this.find(player.getIdentifier()));
-        this.players.remove(index);
+        this.players.remove(this.find(player.getIdentifier()));
         return this.add(player);
       }
     } catch (Exception e) {

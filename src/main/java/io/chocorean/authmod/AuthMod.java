@@ -52,20 +52,7 @@ public class AuthMod {
     MinecraftForge.EVENT_BUS.addListener( this::serverStart );
     ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, AuthModConfig.serverSpec);
     LOGGER.info(String.format("%s %s", NAME, VERSION));
-    // Checking if a new version is available
-    try (BufferedInputStream in = new BufferedInputStream(new URL(versionUrl).openStream())) {
-		byte[] dataBuffer = new byte[1024];
-	    String version = "";
-	    while ((in.read(dataBuffer, 0, 1024)) != -1) {
-	        version += new String(dataBuffer);
-	    }
-	    String pattern = "[^a-zA-Z0-9.]";
-	    version = version.replaceAll(pattern, "");
-	    if (!version.contentEquals(VERSION))
-	      LOGGER.warn(String.format("An update is available! '%s' -> '%s'", VERSION, version));
-	} catch (Exception e) {
-		LOGGER.catching(e);
-	}
+    this.checkForUpdates();
   }
 
   private void serverStart(FMLServerStartingEvent event) {
@@ -76,17 +63,17 @@ public class AuthMod {
           GuardInterface guard = this.createGuard(AuthModConfig.get().dataSource.get(), identifierRequired);
           this.handler = new Handler();
           if(guard != null) {
-            if (AuthModConfig.get().enableRegister.get().booleanValue()) {
+            if (AuthModConfig.get().enableRegister.get()) {
               LOGGER.info("Registering /register command");
               RegisterCommand.register(event.getCommandDispatcher(), this.handler, guard, identifierRequired);
             }
-            if (AuthModConfig.get().enableLogin.get().booleanValue()) {
+            if (AuthModConfig.get().enableLogin.get()) {
               LOGGER.info("Registering /login command");
               LoginCommand.register(event.getCommandDispatcher(), this.handler, guard, identifierRequired);
               LOGGER.info("Registering /logged command");
               LoggedCommand.register(event.getCommandDispatcher(), this.handler);
             }
-            if (AuthModConfig.get().enableChangePassword.get().booleanValue()) {
+            if (AuthModConfig.get().enableChangePassword.get()) {
               LOGGER.info("Registering /changepassword command");
               ChangePasswordCommand.register(event.getCommandDispatcher(), this.handler, guard);
             }
@@ -99,7 +86,7 @@ public class AuthMod {
   }
 
   private GuardInterface createGuard(AuthModConfig.DataSource ds, boolean identifierRequired) throws Exception {
-    DataSourceStrategyInterface datasource = null;
+    DataSourceStrategyInterface datasource;
     switch (ds) {
       case DATABASE:
         Map<String, String> columns = new HashMap<>();
@@ -123,19 +110,32 @@ public class AuthMod {
         datasource = new FileDataSourceStrategy(Paths.get(FMLPaths.CONFIGDIR.get().toString(), MODID + ".csv").toFile());
         break;
       case NONE:
+      default:
         return null;
-    }
-    if(datasource == null) {
-      return null;
     }
     LOGGER.info("Use guard " + datasource);
     return new DataSourceGuard(datasource, identifierRequired);
   }
 
+  private void checkForUpdates() {
+    try (BufferedInputStream in = new BufferedInputStream(new URL(versionUrl).openStream())) {
+      byte[] dataBuffer = new byte[1024];
+      StringBuilder version = new StringBuilder();
+      while ((in.read(dataBuffer, 0, 1024)) != -1) {
+        version.append(new String(dataBuffer));
+      }
+      String pattern = "[^a-zA-Z0-9.]";
+      version = new StringBuilder(version.toString().replaceAll(pattern, ""));
+      if (!version.toString().contentEquals(VERSION))
+        LOGGER.warn(String.format("An update is available! '%s' -> '%s'", VERSION, version.toString()));
+    } catch (Exception e) {
+      LOGGER.catching(e);
+    }
+  }
+
   public static PayloadInterface toPayload(PlayerEntity entity, String ...args) {
-    String uuid = null;
     // TODO when offline, UUID is not the mojang UUID
-    uuid = entity.getUUID(entity.getGameProfile()).toString();
+    String uuid = entity.getUUID(entity.getGameProfile()).toString();
     AuthMod.LOGGER.info(uuid);
     return new Payload(new Player(entity.getDisplayName().getString(), uuid),
       Arrays.stream(args).filter(Objects::nonNull).toArray(String[]::new));

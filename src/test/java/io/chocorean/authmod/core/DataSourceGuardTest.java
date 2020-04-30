@@ -5,10 +5,7 @@ import io.chocorean.authmod.core.datasource.DatabaseStrategy;
 import io.chocorean.authmod.core.datasource.FileDataSourceStrategy;
 import io.chocorean.authmod.core.datasource.db.ConnectionFactoryInterface;
 import io.chocorean.authmod.core.datasource.db.DBHelpers;
-import io.chocorean.authmod.core.exception.BannedPlayerError;
-import io.chocorean.authmod.core.exception.PlayerAlreadyExistError;
-import io.chocorean.authmod.core.exception.PlayerNotFoundError;
-import io.chocorean.authmod.core.exception.WrongPasswordConfirmationError;
+import io.chocorean.authmod.core.exception.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -57,8 +54,8 @@ class DataSourceGuardTest {
   public void testAuthenticate(DataSourceStrategyInterface impl) throws Exception {
     init(impl);
     this.guard.register(registrationPayload);
-    PayloadInterface payload = new Payload(this.player, new String[]{"rootroot"});
-    assertFalse(this.guard.authenticate(payload));
+    PayloadInterface payload = new Payload(this.player, new String[]{this.password});
+    assertTrue(this.guard.authenticate(payload));
   }
 
   @ParameterizedTest(name = "with {0}")
@@ -67,7 +64,7 @@ class DataSourceGuardTest {
     init(impl);
     this.guard.register(registrationPayload);
     this.loginPayload = new Payload(this.player, new String[]{"qwertyqwerty"});
-    assertFalse(this.guard.authenticate(loginPayload));
+    assertThrows(WrongPasswordError.class, () -> this.guard.authenticate(loginPayload));
   }
 
   @ParameterizedTest(name = "with {0}")
@@ -119,6 +116,48 @@ class DataSourceGuardTest {
     this.guard = new DataSourceGuard(dataSourceStrategy, true);
     this.registrationPayload = new Payload(this.player, new String[]{"Crumb", this.password, this.password});
     assertTrue(this.guard.register(this.registrationPayload));
+  }
+
+  @ParameterizedTest(name = "with {0}")
+  @MethodSource("parameters")
+  void testChangePassword(DataSourceStrategyInterface impl) throws Exception {
+    init(impl);
+    this.guard.register(registrationPayload);
+    PayloadInterface payload = new Payload(this.player, new String[]{this.password});
+    assertTrue(this.guard.authenticate(payload));
+    String newPassword = "qwertyazerty";
+    assertTrue(this.guard.update(payload, new Payload(this.player, new String[]{newPassword, newPassword})));
+  }
+
+  @ParameterizedTest(name = "with {0}")
+  @MethodSource("parameters")
+  void testChangeNotExist(DataSourceStrategyInterface impl) throws Exception {
+    init(impl);
+    this.guard.register(registrationPayload);
+    PayloadInterface payload = new Payload(this.player, new String[]{this.password});
+    assertTrue(this.guard.authenticate(payload));
+    String newPassword = "qwertyazerty";
+    assertFalse(this.guard.update(payload, new Payload(new Player(), new String[]{newPassword, newPassword})));
+  }
+
+  @ParameterizedTest(name = "with {0}")
+  @MethodSource("parameters")
+  void testChangePasswordSamePassword(DataSourceStrategyInterface impl) throws Exception {
+    init(impl);
+    this.guard.register(registrationPayload);
+    PayloadInterface payload = new Payload(this.player, new String[]{this.password});
+    assertTrue(this.guard.authenticate(payload));
+    assertThrows(SamePasswordError.class, () -> this.guard.update(payload, new Payload(this.player, new String[]{this.password, this.password})));
+  }
+
+  @ParameterizedTest(name = "with {0}")
+  @MethodSource("parameters")
+  void testChangePasswordWrongConfirmation(DataSourceStrategyInterface impl) throws Exception {
+    init(impl);
+    this.guard.register(registrationPayload);
+    PayloadInterface payload = new Payload(this.player, new String[]{this.password});
+    assertTrue(this.guard.authenticate(payload));
+    assertThrows(WrongPasswordConfirmationError.class, () -> this.guard.update(payload, new Payload(this.player, new String[]{"Provencal le gaulois", "Perceval le gallois"})));
   }
 
   @ParameterizedTest(name = "with {0}")

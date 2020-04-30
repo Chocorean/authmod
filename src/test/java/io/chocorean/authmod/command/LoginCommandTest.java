@@ -56,7 +56,7 @@ class LoginCommandTest {
   @Test
   void testExecute() {
     int res = LoginCommand.execute(this.source, this.handler, this.guard, this.payload);
-    assertEquals(1, res);
+    assertEquals(0, res);
     assertTrue(this.handler.isLogged(this.playerEntity));
   }
 
@@ -81,7 +81,7 @@ class LoginCommandTest {
     this.payload = new Payload(this.player, new String[]{this.player.getUsername(), this.password});
     this.guard = new DataSourceGuard(this.dataSource, true);
     int res = LoginCommand.execute(this.source, this.handler, this.guard, this.payload);
-    assertEquals(1, res);
+    assertEquals(0, res);
     assertTrue(this.handler.isLogged(this.playerEntity));
   }
 
@@ -115,7 +115,7 @@ class LoginCommandTest {
     handler.authorizePlayer(playerEntity);
     assertTrue(this.handler.isLogged(this.playerEntity));
     int res = LoginCommand.execute(this.source, this.handler, this.guard, this.payload);
-    assertEquals(1, res);
+    assertEquals(0, res);
     assertTrue(this.handler.isLogged(this.playerEntity));
   }
 

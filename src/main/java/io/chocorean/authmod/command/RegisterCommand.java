@@ -7,7 +7,6 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.core.*;
 import io.chocorean.authmod.core.exception.AuthmodError;
-import io.chocorean.authmod.core.exception.PlayerAlreadyExistError;
 import io.chocorean.authmod.event.Handler;
 import io.chocorean.authmod.util.text.ServerTranslationTextComponent;
 import net.minecraft.command.CommandSource;
@@ -42,6 +41,13 @@ public class RegisterCommand {
     dispatcher.register(builder);
   }
 
+  /**
+   * @param source
+   * @param handler
+   * @param guard The guard to use for registration.
+   * @param payload the user-provided payload.
+   * @return 1 if something goes wrong, 0 otherwise.
+   */
   public static int execute(CommandSource source, Handler handler, GuardInterface guard, PayloadInterface payload) {
     try {
       AuthMod.LOGGER.info(String.format("%s is using /register", payload.getPlayer().getUsername()));
@@ -52,13 +58,11 @@ public class RegisterCommand {
           source.sendFeedback(new ServerTranslationTextComponent("register.success"), true);
         }
       }
-    } catch (PlayerAlreadyExistError e) {
-      source.sendFeedback(new ServerTranslationTextComponent(ExceptionToMessageMapper.getMessage(e)), true);
+      return 0;
     } catch (AuthmodError | CommandSyntaxException e) {
-      AuthMod.LOGGER.catching(e);
       source.sendFeedback(new ServerTranslationTextComponent(ExceptionToMessageMapper.getMessage(e)), true);
+      return 1;
     }
-    return 1;
   }
 }
 

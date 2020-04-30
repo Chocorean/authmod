@@ -33,19 +33,24 @@ public class LoginCommand {
     dispatcher.register(builder);
   }
 
+  /**
+   * @param source
+   * @param handler
+   * @param guard the guard to use for login.
+   * @param payload the user-provided payload.
+   * @return 1 if something goes wrong, 0 otherwise.
+   */
   public static int execute(CommandSource source, Handler handler, GuardInterface guard, PayloadInterface payload) {
     try {
       AuthMod.LOGGER.info(String.format("%s is using /login", payload.getPlayer().getUsername()));
       PlayerEntity player = source.asPlayer();
-      if (!handler.isLogged(player)) {
-        if (guard.authenticate(payload)) {
+      if (!handler.isLogged(player) && guard.authenticate(payload)) {
           handler.authorizePlayer(player);
           source.sendFeedback(new ServerTranslationTextComponent("login.success"), true);
-        } else
-          source.sendFeedback(new ServerTranslationTextComponent("login.wrongPassword"), true);
       }
+      return 0;
     } catch (AuthmodError | CommandSyntaxException e) {
-      source.sendFeedback(new ServerTranslationTextComponent(ExceptionToMessageMapper.getMessage(e), payload.getPlayer().getUsername()), false);
+      source.sendFeedback(new ServerTranslationTextComponent(ExceptionToMessageMapper.getMessage(e), payload.getPlayer().getUsername()), true);
     }
     return 1;
   }

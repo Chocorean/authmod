@@ -15,7 +15,7 @@ class ImARobotGuard implements GuardInterface {
   }
 
   @Override
-  public boolean update(PayloadInterface oldPayload, PayloadInterface newPayload) throws AuthmodError {
+  public boolean update(PayloadInterface oldPayload, PayloadInterface newPayload) {
     return true;
   }
 

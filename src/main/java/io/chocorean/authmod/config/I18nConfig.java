@@ -1,7 +1,16 @@
 package io.chocorean.authmod.config;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import io.chocorean.authmod.AuthMod;
+import io.chocorean.authmod.util.text.ServerLanguageMap;
+import net.minecraft.util.JSONUtils;
 import net.minecraftforge.common.ForgeConfigSpec;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -14,23 +23,17 @@ public class I18nConfig {
   public I18nConfig(ForgeConfigSpec.Builder builder) {
     builder.push("I18n");
     this.mappings = new HashMap<>();
-    this.put(builder, "error", "Message displayed when an unknown error occurs.");
-    this.put(builder, "welcome", "Message displayed to a player when he/she joins the server.");
-    this.put(builder, "banned", "Message displayed when a banned player tries to connect.");
-    this.put(builder, "login.usage","Usage for /login");
-    this.put(builder, "login.success","Message when the player successfully signed in.");
-    this.put(builder, "login.wrongPassword", "Message when the player entered a wrong password.");
-    this.put(builder, "register.exist","Message when a player tries to sign up but am account already exists.");
-    this.put(builder, "register.usage","Usage for /register");
-    this.put(builder, "register.success","Message when the player successfully registered.");
-    this.put(builder, "register.wrongPassword","The passwords doesn't match. Please retry");
-    this.put(builder, "logged.yes","Message when the player is logged");
-    this.put(builder, "logged.no","Message when the player is not logged");
-    this.put(builder, "logged.usage","Usage for /logged");
-    this.put(builder, "changepassword.success", "Message when the player successfully change password.");
-    this.put(builder, "changepassword.failure_old", "Message when the player fails to change password due to old password.");
-    this.put(builder, "changepassword.failure_new", "Message when the player fails to change password due to new password.");
-    this.put(builder, "changepassword.usage", "Usage for /changepassword");
+    String path = "/assets/authmod/lang/en_us.json";
+    try (InputStream inputstream = ServerLanguageMap.class.getResourceAsStream(path)) {
+      JsonElement jsonelement = (new Gson()).fromJson(new InputStreamReader(inputstream, StandardCharsets.UTF_8), JsonElement.class);
+      JsonObject jsonobject = JSONUtils.getJsonObject(jsonelement, "strings");
+      for(Map.Entry<String, JsonElement> entry : jsonobject.entrySet()) {
+        String s = ServerLanguageMap.NUMERIC_VARIABLE_PATTERN.matcher(JSONUtils.getString(entry.getValue(), entry.getKey())).replaceAll("%$1s");
+        this.put(builder, entry.getKey(), s);
+      }
+    } catch (Exception exception) {
+      AuthMod.LOGGER.catching(exception);
+    }
     builder.pop();
   }
 

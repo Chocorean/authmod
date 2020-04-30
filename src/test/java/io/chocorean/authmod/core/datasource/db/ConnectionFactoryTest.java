@@ -19,6 +19,20 @@ class ConnectionFactoryTest {
   }
 
   @Test
+  void testConstructorUrlWithUser() throws Exception {
+    DBHelpers.initDatabaseFile();
+    ConnectionFactoryInterface connectionFactory = new ConnectionFactory(
+      "sqlite",
+      null,
+      0,
+      DBHelpers.file.getAbsolutePath(),
+      "root",
+      "rootroot", driver);
+    Connection connection = connectionFactory.getConnection();
+    assertNotNull(connection, "Connection should be configured correctly");
+  }
+
+  @Test
   void testConstructorParamsSqlite() throws Exception {
     DBHelpers.initDatabaseFile();
     ConnectionFactoryInterface connectionFactory = new ConnectionFactory(
