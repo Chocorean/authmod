@@ -9,5 +9,5 @@ public interface GuardInterface {
 
   boolean register(PayloadInterface payload) throws AuthmodError;
   
-  boolean update(PayloadInterface oldPayload, PayloadInterface newPayload) throws AuthmodError;
+  boolean updatePassword(PayloadInterface newPayload) throws AuthmodError;
 }

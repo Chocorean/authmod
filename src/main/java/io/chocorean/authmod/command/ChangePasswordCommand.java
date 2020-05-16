@@ -22,40 +22,46 @@ public class ChangePasswordCommand  {
                               GuardInterface guard) {
     LiteralArgumentBuilder<CommandSource> builder = Commands.literal("changepassword");
     builder.then(
-        Commands.argument("old_password", StringArgumentType.string())
-          .then(
-              Commands.argument("new_password", StringArgumentType.string())
-                .then(Commands.argument("confirmation", StringArgumentType.string())
-                  .executes(
-                    ctx -> execute(ctx.getSource(),
-                	    handler,
-                		guard,
-                		AuthMod.toPayload(
-                		    ctx.getSource().asPlayer(),
-                	        StringArgumentType.getString(ctx, "old_password")
-                	    ),
-                		AuthMod.toPayload(
-                          ctx.getSource().asPlayer(),
-                          StringArgumentType.getString(ctx, "new_password"),
-                          StringArgumentType.getString(ctx, "confirmation")
-      ))))));
+      Commands.argument("old_password", StringArgumentType.string())
+        .then(
+          Commands.argument("new_password", StringArgumentType.string())
+            .then(Commands.argument("confirmation", StringArgumentType.string())
+              .executes(
+                ctx -> execute(ctx.getSource(),
+                  handler,
+                  guard,
+                  AuthMod.toPayload(
+                    ctx.getSource().asPlayer(),
+                    StringArgumentType.getString(ctx, "old_password"),
+                    StringArgumentType.getString(ctx, "new_password"),
+                    StringArgumentType.getString(ctx, "confirmation")
+                  ))))));
     dispatcher.register(builder);
   }
 
-  public static int execute(CommandSource source, Handler handler, GuardInterface guard, PayloadInterface oldPayload, PayloadInterface newPayload) {
+  /**
+   *
+   * @param source
+   * @param handler
+   * @param guard
+   * @param payload
+   * @return 1 if something goes wrong, 0 otherwise.
+   */
+  public static int execute(CommandSource source, Handler handler, GuardInterface guard, PayloadInterface payload) {
     try {
-      AuthMod.LOGGER.info(String.format("%s is using /changepassword", oldPayload.getPlayer().getUsername()));
+      AuthMod.LOGGER.info(String.format("%s is using /changepassword", payload.getPlayer().getUsername()));
       PlayerEntity player = source.asPlayer();
       if (handler.isLogged(player)) {
-        guard.update(oldPayload, newPayload);
+        guard.updatePassword(payload);
         source.sendFeedback(new ServerTranslationTextComponent("changepassword.success"), true);
-        return 1;
-      } else {
+        return 0;
+      }
+      else {
         source.sendFeedback(new ServerTranslationTextComponent("welcome"), true);
       }
     } catch (AuthmodError | CommandSyntaxException e) {
       source.sendFeedback(new ServerTranslationTextComponent(ExceptionToMessageMapper.getMessage(e)), true);
     }
-    return 0;
+    return 1;
   }
 }

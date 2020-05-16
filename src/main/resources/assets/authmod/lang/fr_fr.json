@@ -13,11 +13,10 @@
   "authmod.logged.usage": "/logged - Vous informe si vous êtes authentifié.",
   "authmod.login.wrongUUID": "Mauvais UUID.",
   "authmod.login.wrongUsername": "Votre username ne correspond à celui enregistré.",
-  "authmod.register.exist": "Quelqu'un a déjà utilisé cet identifiant.",
+  "authmod.register.exist": "Quelqu'un a déjà utilisé l'identifiant %s.",
   "authmod.register.usage": "/register <ID> <password> <confirmation> - Permet de vous enregistrer sur ce serveur.",
   "authmod.register.success": "Tu es enregistré, have fun!",
   "authmod.changepassword.success": "Mot de passe changé!",
-  "authmod.changepassword.failure_old": "Mauvais mot de passe.",
-  "authmod.changepassword.same_password": "Le nouveau mot de passe doit être différent du précédent.",
+  "authmod.changepassword.samePassword": "Le nouveau mot de passe doit être différent du précédent.",
   "authmod.changepassword.usage": "/changepassword <old_password> <new_password> <new_password> - Change votre mot de passe."
 }

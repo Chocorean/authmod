@@ -33,7 +33,7 @@ class ImARobotGuardTest {
   
   @Test
   public void testUpdate() throws AuthmodError {
-    assertTrue(this.guard.update(null, null));
+    assertTrue(this.guard.updatePassword(null));
   }
 
 }

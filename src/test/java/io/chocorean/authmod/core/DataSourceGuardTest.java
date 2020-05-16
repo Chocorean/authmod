@@ -126,7 +126,7 @@ class DataSourceGuardTest {
     PayloadInterface payload = new Payload(this.player, new String[]{this.password});
     assertTrue(this.guard.authenticate(payload));
     String newPassword = "qwertyazerty";
-    assertTrue(this.guard.update(payload, new Payload(this.player, new String[]{newPassword, newPassword})));
+    assertTrue(this.guard.updatePassword(new Payload(this.player, new String[]{this.password, newPassword, newPassword})));
   }
 
   @ParameterizedTest(name = "with {0}")
@@ -137,7 +137,7 @@ class DataSourceGuardTest {
     PayloadInterface payload = new Payload(this.player, new String[]{this.password});
     assertTrue(this.guard.authenticate(payload));
     String newPassword = "qwertyazerty";
-    assertFalse(this.guard.update(payload, new Payload(new Player(), new String[]{newPassword, newPassword})));
+    assertFalse(this.guard.updatePassword(new Payload(new Player(), new String[]{this.password, newPassword, newPassword})));
   }
 
   @ParameterizedTest(name = "with {0}")
@@ -147,7 +147,7 @@ class DataSourceGuardTest {
     this.guard.register(registrationPayload);
     PayloadInterface payload = new Payload(this.player, new String[]{this.password});
     assertTrue(this.guard.authenticate(payload));
-    assertThrows(SamePasswordError.class, () -> this.guard.update(payload, new Payload(this.player, new String[]{this.password, this.password})));
+    assertThrows(SamePasswordError.class, () -> this.guard.updatePassword(new Payload(this.player, new String[]{this.password, this.password, this.password})));
   }
 
   @ParameterizedTest(name = "with {0}")
@@ -157,7 +157,7 @@ class DataSourceGuardTest {
     this.guard.register(registrationPayload);
     PayloadInterface payload = new Payload(this.player, new String[]{this.password});
     assertTrue(this.guard.authenticate(payload));
-    assertThrows(WrongPasswordConfirmationError.class, () -> this.guard.update(payload, new Payload(this.player, new String[]{"Provencal le gaulois", "Perceval le gallois"})));
+    assertThrows(WrongPasswordConfirmationError.class, () -> this.guard.updatePassword(new Payload(this.player, new String[]{this.password, "Provencal le gaulois", "Perceval le gallois"})));
   }
 
   @ParameterizedTest(name = "with {0}")

@@ -21,7 +21,6 @@ class PlayerTest {
     assertEquals(this.uuid, this.player.getUuid(), "The UUID format should be X-X-X-X-X");
   }
 
-
   @Test
   void testSetUuidLongFormat() {
     this.player.setUuid(this.uuid);

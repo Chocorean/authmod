@@ -33,7 +33,24 @@ public class FileDataSourceStrategy implements DataSourceStrategyInterface {
       if (identifier != null) {
         return this.players
           .stream()
-          .filter(tmp -> tmp.getIdentifier().equals(identifier))
+          .filter(tmp -> tmp.getIdentifier().contentEquals(identifier))
+          .findFirst()
+          .orElse(null);
+      }
+    } catch (IOException e) {
+      AuthMod.LOGGER.catching(e);
+    }
+    return null;
+  }
+
+  @Override
+  public DataSourcePlayerInterface findByUsername(String username) {
+    try {
+      this.reloadFile();
+      if (username != null) {
+        return this.players
+          .stream()
+          .filter(tmp -> tmp.getUsername().contentEquals(username))
           .findFirst()
           .orElse(null);
       }
@@ -63,7 +80,7 @@ public class FileDataSourceStrategy implements DataSourceStrategyInterface {
   }
   
   @Override
-  public boolean update(DataSourcePlayerInterface player) {
+  public boolean updatePassword(DataSourcePlayerInterface player) {
     try {
       this.reloadFile();
       if (this.exist(player)) {

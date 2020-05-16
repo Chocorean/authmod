@@ -19,8 +19,7 @@ public class ExceptionToMessageMapper {
     messages.put(PlayerNotFoundError.class, ServerLanguageMap.getInstance().translateKey("login.notFound"));
     messages.put(PlayerAlreadyExistError.class, ServerLanguageMap.getInstance().translateKey("register.exist"));
     messages.put(WrongRegisterUsageError.class, ServerLanguageMap.getInstance().translateKey("register.usage"));
-    messages.put(WrongOldPasswordError.class, ServerLanguageMap.getInstance().translateKey("changepassword.failure_old"));
-    messages.put(SamePasswordError.class, ServerLanguageMap.getInstance().translateKey("changepassword.same_password"));
+    messages.put(SamePasswordError.class, ServerLanguageMap.getInstance().translateKey("changepassword.samePassword"));
     messages.put(AuthmodError.class, ServerLanguageMap.getInstance().translateKey("error"));
   }
 

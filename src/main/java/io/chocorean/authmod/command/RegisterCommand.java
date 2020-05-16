@@ -3,6 +3,7 @@ package io.chocorean.authmod.command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.core.*;
@@ -20,24 +21,22 @@ public class RegisterCommand {
                               GuardInterface guard,
                               boolean identifierRequired) {
     LiteralArgumentBuilder<CommandSource> builder = Commands.literal("register");
-    if (identifierRequired) {
-      builder.then(Commands.argument("id", StringArgumentType.word()));
-    }
-    builder.then(
-      Commands.argument("password", StringArgumentType.string())
-        .then(
-          Commands.argument("confirmation", StringArgumentType.string())
-            .executes(ctx -> execute(
-              ctx.getSource(),
-              handler,
-              guard,
-              AuthMod.toPayload(
-                ctx.getSource().asPlayer(),
-                identifierRequired ? StringArgumentType.getString(ctx, "id") : null,
-                StringArgumentType.getString(ctx, "password"),
-                StringArgumentType.getString(ctx, "confirmation"))))
-        )
-    );
+    RequiredArgumentBuilder<CommandSource, String> passwordArgs = Commands.argument("password", StringArgumentType.string())
+      .then(
+        Commands.argument("confirmation", StringArgumentType.string())
+          .executes(ctx -> execute(
+            ctx.getSource(),
+            handler,
+            guard,
+            AuthMod.toPayload(
+              ctx.getSource().asPlayer(),
+              identifierRequired ? StringArgumentType.getString(ctx, "id") : null,
+              StringArgumentType.getString(ctx, "password"),
+              StringArgumentType.getString(ctx, "confirmation")))));
+      builder.then(identifierRequired
+        ? Commands.argument("id", StringArgumentType.word()).then(passwordArgs)
+        : passwordArgs
+      );
     dispatcher.register(builder);
   }
 
@@ -49,6 +48,7 @@ public class RegisterCommand {
    * @return 1 if something goes wrong, 0 otherwise.
    */
   public static int execute(CommandSource source, Handler handler, GuardInterface guard, PayloadInterface payload) {
+
     try {
       AuthMod.LOGGER.info(String.format("%s is using /register", payload.getPlayer().getUsername()));
       PlayerEntity player = source.asPlayer();
@@ -60,7 +60,7 @@ public class RegisterCommand {
       }
       return 0;
     } catch (AuthmodError | CommandSyntaxException e) {
-      source.sendFeedback(new ServerTranslationTextComponent(ExceptionToMessageMapper.getMessage(e)), true);
+      source.sendFeedback(new ServerTranslationTextComponent(ExceptionToMessageMapper.getMessage(e), payload.getPlayer().getUsername()), true);
       return 1;
     }
   }

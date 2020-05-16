@@ -5,11 +5,11 @@ import io.chocorean.authmod.core.exception.AuthmodError;
 import io.chocorean.authmod.core.exception.WrongPasswordConfirmationError;
 import io.chocorean.authmod.core.exception.WrongRegisterUsageError;
 
-public class DataSourceRegistrationValidator implements ValidatorInterface {
+public class RegistrationValidator implements ValidatorInterface {
 
   private final boolean indentifierRequired;
 
-  public DataSourceRegistrationValidator(boolean identifierRequired) {
+  public RegistrationValidator(boolean identifierRequired) {
     this.indentifierRequired = identifierRequired;
   }
 

@@ -56,4 +56,9 @@ class BcryptPasswordHashTest {
     assertFalse(this.passwordHash.check(null, this.password));
   }
 
+  @Test
+  public void testCheckNotHash() {
+    assertFalse(this.passwordHash.check("pelegrino", this.password));
+  }
+
 }

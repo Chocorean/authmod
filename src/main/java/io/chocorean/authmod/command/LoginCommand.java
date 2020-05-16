@@ -3,11 +3,10 @@ package io.chocorean.authmod.command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.core.GuardInterface;
 import io.chocorean.authmod.core.PayloadInterface;
-import io.chocorean.authmod.core.exception.AuthmodError;
 import io.chocorean.authmod.event.Handler;
 import io.chocorean.authmod.util.text.ServerTranslationTextComponent;
 import net.minecraft.command.CommandSource;
@@ -18,7 +17,7 @@ public class LoginCommand {
 
   public static void register(CommandDispatcher<CommandSource> dispatcher, Handler handler, GuardInterface guard, boolean identifierRequired) {
     LiteralArgumentBuilder<CommandSource> builder  = Commands.literal("login");
-    builder.then(Commands.argument("password", StringArgumentType.string())
+    RequiredArgumentBuilder<CommandSource, String> passwordArgs = Commands.argument("password", StringArgumentType.string())
         .executes(ctx -> execute(
           ctx.getSource(),
           handler,
@@ -28,8 +27,11 @@ public class LoginCommand {
             identifierRequired ? StringArgumentType.getString(ctx, "id") : null,
             StringArgumentType.getString(ctx, "password")
           ))
-        )
-      );
+        );
+    builder.then(identifierRequired
+      ? Commands.argument("id", StringArgumentType.word()).then(passwordArgs)
+      : passwordArgs
+    );
     dispatcher.register(builder);
   }
 
@@ -49,7 +51,7 @@ public class LoginCommand {
           source.sendFeedback(new ServerTranslationTextComponent("login.success"), true);
       }
       return 0;
-    } catch (AuthmodError | CommandSyntaxException e) {
+    } catch (Exception e) {
       source.sendFeedback(new ServerTranslationTextComponent(ExceptionToMessageMapper.getMessage(e), payload.getPlayer().getUsername()), true);
     }
     return 1;

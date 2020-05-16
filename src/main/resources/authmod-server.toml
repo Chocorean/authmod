@@ -7,15 +7,19 @@
 	enableLogin = false
 	#Enable or disable the /register command.
 	enableRegister = false
+	#Enable or disable the /changepassword command.
+	enableChangePassword = false
 	#delay in seconds a player can authenticate before being automatically kicked from the server.
 	#Range: 1 ~ 1024
-	delay = 640
+	delay = 60
 	#lang file to use
 	#Allowed Values: en_us, fr_fr
 	language = "en_us"
 	#The way you want to store player's data, choose between 'database' or 'file'. If the strategy is unknown, the server will be open for everyone.
 	#Allowed Values: FILE, DATABASE, NONE
 	dataSource = "FILE"
+	#Whitelisted commands (can be used without being logged)
+	whitelist = ["register", "login", "logged", "help"]
 
 [Database]
 	#Column for the identifier
@@ -47,28 +51,46 @@
 	table = "players"
 
 [I18n]
-	#Message displayed when an unknown error occurs.
+	#Something was wrong. Please contact the admins.
 	error = ""
-	#Message displayed to a player when he/she joins the server.
+	#Use /register to sign up or /login to sign in.
 	welcome = ""
-	#Message displayed when a banned player tries to connect.
+	#Wake up, you have only %s seconds to log in.
+	wakeUp = ""
+	#You've been banned. Please contact the admins.
 	banned = ""
-	#Usage for /login
-	loginUsage = ""
-	#Message when the player successfully signed in.
-	loginSuccess = ""
-	#Message when the player entered a wrong password.
-	loginWrongpassword = ""
-	#Message when a player tries to sign up but am account already exists.
-	registerExist = ""
-	#Usage for /register
-	registerUsage = ""
-	#Message when the player successfully registered.
-	registerSuccess = ""
-	#The passwords doesn't match. Please retry
-	registerWrongpassword = ""
-	#Message when the player is logged
+	#Wrong password. Please try again.
+	wrongPassword = ""
+	#The password confirmation doesn't match. Please retry.
+	wrongPasswordConfirmation = ""
+	#yes
 	loggedYes = ""
-	#Usage for /logged
+	#no
 	loggedNo = ""
+	#/login <email> <password> - Allows you to authenticate on the server
+	loginUsage = ""
+	#%s is not registered on this server.
+	loginNotfound = ""
+	#Have fun!
+	loginSuccess = ""
+	#/logged - tells you whether you are authenticated or not
+	loggedUsage = ""
+	#Wrong UUID. Please be sure you use the same UUID when you registered your account.
+	loginWronguuid = ""
+	#Your username does not correspond to your credentials.
+	loginWrongusername = ""
+	#Someone has already registered with the username %s.
+	registerExist = ""
+	#/register <email> <password> <password>- Be careful when choosing it, you'll be asked to login each time you play.
+	registerUsage = ""
+	#You are registered and authenticated, have fun!
+	registerSuccess = ""
+	#Password changed!
+	changepasswordSuccess = ""
+	#Wrong password.
+	changepasswordError = ""
+	#New password should be different than the previous one.
+	changepasswordSamepassword = ""
+	#/changepassword <old_password> <new_password> <new_password> - Change your password.
+	changepasswordUsage = ""
 

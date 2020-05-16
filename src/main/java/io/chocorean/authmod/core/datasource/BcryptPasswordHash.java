@@ -10,11 +10,15 @@ public class BcryptPasswordHash implements PasswordHashInterface {
 
   @Override
   public boolean check(String hashedPassword, String password) {
-    if (hashedPassword == null || password == null)
+    try {
+      if (hashedPassword == null || password == null)
+        return false;
+      if(hashedPassword.equals(""))
+        return false;
+      return BCrypt.checkpw(password, hashedPassword);
+    } catch(Exception e) {
       return false;
-    if(hashedPassword.equals(""))
-      return false;
-    return BCrypt.checkpw(password, hashedPassword);
+    }
   }
 
 }

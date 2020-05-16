@@ -81,6 +81,12 @@ class DatabaseStrategyTest {
   }
 
   @Test
+  void testFindByUsername() {
+    this.dataSource.add(this.player);
+    assertNotNull(this.dataSource.find(this.player.getUsername()), "The player should be found");
+  }
+
+  @Test
   void testExist() {
     this.dataSource.add(this.player);
     assertTrue(this.dataSource.exist(this.player), "The player should exist");
@@ -93,7 +99,19 @@ class DatabaseStrategyTest {
   }
 
   @Test
+  void testFindByUsernameNotExist() {
+    this.dataSource.add(this.player);
+    assertNull(this.dataSource.find("Eddy le quartier"), "The player should not exist");
+  }
+
+  @Test
   void testFindNullParams() {
+    this.dataSource.add(this.player);
+    assertNull(this.dataSource.find(null), "It should return null");
+  }
+
+  @Test
+  void testFindByUsernameNullParams() {
     this.dataSource.add(this.player);
     assertNull(this.dataSource.find(null), "It should return null");
   }
@@ -102,7 +120,7 @@ class DatabaseStrategyTest {
   void testupdateSQLError() throws Exception {
     this.dataSource.add(this.player);
     Files.deleteIfExists(Paths.get(this.connectionFactory.getURL().split("sqlite:")[1]));
-    assertFalse(this.dataSource.update(this.player));
+    assertFalse(this.dataSource.updatePassword(this.player));
   }
 
 }

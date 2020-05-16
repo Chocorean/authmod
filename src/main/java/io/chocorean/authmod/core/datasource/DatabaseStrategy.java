@@ -53,6 +53,19 @@ public class DatabaseStrategy implements DataSourceStrategyInterface {
   }
 
   @Override
+  public DataSourcePlayerInterface findByUsername(String identifier) {
+    try (Connection conn = this.connectionFactory.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(String.format("SELECT * FROM %s WHERE %s = ?", this.table, this.columns.get(USERNAME_COLUMN)))) {
+      stmt.setString(1, identifier);
+      ResultSet rs = stmt.executeQuery();
+      return this.createPlayer(rs);
+    } catch(Exception e) {
+      AuthMod.LOGGER.catching(e);
+    }
+    return null;
+  }
+
+  @Override
   public boolean add(DataSourcePlayerInterface player) {
     String query =
       String.format(
@@ -85,7 +98,7 @@ public class DatabaseStrategy implements DataSourceStrategyInterface {
   }
 
   @Override
-  public boolean update(DataSourcePlayerInterface player) {
+  public boolean updatePassword(DataSourcePlayerInterface player) {
     String query =
       String.format(
         "UPDATE %s SET %s = ? WHERE %s = ?;",

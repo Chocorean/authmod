@@ -1,7 +1,5 @@
 package io.chocorean.authmod.core;
 
-import io.chocorean.authmod.core.exception.AuthmodError;
-
 class ImARobotGuard implements GuardInterface {
 
   @Override
@@ -15,7 +13,7 @@ class ImARobotGuard implements GuardInterface {
   }
 
   @Override
-  public boolean update(PayloadInterface oldPayload, PayloadInterface newPayload) {
+  public boolean updatePassword(PayloadInterface oldPayload) {
     return true;
   }
 

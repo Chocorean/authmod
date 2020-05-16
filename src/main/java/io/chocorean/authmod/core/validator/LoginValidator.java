@@ -4,11 +4,11 @@ import io.chocorean.authmod.core.PayloadInterface;
 import io.chocorean.authmod.core.exception.AuthmodError;
 import io.chocorean.authmod.core.exception.WrongLoginUsageError;
 
-public class DataSourceLoginValidator implements ValidatorInterface {
+public class LoginValidator implements ValidatorInterface {
 
   private final boolean indentifierRequired;
 
-  public DataSourceLoginValidator(boolean identifierRequired) {
+  public LoginValidator(boolean identifierRequired) {
     this.indentifierRequired = identifierRequired;
   }
 

@@ -101,7 +101,7 @@ class FileDataSourceStrategyTest {
 
   @Test
   void testUpdateNotExist() {
-    boolean res = this.dataSource.update(new DataSourcePlayer());
+    boolean res = this.dataSource.updatePassword(new DataSourcePlayer());
     assertFalse(res);
   }
 
@@ -109,7 +109,7 @@ class FileDataSourceStrategyTest {
   void testUpdateFileFailed() throws Exception {
     this.file.delete();
     this.file.mkdirs();
-    boolean res = this.dataSource.update(null);
+    boolean res = this.dataSource.updatePassword(null);
     clean();
     assertFalse(res);
   }
