@@ -21,7 +21,7 @@
     <img src="https://img.shields.io/badge/java-1.8-blue.svg" alt="java version" />
 </a>
 <a href="https://github.com/Chocorean/authmod/actions" target="_blank">
-    <img src="https://github.com/Chocorean/authmod/workflows/build/badge.svg" alt="build status"/>
+    <img src="https://github.com/Chocorean/authmod/workflows/build/badge.svg?branch=master" alt="build status"/>
 </a>
 <a href="https://sonarcloud.io/dashboard?id=Chocorean_authmod" target="_blank">
     <img src="https://sonarcloud.io/api/project_badges/measure?project=Chocorean_authmod&metric=alert_status" alt="build status on sonarcloud"/>
