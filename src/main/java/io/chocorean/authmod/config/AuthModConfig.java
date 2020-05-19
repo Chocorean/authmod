@@ -17,7 +17,7 @@ public class AuthModConfig {
   public final DatabaseConfig database;
   public final I18nConfig i18n;
   public enum DataSource {FILE, DATABASE, NONE}
-  public enum Language {en_us, fr_fr}
+  public enum Language {en_us, fr_fr, es_es}
   public final ForgeConfigSpec.BooleanValue identifierRequired;
   public final ForgeConfigSpec.BooleanValue enableLogin;
   public final ForgeConfigSpec.BooleanValue enableRegister;
