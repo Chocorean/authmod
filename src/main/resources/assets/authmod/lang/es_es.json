@@ -1,0 +1,22 @@
+{
+"authmod.error": "Ha ocurrido un error, contacta con un Administrador.",
+"authmod.welcome": "¡Registrate con el comando /register <contraseña> <contraseña de nuevo> / Si ya estabas registrado, utiliza el comando /login <contraseña>",
+"authmod.wakeUp": "Si no te logueas en %s, serás expulsado automáticamente.",
+"authmod.banned": "Usuario baneado, contacta con un administrador.",
+"authmod.wrongPassword": "Contraseña incorrecta, intenta de nuevo.",
+"authmod.wrongPasswordConfirmation": "La contraseña de confirmación no coincide.",
+"authmod.logged.yes": "Ya estás logeado.",
+"authmod.logged.no": "No estás logeado.",
+"authmod.login.usage": "/login <contraseña> - Te permite logearte al servidor",
+"authmod.login.notFound": "%s no está registrado en este servidor",
+"authmod.login.success": "¡Bienvenido al servidor!",
+"authmod.logged.usage": "/logged - Revisar estado de logeo",
+"authmod.login.wrongUUID": "Error de UUID, contacta con un Administrador.",
+"authmod.login.wrongUsername": "Nombre de Usuario incorrecto.",
+"authmod.register.exist": "Ya alguien se ha registrado con este usuario, utiliza el comando /login <contraseña> o contacta con un administrador.",
+"authmod.register.usage": "/register <nombre> <contraseña> <contraseña de nuevo> - Elije con cuidado, será tu contraseña para siempre",
+"authmod.register.success": "¡Te has registrado correctamente, Bienvenido a l servidor!",
+"authmod.changepassword.success": "Contraseña cambiada",
+"authmod.changepassword.samePassword": "La nueva contraseña no puede ser la misma que la anterior",
+"authmod.changepassword.usage": "/changepassword <contraseña actual> <nueva contraseña> <confirmar contraseña> - Cambia tu contraseña."
+}

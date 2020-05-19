@@ -146,3 +146,4 @@ INSERT INTO minecraft.players (id, email, password, uuid, username, banned) VALU
 
 - Baptiste Chocot ([@Chocorean](https://www.github.com/Chocorean/)) or `Sunser#7808` (Discord)
 - Yann Prono ([@Mcdostone](https://www.github.com/Mcdostone/))
+- [weffermiguel](https://www.curseforge.com/members/weffermiguel) for spanish i18n
