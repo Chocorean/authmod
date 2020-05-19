@@ -1,9 +1,8 @@
 package io.chocorean.authmod;
 
-import io.chocorean.authmod.command.ChangePasswordCommand;
-import io.chocorean.authmod.command.LoggedCommand;
-import io.chocorean.authmod.command.LoginCommand;
-import io.chocorean.authmod.command.RegisterCommand;
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.builder.RequiredArgumentBuilder;
+import io.chocorean.authmod.command.*;
 import io.chocorean.authmod.config.AuthModConfig;
 import io.chocorean.authmod.config.DatabaseConfig;
 import io.chocorean.authmod.core.*;
@@ -14,6 +13,8 @@ import io.chocorean.authmod.core.datasource.FileDataSourceStrategy;
 import io.chocorean.authmod.core.datasource.db.ConnectionFactory;
 import io.chocorean.authmod.core.datasource.db.ConnectionFactoryInterface;
 import io.chocorean.authmod.event.Handler;
+import net.minecraft.command.CommandSource;
+import net.minecraft.command.Commands;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -56,33 +57,21 @@ public class AuthMod {
   }
 
   private void serverStart(FMLServerStartingEvent event) {
-    if (FMLEnvironment.dist.isDedicatedServer()) {
-      if(AuthModConfig.get().enableAuthmod()) {
-        try {
-          boolean identifierRequired = AuthModConfig.get().identifierRequired.get();
-          GuardInterface guard = this.createGuard(AuthModConfig.get().dataSource.get(), identifierRequired);
-          this.handler = new Handler();
-          if(guard != null) {
-            if (AuthModConfig.get().enableRegister.get()) {
-              LOGGER.info("Registering /register command");
-              RegisterCommand.register(event.getCommandDispatcher(), this.handler, guard, identifierRequired);
-            }
-            if (AuthModConfig.get().enableLogin.get()) {
-              LOGGER.info("Registering /login command");
-              LoginCommand.register(event.getCommandDispatcher(), this.handler, guard, identifierRequired);
-              LOGGER.info("Registering /logged command");
-              LoggedCommand.register(event.getCommandDispatcher(), this.handler);
-            }
-            if (AuthModConfig.get().enableChangePassword.get()) {
-              LOGGER.info("Registering /changepassword command");
-              ChangePasswordCommand.register(event.getCommandDispatcher(), this.handler, guard);
-            }
-          } else {
-            LOGGER.warn(AuthMod.MODID + " is disabled because guard is NULL");
-          }
-        } catch(Exception e) { LOGGER.catching(e); }
-      }
+    if (FMLEnvironment.dist.isDedicatedServer() && AuthModConfig.get().enableAuthmod()) {
+      try {
+        boolean identifierRequired = AuthModConfig.get().identifierRequired.get();
+        GuardInterface guard = this.createGuard(AuthModConfig.get().dataSource.get(), identifierRequired);
+        this.handler = new Handler();
+        if(guard != null) {
+          this.registerLoginCommands(AuthModConfig.get().enableLogin.get(), identifierRequired, event.getCommandDispatcher(), guard);
+          this.registerRegisterCommand(AuthModConfig.get().enableRegister.get(), identifierRequired, event.getCommandDispatcher(), guard);
+          this.registerChangePasswordCommand(AuthModConfig.get().enableRegister.get(), event.getCommandDispatcher(), guard);
+        } else {
+          LOGGER.warn(AuthMod.MODID + " is disabled because guard is NULL");
+        }
+      } catch(Exception e) { LOGGER.catching(e); }
     }
+
   }
 
   private GuardInterface createGuard(AuthModConfig.DataSource ds, boolean identifierRequired) throws Exception {
@@ -97,13 +86,13 @@ public class AuthMod {
         columns.put(DatabaseStrategy.PASSWORD_COLUMN, dbconfig.columnPassword.get().trim());
         columns.put(DatabaseStrategy.BANNED_COLUMN, dbconfig.columnBan.get().trim());
         ConnectionFactoryInterface connectionFactory = new ConnectionFactory(
-          dbconfig.dialect.get().trim(),
-          dbconfig.host.get().trim(),
-          dbconfig.port.get(),
-          dbconfig.database.get().trim(),
-          dbconfig.user.get().trim(),
-          dbconfig.password.get(),
-          dbconfig.driver.get());
+                dbconfig.dialect.get().trim(),
+                dbconfig.host.get().trim(),
+                dbconfig.port.get(),
+                dbconfig.database.get().trim(),
+                dbconfig.user.get().trim(),
+                dbconfig.password.get(),
+                dbconfig.driver.get());
         datasource = new DatabaseStrategy(dbconfig.table.get().trim(), connectionFactory, columns, new BcryptPasswordHash());
         break;
       case FILE:
@@ -138,7 +127,33 @@ public class AuthMod {
     String uuid = entity.getUUID(entity.getGameProfile()).toString();
     AuthMod.LOGGER.info(uuid);
     return new Payload(new Player(entity.getDisplayName().getString(), uuid),
-      Arrays.stream(args).filter(Objects::nonNull).toArray(String[]::new));
+            Arrays.stream(args).filter(Objects::nonNull).toArray(String[]::new));
   }
 
+  private void registerChangePasswordCommand(Boolean enabled, CommandDispatcher<CommandSource> commandDispatcher, GuardInterface guard) {
+    if (enabled) {
+      LOGGER.info("Registering /changepassword command");
+      ChangePasswordCommand.register(commandDispatcher, this.handler, guard);
+    }
+  }
+
+  private void registerRegisterCommand(boolean enabled, boolean identifierRequired, CommandDispatcher<CommandSource> commandDispatcher, GuardInterface guard) {
+    if (enabled) {
+      LOGGER.info("Registering /register command");
+      ChangePasswordCommand.register(commandDispatcher, this.handler, guard);
+    }
+  }
+
+  private void registerLoginCommands(boolean enabled, boolean identifierRequired, CommandDispatcher<CommandSource> commandDispatcher, GuardInterface guard) {
+    if (enabled) {
+      LOGGER.info("Registering /login command");
+      LoginCommand command = new LoginCommand(this.handler, guard);
+      if (identifierRequired) {
+        command = new LoginWithIdentifierCommand(this.handler, guard);
+      }
+      commandDispatcher.register(command.getCommandBuilder());
+      LOGGER.info("Registering /logged command");
+      LoggedCommand.register(commandDispatcher, this.handler);
+    }
+  }
 }

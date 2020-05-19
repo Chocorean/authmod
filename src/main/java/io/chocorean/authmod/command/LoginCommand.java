@@ -1,9 +1,13 @@
 package io.chocorean.authmod.command;
 
+import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.core.GuardInterface;
 import io.chocorean.authmod.core.PayloadInterface;
@@ -13,42 +17,35 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.entity.player.PlayerEntity;
 
-public class LoginCommand {
+public class LoginCommand implements Command<CommandSource> {
 
-  public static void register(CommandDispatcher<CommandSource> dispatcher, Handler handler, GuardInterface guard, boolean identifierRequired) {
-    LiteralArgumentBuilder<CommandSource> builder  = Commands.literal("login");
-    RequiredArgumentBuilder<CommandSource, String> passwordArgs = Commands.argument("password", StringArgumentType.string())
-        .executes(ctx -> execute(
-          ctx.getSource(),
-          handler,
-          guard,
-          AuthMod.toPayload(
-            ctx.getSource().asPlayer(),
-            identifierRequired ? StringArgumentType.getString(ctx, "id") : null,
-            StringArgumentType.getString(ctx, "password")
-          ))
-        );
-    builder.then(identifierRequired
-      ? Commands.argument("id", StringArgumentType.word()).then(passwordArgs)
-      : passwordArgs
-    );
-    dispatcher.register(builder);
+  protected final Handler handler;
+  protected final GuardInterface guard;
+
+  public LoginCommand(Handler handler, GuardInterface guard) {
+    this(handler, guard, null);
   }
 
-  /**
-   * @param source
-   * @param handler
-   * @param guard the guard to use for login.
-   * @param payload the user-provided payload.
-   * @return 1 if something goes wrong, 0 otherwise.
-   */
+  public LoginCommand( Handler handler, GuardInterface guard, RequiredArgumentBuilder<CommandSource, String> requiredArgs) {
+    this.handler = handler;
+    this.guard = guard;
+  }
+
+  public LiteralArgumentBuilder<CommandSource> getCommandBuilder() {
+    return Commands.literal("login").then(this.getDefaultParameters());
+  }
+
+  public RequiredArgumentBuilder<CommandSource, String> getDefaultParameters() {
+    return Commands.argument("password", StringArgumentType.string());
+  }
+
   public static int execute(CommandSource source, Handler handler, GuardInterface guard, PayloadInterface payload) {
     try {
       AuthMod.LOGGER.info(String.format("%s is using /login", payload.getPlayer().getUsername()));
       PlayerEntity player = source.asPlayer();
       if (!handler.isLogged(player) && guard.authenticate(payload)) {
-          handler.authorizePlayer(player);
-          source.sendFeedback(new ServerTranslationTextComponent("login.success"), true);
+        handler.authorizePlayer(player);
+        source.sendFeedback(new ServerTranslationTextComponent("login.success"), true);
       }
       return 0;
     } catch (Exception e) {
@@ -57,4 +54,15 @@ public class LoginCommand {
     return 1;
   }
 
+  @Override
+  public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
+    return execute(context.getSource(), this.handler, this.guard,
+      AuthMod.toPayload(context.getSource().asPlayer(), StringArgumentType.getString(context, "password")));
+  }
+
+  public static void register(CommandDispatcher<CommandSource> dispatcher, Handler handler, GuardInterface guard) {
+    new LoginCommand(handler, guard);
+  }
+
 }
+

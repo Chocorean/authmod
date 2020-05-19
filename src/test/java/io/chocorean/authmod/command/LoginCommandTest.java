@@ -4,6 +4,7 @@ import io.chocorean.authmod.core.DataSourceGuard;
 import io.chocorean.authmod.core.Payload;
 import io.chocorean.authmod.core.datasource.DataSourcePlayer;
 import io.chocorean.authmod.core.datasource.FileDataSourceStrategy;
+import net.minecraftforge.server.command.CommandDimensions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,10 +14,23 @@ import static org.mockito.Mockito.when;
 
 class LoginCommandTest extends CommandTest {
 
+  private LoginCommand command;
+
   @BeforeEach
   public void init() throws Exception {
     super.initProperties();
+    this.command = new LoginCommand(this.handler, this.guard);
     this.registerPlayer();
+  }
+
+  @Test
+  void testConstructor() {
+    assertNotNull(this.command);
+  }
+
+  @Test
+  void testGetCommandBuilder() {
+    assertEquals(this.command.getCommandBuilder().getLiteral(), "login");
   }
 
   @Test
