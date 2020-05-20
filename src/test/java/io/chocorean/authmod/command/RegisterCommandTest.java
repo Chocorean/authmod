@@ -1,6 +1,7 @@
 package io.chocorean.authmod.command;
 
 import com.mojang.authlib.GameProfile;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.chocorean.authmod.core.*;
 import net.minecraft.command.CommandSource;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -18,7 +19,8 @@ class RegisterCommandTest extends CommandTest {
 
   @BeforeEach
   public void init() throws Exception {
-    super.initProperties();
+    super.initProperties("register");
+    this.command = new RegisterCommand(this.handler, this.guard);
     this.payload = new Payload(player, new String[]{this.password, this.password});
   }
 
@@ -27,6 +29,11 @@ class RegisterCommandTest extends CommandTest {
     int res = RegisterCommand.execute(this.source, this.handler, this.guard, this.payload);
     assertEquals(0, res);
     assertTrue(this.handler.isLogged(this.playerEntity));
+  }
+
+  @Test
+  void testRun() throws CommandSyntaxException {
+    assertNotEquals(0, this.command.run(this.context));
   }
 
   @Test
@@ -45,22 +52,6 @@ class RegisterCommandTest extends CommandTest {
     assertFalse(this.handler.isLogged(this.playerEntity));
   }
 
-  @Test
-  void testExecuteIdentifierRequired() {
-    this.payload = new Payload(this.player, new String[]{"elliotalderson@protonmail.ch", "MrRobot", "MrRobot"});
-    this.guard = new DataSourceGuard(this.dataSource, true);
-    int res = RegisterCommand.execute(this.source, this.handler, this.guard, this.payload);
-    assertEquals(0, res);
-    assertTrue(this.handler.isLogged(this.playerEntity));
-  }
-
-  @Test
-  void testExecuteIdentifierMissing() {
-    this.guard = new DataSourceGuard(this.dataSource, true);
-    int res = RegisterCommand.execute(this.source, this.handler, this.guard, this.payload);
-    assertNotEquals(0, res);
-    assertFalse(this.handler.isLogged(this.playerEntity));
-  }
 
   @Test
   void testExecuteAlreadyLogged() {

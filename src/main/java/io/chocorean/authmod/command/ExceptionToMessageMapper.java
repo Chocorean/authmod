@@ -1,6 +1,5 @@
 package io.chocorean.authmod.command;
 
-import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.core.exception.*;
 import io.chocorean.authmod.util.text.ServerLanguageMap;
 
@@ -24,9 +23,6 @@ public class ExceptionToMessageMapper {
   }
 
   public static String getMessage(Exception e) {
-    if(e instanceof AuthmodError) {
-      AuthMod.LOGGER.catching(e);
-    }
     return messages.getOrDefault(e.getClass(), "Something goes wrong, see the server logs");
   }
 

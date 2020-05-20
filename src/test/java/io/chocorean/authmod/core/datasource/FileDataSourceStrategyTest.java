@@ -24,8 +24,8 @@ class FileDataSourceStrategyTest {
 
   @BeforeEach
   void init() throws Exception {
-    this.file = Paths.get(System.getProperty("java.io.tmpdir"), "authmod.csv").toFile();
-    this.dataSource = new FileDataSourceStrategy(this.file);
+    file = Paths.get(System.getProperty("java.io.tmpdir"), "authmod.csv").toFile();
+    this.dataSource = new FileDataSourceStrategy(file);
     clean();
     this.player = new DataSourcePlayer(new Player().setUsername("Whitney"));
   }
@@ -46,8 +46,8 @@ class FileDataSourceStrategyTest {
 
   @Test
   void testConstructor() throws Exception {
-    new FileDataSourceStrategy(this.file);
-    assertTrue(this.file.exists(), "The strategy should create a CSV file automatically");
+    new FileDataSourceStrategy(file);
+    assertTrue(file.exists(), "The strategy should create a CSV file automatically");
   }
 
   @Test
@@ -65,7 +65,7 @@ class FileDataSourceStrategyTest {
   void testFileModified() throws Exception {
     this.registerPlayer(this.player);
     Thread.sleep(1000);
-    BufferedWriter writer = new BufferedWriter(new FileWriter(this.file, true));
+    BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
     writer.append("mcdostone, mcdostone, password, false");
     writer.flush();
     writer.close();
@@ -92,8 +92,8 @@ class FileDataSourceStrategyTest {
 
   @Test
   void testSaveFileFailed() throws Exception {
-    this.file.delete();
-    this.file.mkdirs();
+    file.delete();
+    file.mkdirs();
     boolean res = this.registerPlayer(this.player);
     clean();
     assertFalse(res);
@@ -107,8 +107,8 @@ class FileDataSourceStrategyTest {
 
   @Test
   void testUpdateFileFailed() throws Exception {
-    this.file.delete();
-    this.file.mkdirs();
+    file.delete();
+    file.mkdirs();
     boolean res = this.dataSource.updatePassword(null);
     clean();
     assertFalse(res);
@@ -117,7 +117,7 @@ class FileDataSourceStrategyTest {
   @Test
   void testWrongDataFile() throws Exception {
     file = Paths.get(System.getProperty("java.io.tmpdir"), "authmod.csv").toFile();
-    BufferedWriter bw = new BufferedWriter(new FileWriter(this.file));
+    BufferedWriter bw = new BufferedWriter(new FileWriter(file));
     bw.write("test, test");
     bw.close();
     bw.close();

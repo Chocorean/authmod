@@ -11,18 +11,18 @@ import io.chocorean.authmod.event.Handler;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 
-public class LoginWithIdentifierCommand extends LoginCommand implements CommandInterface {
+public class RegisterWithIdentifierCommand extends RegisterCommand implements CommandInterface {
 
-  public LoginWithIdentifierCommand(Handler handler, GuardInterface guard) {
+  public RegisterWithIdentifierCommand(Handler handler, GuardInterface guard) {
     super(handler, guard);
   }
 
   public RequiredArgumentBuilder<CommandSource, String> getParameters() {
-    return Commands.argument("identifier", StringArgumentType.word()).then(super.getParameters());
+    return Commands.argument("identifier", StringArgumentType.string()).then(super.getParameters());
   }
 
   public static int execute(CommandSource source, Handler handler, GuardInterface guard, PayloadInterface payload) {
-    return LoginCommand.execute(source, handler, guard, payload);
+    return RegisterCommand.execute(source, handler, guard, payload);
   }
 
   @Override
@@ -31,7 +31,8 @@ public class LoginWithIdentifierCommand extends LoginCommand implements CommandI
       AuthMod.toPayload(
         context.getSource().asPlayer(),
         StringArgumentType.getString(context, "identifier") ,
-        StringArgumentType.getString(context, "password")));
+        StringArgumentType.getString(context, "password") ,
+        StringArgumentType.getString(context, "confirmation")));
   }
 
 }

@@ -27,7 +27,7 @@ class RegisterValidatorTest {
   }
 
   @Test
-  public void testValidateWrongNumberOfArgs() throws AuthmodError {
+  public void testValidateWrongNumberOfArgs() {
     assertThrows(WrongRegisterUsageError.class, () -> this.validator.validate(new Payload(this.player, new String[]{})));
   }
 

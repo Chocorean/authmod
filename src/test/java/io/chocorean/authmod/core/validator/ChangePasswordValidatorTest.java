@@ -33,14 +33,14 @@ class ChangePasswordValidatorTest {
   }
 
   @Test
-  public void testValidateDifferentPasswords() throws AuthmodError {
+  public void testValidateDifferentPasswords() {
     assertThrows(
       WrongPasswordConfirmationError.class,
       () -> this.validator.validate(new Payload(this.player, new String[]{"Expelliarmus", "Lumos" ,"Lumox"})));
   }
 
   @Test
-  public void testValidateSamePasswords() throws AuthmodError {
+  public void testValidateSamePasswords() {
     assertThrows(
       SamePasswordError.class,
       () -> this.validator.validate(new Payload(this.player, new String[]{"Avada Kedavra", "Avada Kedavra" ,"Avada Kedavra"})));

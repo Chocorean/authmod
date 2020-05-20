@@ -16,8 +16,9 @@ public class ChangePasswordCommandTest extends CommandTest {
 
   @BeforeEach
   public void init() throws Exception {
-    super.initProperties();
-    this.registerPlayer();
+    super.initProperties("changepassword");
+    this.command = new ChangePasswordCommand(this.handler, this.guard);
+    this.guard.register(new Payload(this.player, new String[]{this.password, this.password}));
   }
 
   @Test
@@ -51,11 +52,11 @@ public class ChangePasswordCommandTest extends CommandTest {
   @Test
   void testWrongOldPassword() {
     this.handler.authorizePlayer(this.playerEntity);
-    int res = ChangePasswordCommand.execute(this.source, this.handler, this.guard, this.createPayload(
+    PayloadInterface payload = new Payload(this.player, new String[] {
       "pain au chocolat",
       "chausson au pommes",
-      "chausson au pommes"
-      ));
+      "chausson au pommes"});
+    int res = ChangePasswordCommand.execute(this.source, this.handler, this.guard, payload);
     assertNotEquals(0, res);
   }
   
@@ -70,10 +71,6 @@ public class ChangePasswordCommandTest extends CommandTest {
     int res = ChangePasswordCommand.execute(this.source, this.handler, this.guard, this.createPayload("opera"));
     assertNotEquals(0, res);
     assertFalse(this.handler.isLogged(this.playerEntity));
-  }
-
-  private PayloadInterface createPayload(String oldPassword, String newPassword, String confirmation) {
-    return new Payload(this.player, new String[] {oldPassword, newPassword, confirmation});
   }
 
   private PayloadInterface createPayload(String newPassword) {

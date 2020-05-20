@@ -1,9 +1,7 @@
 package io.chocorean.authmod.command;
 
 import com.mojang.brigadier.Command;
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
-import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
@@ -17,26 +15,23 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.entity.player.PlayerEntity;
 
-public class LoginCommand implements Command<CommandSource> {
+
+public class LoginCommand implements CommandInterface, Command<CommandSource> {
 
   protected final Handler handler;
   protected final GuardInterface guard;
 
   public LoginCommand(Handler handler, GuardInterface guard) {
-    this(handler, guard, null);
-  }
-
-  public LoginCommand( Handler handler, GuardInterface guard, RequiredArgumentBuilder<CommandSource, String> requiredArgs) {
     this.handler = handler;
     this.guard = guard;
   }
 
   public LiteralArgumentBuilder<CommandSource> getCommandBuilder() {
-    return Commands.literal("login").then(this.getDefaultParameters());
+    return Commands.literal("login").then(this.getParameters());
   }
 
-  public RequiredArgumentBuilder<CommandSource, String> getDefaultParameters() {
-    return Commands.argument("password", StringArgumentType.string());
+  public RequiredArgumentBuilder<CommandSource, String> getParameters() {
+    return Commands.argument("password", StringArgumentType.string()).executes(this);
   }
 
   public static int execute(CommandSource source, Handler handler, GuardInterface guard, PayloadInterface payload) {
@@ -49,7 +44,7 @@ public class LoginCommand implements Command<CommandSource> {
       }
       return 0;
     } catch (Exception e) {
-      source.sendFeedback(new ServerTranslationTextComponent(ExceptionToMessageMapper.getMessage(e), payload.getPlayer().getUsername()), true);
+      source.sendFeedback(new ServerTranslationTextComponent(ExceptionToMessageMapper.getMessage(e), payload.getPlayer().getUsername()), false);
     }
     return 1;
   }
@@ -58,10 +53,6 @@ public class LoginCommand implements Command<CommandSource> {
   public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
     return execute(context.getSource(), this.handler, this.guard,
       AuthMod.toPayload(context.getSource().asPlayer(), StringArgumentType.getString(context, "password")));
-  }
-
-  public static void register(CommandDispatcher<CommandSource> dispatcher, Handler handler, GuardInterface guard) {
-    new LoginCommand(handler, guard);
   }
 
 }

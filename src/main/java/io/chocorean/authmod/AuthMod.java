@@ -1,7 +1,6 @@
 package io.chocorean.authmod;
 
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import io.chocorean.authmod.command.*;
 import io.chocorean.authmod.config.AuthModConfig;
 import io.chocorean.authmod.config.DatabaseConfig;
@@ -14,7 +13,6 @@ import io.chocorean.authmod.core.datasource.db.ConnectionFactory;
 import io.chocorean.authmod.core.datasource.db.ConnectionFactoryInterface;
 import io.chocorean.authmod.event.Handler;
 import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -124,8 +122,7 @@ public class AuthMod {
 
   public static PayloadInterface toPayload(PlayerEntity entity, String ...args) {
     // TODO when offline, UUID is not the mojang UUID
-    String uuid = entity.getUUID(entity.getGameProfile()).toString();
-    AuthMod.LOGGER.info(uuid);
+    String uuid = PlayerEntity.getUUID(entity.getGameProfile()).toString();
     return new Payload(new Player(entity.getDisplayName().getString(), uuid),
             Arrays.stream(args).filter(Objects::nonNull).toArray(String[]::new));
   }
@@ -133,14 +130,18 @@ public class AuthMod {
   private void registerChangePasswordCommand(Boolean enabled, CommandDispatcher<CommandSource> commandDispatcher, GuardInterface guard) {
     if (enabled) {
       LOGGER.info("Registering /changepassword command");
-      ChangePasswordCommand.register(commandDispatcher, this.handler, guard);
+      commandDispatcher.register(new ChangePasswordCommand(this.handler, guard).getCommandBuilder());
     }
   }
 
   private void registerRegisterCommand(boolean enabled, boolean identifierRequired, CommandDispatcher<CommandSource> commandDispatcher, GuardInterface guard) {
     if (enabled) {
       LOGGER.info("Registering /register command");
-      ChangePasswordCommand.register(commandDispatcher, this.handler, guard);
+      RegisterCommand command = new RegisterCommand(this.handler, guard);
+      if (identifierRequired) {
+        command = new RegisterWithIdentifierCommand(this.handler, guard);
+      }
+      commandDispatcher.register(command.getCommandBuilder());
     }
   }
 
@@ -153,7 +154,7 @@ public class AuthMod {
       }
       commandDispatcher.register(command.getCommandBuilder());
       LOGGER.info("Registering /logged command");
-      LoggedCommand.register(commandDispatcher, this.handler);
+      commandDispatcher.register(new LoggedCommand(this.handler).getCommandBuilder());
     }
   }
 }

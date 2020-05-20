@@ -27,7 +27,7 @@ class LoginValidatorTest {
   }
 
   @Test
-  public void testValidateWrongNumberOfArgs() throws AuthmodError {
+  public void testValidateWrongNumberOfArgs() {
     assertThrows(WrongLoginUsageError.class, () -> this.validator.validate(new Payload(this.player, new String[]{})));
   }
 
