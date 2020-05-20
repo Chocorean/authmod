@@ -46,7 +46,6 @@
 - [Authmod](#authmod)
 - [Installation](#installation)
 - [Disabling in-game registration](#disabling-in-game-registration)
-- [Limits](#limits)
 - [Getting started for developers](#getting-started-for-developers)
   - [Building the mod](#building-the-mod)
   - [SQL snippets](#sql-snippets)
@@ -150,6 +149,13 @@ INSERT INTO minecraft.players (id, email, password, uuid, username, banned) VALU
 ```
 
 ## Internationalization
+
+Pull requests for adding i18n are more than welcomed. Please make sure to:
+- create ` src/main/resources/assets/authmod/lang/XX_YY.json`
+- update `src/main/java/io/chocorean/authmod/config/AuthModConfig.java`
+- update this `README.md` file with your pseudo (optional but strongly recommended!)
+
+Thank you!
 
 ## Contributors
 
