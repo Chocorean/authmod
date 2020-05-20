@@ -45,11 +45,12 @@
 
 - [Authmod](#authmod)
 - [Installation](#installation)
+- [Disabling in-game registration](#disabling-in-game-registration)
 - [Limits](#limits)
 - [Getting started for developers](#getting-started-for-developers)
   - [Building the mod](#building-the-mod)
   - [SQL snippets](#sql-snippets)
-- [Contact](#contact)
+- [Internationalization](#internationalization)
 - [Contributors](#contributors)
 
 
@@ -105,6 +106,12 @@ curl -s https://api.github.com/repos/chocorean/authmod/releases/latest \
 4. Edit the `authmod-server.toml` file depending on your needs.
 5. Restart the server and you're all set!
 
+## Disabling in-game registration
+
+You might want to disallow players from registering themselves on your server. If you do that, you will have to find a way to fill your SQL database or registration file.
+
+If you don't know it already, passwords are not stored in the database; what is stored is a fingerprint of the password, called an *hash*. This hash is computed with the [bcrypt algorithm](https://en.wikipedia.org/wiki/Bcrypt), and we will have to insert in the database the *hash of the passwords* instead of passwords themselves. You can use [BCrypt Calculator](https://www.dailycred.com/article/bcrypt-calculator) to compute your hashes.
+
 ## Getting started for developers
 
 Please refer to the [Forge documentation](https://mcforge.readthedocs.io/en/latest/gettingstarted/) for setting your development environment.
@@ -141,6 +148,8 @@ INSERT INTO minecraft.players (id, email, password, uuid, username, banned) VALU
 (1, 'richard.stallman.gnu.org', NULL, NULL, 'stallman', 0),
 (2, 'linus.torvalds.linux.org', NULL, NULL, 'linux', 0);
 ```
+
+## Internationalization
 
 ## Contributors
 
