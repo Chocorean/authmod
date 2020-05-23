@@ -22,12 +22,12 @@ class RegisterValidatorTest {
   }
 
   @Test
-  public void testValidate() throws AuthmodError {
+  void testValidate() throws AuthmodError {
     assertTrue(this.validator.validate(new Payload(this.player, new String[]{"Tintin", "Tintin"})));
   }
 
   @Test
-  public void testValidateWrongNumberOfArgs() {
+  void testValidateWrongNumberOfArgs() {
     assertThrows(WrongRegisterUsageError.class, () -> this.validator.validate(new Payload(this.player, new String[]{})));
   }
 

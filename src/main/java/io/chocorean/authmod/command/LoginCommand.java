@@ -36,7 +36,6 @@ public class LoginCommand implements CommandInterface, Command<CommandSource> {
 
   public static int execute(CommandSource source, Handler handler, GuardInterface guard, PayloadInterface payload) {
     try {
-      AuthMod.LOGGER.info(String.format("%s is using /login", payload.getPlayer().getUsername()));
       PlayerEntity player = source.asPlayer();
       if (!handler.isLogged(player) && guard.authenticate(payload)) {
         handler.authorizePlayer(player);

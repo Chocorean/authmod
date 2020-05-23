@@ -44,13 +44,12 @@ class DataSourcePlayerTest {
   @Test
   void testSetIdentifierNullParam() {
     this.player.setIdentifier(null);
-    assertEquals(this.player.getIdentifier().length(), 0, "The email should be null");
+    assertEquals(0, this.player.getIdentifier().length(), "The email should be null");
   }
 
   @Test
   void testToString() {
     assertNotNull(this.player.toString());
   }
-
 
 }

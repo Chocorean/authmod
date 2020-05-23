@@ -4,7 +4,8 @@ import net.minecraft.util.math.BlockPos;
 
 public class PlayerPos {
   private final BlockPos pos;
-  private final float yaw, pitch;
+  private final float yaw;
+  private final float pitch;
 
   public PlayerPos(BlockPos pos, float yaw, float pitch) {
     this.pos = pos;

@@ -66,10 +66,9 @@ abstract class CommandTest {
     assertNotNull(this.command.getParameters());
   }
 
-
   @Test
   void testGetCommandBuilder() {
-    assertEquals(this.command.getCommandBuilder().getLiteral(), this.name);
+    assertEquals(this.name, this.command.getCommandBuilder().getLiteral());
   }
 
   @Test

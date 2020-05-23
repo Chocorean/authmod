@@ -35,7 +35,6 @@ public class LoggedCommand implements CommandInterface {
   }
 
   public static int execute(CommandSource source, PlayerEntity player, Handler handler) {
-    AuthMod.LOGGER.info(String.format("%s is using /logged", player.getDisplayName().getString()));
     boolean logged = handler.isLogged(player);
     String translationKey = "logged." + (logged ? "yes" : "no");
     source.sendFeedback(new ServerTranslationTextComponent(translationKey), false);

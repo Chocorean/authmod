@@ -23,24 +23,24 @@ class ChangePasswordValidatorTest {
   }
 
   @Test
-  public void testValidate() throws AuthmodError {
+  void testValidate() throws AuthmodError {
     assertTrue(this.validator.validate(new Payload(this.player, new String[]{"Expelliarmus", "Obliviate" ,"Obliviate"})));
   }
 
   @Test
-  public void testValidateWrongNumberOfArgs() throws AuthmodError {
+  void testValidateWrongNumberOfArgs() throws AuthmodError {
     assertFalse(this.validator.validate(new Payload(this.player, new String[]{})));
   }
 
   @Test
-  public void testValidateDifferentPasswords() {
+  void testValidateDifferentPasswords() {
     assertThrows(
       WrongPasswordConfirmationError.class,
       () -> this.validator.validate(new Payload(this.player, new String[]{"Expelliarmus", "Lumos" ,"Lumox"})));
   }
 
   @Test
-  public void testValidateSamePasswords() {
+  void testValidateSamePasswords() {
     assertThrows(
       SamePasswordError.class,
       () -> this.validator.validate(new Payload(this.player, new String[]{"Avada Kedavra", "Avada Kedavra" ,"Avada Kedavra"})));

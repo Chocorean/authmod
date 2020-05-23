@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 class RegisterCommandTest extends CommandTest {
 
   @BeforeEach
-  public void init() throws Exception {
+  void init() throws Exception {
     super.initProperties("register");
     this.command = new RegisterCommand(this.handler, this.guard);
     this.payload = new Payload(player, new String[]{this.password, this.password});
@@ -29,11 +29,6 @@ class RegisterCommandTest extends CommandTest {
     int res = RegisterCommand.execute(this.source, this.handler, this.guard, this.payload);
     assertEquals(0, res);
     assertTrue(this.handler.isLogged(this.playerEntity));
-  }
-
-  @Test
-  void testRun() throws CommandSyntaxException {
-    assertNotEquals(0, this.command.run(this.context));
   }
 
   @Test

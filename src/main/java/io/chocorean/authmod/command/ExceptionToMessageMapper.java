@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class ExceptionToMessageMapper {
 
-  private final static Map<Class<? extends AuthmodError>, String> messages = new HashMap<>();
+  private ExceptionToMessageMapper() {}
 
   public static void init() {
     messages.put(WrongPasswordError.class, ServerLanguageMap.getInstance().translateKey("wrongPassword"));
@@ -25,5 +25,7 @@ public class ExceptionToMessageMapper {
   public static String getMessage(Exception e) {
     return messages.getOrDefault(e.getClass(), "Something goes wrong, see the server logs");
   }
+
+  private final static Map<Class<? extends AuthmodError>, String> messages = new HashMap<>();
 
 }

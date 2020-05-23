@@ -48,13 +48,10 @@ public class RegisterCommand implements CommandInterface, Command<CommandSource>
    */
   public static int execute(CommandSource source, Handler handler, GuardInterface guard, PayloadInterface payload) {
     try {
-      AuthMod.LOGGER.info(String.format("%s is using /register", payload.getPlayer().getUsername()));
       PlayerEntity player = source.asPlayer();
-      if (guard.register(payload)) {
-        if (!handler.isLogged(source.asPlayer())) {
-          handler.authorizePlayer(player);
-          source.sendFeedback(new ServerTranslationTextComponent("register.success"), true);
-        }
+      if (guard.register(payload) && !handler.isLogged(source.asPlayer())) {
+        handler.authorizePlayer(player);
+        source.sendFeedback(new ServerTranslationTextComponent("register.success"), true);
       }
       return 0;
     } catch (AuthmodError | CommandSyntaxException e) {

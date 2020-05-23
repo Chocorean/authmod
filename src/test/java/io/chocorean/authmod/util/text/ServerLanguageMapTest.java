@@ -14,38 +14,38 @@ class ServerLanguageMapTest {
   private final String key = "authmod.welcome";
 
   @BeforeEach
-  public void setup() throws NoSuchFieldException, IllegalAccessException {
-    Field instance = ServerLanguageMap.class.getDeclaredField("INSTANCE");
+  void setup() throws NoSuchFieldException, IllegalAccessException {
+    Field instance = ServerLanguageMap.class.getDeclaredField("instance");
     instance.setAccessible(true);
     instance.set(null, null);
   }
 
   @Test
-  public void testConstructor() {
+  void testConstructor() {
     ServerLanguageMap.init();
     assertNotNull(ServerLanguageMap.getInstance().translateKey(key));
   }
 
   @Test
-  public void testConstructorEnLang() {
+  void testConstructorEnLang() {
     ServerLanguageMap.init("en_us");
     assertNotNull(ServerLanguageMap.getInstance().translateKey(key));
   }
 
   @Test
-  public void testConstructorOtherLang() {
+  void testConstructorOtherLang() {
     ServerLanguageMap.init("fr_fr");
     assertNotNull(ServerLanguageMap.getInstance().translateKey(key));
   }
 
   @Test
-  public void testConstructorLangNotFound() {
+  void testConstructorLangNotFound() {
     ServerLanguageMap.init("en_en");
     assertNotNull(ServerLanguageMap.getInstance().translateKey(key));
   }
 
   @Test
-  public void testReplaceAll() {
+  void testReplaceAll() {
     ServerLanguageMap.init();
     String welcome = "Bonsoir Eliot!";
     Map<String, String> newTranslations = new HashMap<>();
@@ -55,7 +55,7 @@ class ServerLanguageMapTest {
   }
 
   @Test
-  public void testReplaceAllNoInstance() {
+  void testReplaceAllNoInstance() {
     String welcome = "Bonsoir Elliot!";
     Map<String, String> newTranslations = new HashMap<>();
     newTranslations.put(key, welcome);
@@ -64,18 +64,18 @@ class ServerLanguageMapTest {
   }
 
   @Test
-  public void testGetInstance() {
+  void testGetInstance() {
     assertNotNull(ServerLanguageMap.getInstance());
   }
 
   @Test
-  public void testExist() {
+  void testExist() {
     ServerLanguageMap.init();
     assertTrue(ServerLanguageMap.getInstance().exists(key));
   }
 
   @Test
-  public void testGetLastUpdateTimeInMilliseconds() {
+  void testGetLastUpdateTimeInMilliseconds() {
     ServerLanguageMap.init();
     assertNotEquals(0, ServerLanguageMap.getInstance().getLastUpdateTimeInMilliseconds());
   }

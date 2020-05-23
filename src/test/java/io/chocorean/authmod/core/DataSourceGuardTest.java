@@ -44,14 +44,14 @@ class DataSourceGuardTest {
 
   @ParameterizedTest(name = "with {0}")
   @MethodSource("parameters")
-  public void testRegister(DataSourceStrategyInterface impl) throws Exception {
+  void testRegister(DataSourceStrategyInterface impl) throws Exception {
     init(impl);
     assertTrue(this.guard.register(this.registrationPayload));
   }
 
   @ParameterizedTest(name = "with {0}")
   @MethodSource("parameters")
-  public void testAuthenticate(DataSourceStrategyInterface impl) throws Exception {
+  void testAuthenticate(DataSourceStrategyInterface impl) throws Exception {
     init(impl);
     this.guard.register(registrationPayload);
     PayloadInterface payload = new Payload(this.player, new String[]{this.password});
@@ -89,14 +89,14 @@ class DataSourceGuardTest {
 
   @ParameterizedTest(name = "with {0}")
   @MethodSource("parameters")
-  public void testAuthenticateNullParam(DataSourceStrategyInterface impl) throws Exception {
+  void testAuthenticateNullParam(DataSourceStrategyInterface impl) throws Exception {
     init(impl);
     assertThrows(Exception.class, () -> this.guard.authenticate(null));
   }
 
   @ParameterizedTest(name = "with {0}")
   @MethodSource("parameters")
-  public void testRegisterNullParam(DataSourceStrategyInterface impl) throws Exception {
+  void testRegisterNullParam(DataSourceStrategyInterface impl) throws Exception {
     init(impl);
     assertThrows(Exception.class, () -> this.guard.authenticate(null));
   }

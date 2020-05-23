@@ -10,27 +10,12 @@ import static org.junit.jupiter.api.Assertions.*;
 class RegisterWithIdentifierCommandTest extends CommandTest {
 
   @BeforeEach
-  public void init() throws Exception {
+  void init() throws Exception {
     super.initProperties("register");
     this.payload = new Payload(this.player, new String[]{this.player.getUsername(), this.password});
     this.guard = new DataSourceGuard(this.dataSource, true);
     this.command = new RegisterWithIdentifierCommand(this.handler, this.guard);
     this.guard.register(new Payload(this.player, new String[]{"Jackson", this.password, this.password}));
-  }
-
-  @Test
-  void testConstructor() {
-    assertNotNull(this.command);
-  }
-
-  @Test
-  void testGetCommandBuilder() {
-    assertEquals(this.command.getCommandBuilder().getLiteral(), "register");
-  }
-
-  @Test
-  void testRun() throws CommandSyntaxException {
-    assertNotEquals(0, this.command.run(this.context));
   }
 
   @Test

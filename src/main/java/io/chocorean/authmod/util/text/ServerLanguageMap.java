@@ -19,12 +19,12 @@ import java.util.regex.Pattern;
 
 public class ServerLanguageMap {
 
-  private static final Logger LOGGER = LogManager.getLogger();
-  private static ServerLanguageMap INSTANCE;
   public static final Pattern NUMERIC_VARIABLE_PATTERN = Pattern.compile("%(\\d+\\$)?[\\d\\.]*[df]");
   private final Map<String, String> languageList = Maps.newHashMap();
   private long lastUpdateTimeInMilliseconds;
-  private final static String DEFAULT_LANG = "en_us";
+  private static ServerLanguageMap instance;
+  private static final Logger LOGGER = LogManager.getLogger();
+  private static final String DEFAULT_LANG = "en_us";
 
   private ServerLanguageMap(String language) {
     this.loadLangFile(DEFAULT_LANG);
@@ -44,7 +44,7 @@ public class ServerLanguageMap {
       }
       this.lastUpdateTimeInMilliseconds = Util.milliTime();
     } catch (Exception exception) {
-      LOGGER.error("Couldn't read strings from " + path, exception);
+      LOGGER.error(String.format("Couldn't read strings from %s", path), exception);
     }
   }
 
@@ -53,22 +53,22 @@ public class ServerLanguageMap {
   }
 
   public static void init(String input) {
-    if(INSTANCE == null) {
-      INSTANCE = new ServerLanguageMap(input);
+    if(instance == null) {
+      instance = new ServerLanguageMap(input);
     }
   }
 
   public static synchronized void replaceWith(Map<String, String> dict) {
-    if(INSTANCE != null) {
-      INSTANCE.languageList.putAll(dict);
-      INSTANCE.lastUpdateTimeInMilliseconds = Util.milliTime();
+    if(instance != null) {
+      instance.languageList.putAll(dict);
+      instance.lastUpdateTimeInMilliseconds = Util.milliTime();
     }
   }
 
   public static ServerLanguageMap getInstance() {
-    if(INSTANCE == null)
+    if(instance == null)
       init();
-    return INSTANCE;
+    return instance;
   }
 
   public synchronized String translateKey(String key) {

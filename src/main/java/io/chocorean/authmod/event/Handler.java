@@ -96,7 +96,7 @@ public class Handler {
       boolean isCommandAllowed = whitelist.contains(name);
       if (descriptors.containsKey(playerEntity))
         if (!isCommandAllowed && event.isCancelable()) {
-    	  AuthMod.LOGGER.info(String.format("Player %s tried to execute /%s without being logged in.", playerEntity.getName().getString(), name));
+    	  AuthMod.LOGGER.info("Player %s tried to execute /%s without being logged in.", playerEntity.getName().getString(), name);
     	  event.setCanceled(true);
           event.getParseResults().getContext().getSource().sendFeedback(new ServerTranslationTextComponent("welcome"), false);
         }
@@ -193,5 +193,3 @@ public class Handler {
   }
 
 }
-
-

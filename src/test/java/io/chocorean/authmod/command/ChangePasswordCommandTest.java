@@ -12,10 +12,10 @@ import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ChangePasswordCommandTest extends CommandTest {
+class ChangePasswordCommandTest extends CommandTest {
 
   @BeforeEach
-  public void init() throws Exception {
+  void init() throws Exception {
     super.initProperties("changepassword");
     this.command = new ChangePasswordCommand(this.handler, this.guard);
     this.guard.register(new Payload(this.player, new String[]{this.password, this.password}));

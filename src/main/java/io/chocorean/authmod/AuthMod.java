@@ -40,7 +40,7 @@ public class AuthMod {
   public static final String MODID = "authmod";
   static final String NAME = "AuthMod";
   static final String VERSION = "4.0";
-  private static final String versionUrl = "https://raw.githubusercontent.com/Chocorean/authmod/master/VERSION";
+  private static final String VERSION_URL = "https://raw.githubusercontent.com/Chocorean/authmod/master/VERSION";
   public static final Logger LOGGER = LogManager.getLogger(NAME);
   private Handler handler;
 
@@ -50,7 +50,7 @@ public class AuthMod {
     modEventBus.register(AuthModConfig.class);
     MinecraftForge.EVENT_BUS.addListener( this::serverStart );
     ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, AuthModConfig.serverSpec);
-    LOGGER.info(String.format("%s %s", NAME, VERSION));
+    LOGGER.info("%s %s", NAME, VERSION);
     this.checkForUpdates();
   }
 
@@ -65,7 +65,7 @@ public class AuthMod {
           this.registerRegisterCommand(AuthModConfig.get().enableRegister.get(), identifierRequired, event.getCommandDispatcher(), guard);
           this.registerChangePasswordCommand(AuthModConfig.get().enableRegister.get(), event.getCommandDispatcher(), guard);
         } else {
-          LOGGER.warn(AuthMod.MODID + " is disabled because guard is NULL");
+          LOGGER.warn("%s is disabled because guard is NULL", AuthMod.MODID);
         }
       } catch(Exception e) { LOGGER.catching(e); }
     }
@@ -100,12 +100,12 @@ public class AuthMod {
       default:
         return null;
     }
-    LOGGER.info("Use guard " + datasource);
+    LOGGER.info("Use guard %s", datasource);
     return new DataSourceGuard(datasource, identifierRequired);
   }
 
   private void checkForUpdates() {
-    try (BufferedInputStream in = new BufferedInputStream(new URL(versionUrl).openStream())) {
+    try (BufferedInputStream in = new BufferedInputStream(new URL(VERSION_URL).openStream())) {
       byte[] dataBuffer = new byte[1024];
       StringBuilder version = new StringBuilder();
       while ((in.read(dataBuffer, 0, 1024)) != -1) {
@@ -114,7 +114,7 @@ public class AuthMod {
       String pattern = "[^a-zA-Z0-9.]";
       version = new StringBuilder(version.toString().replaceAll(pattern, ""));
       if (!version.toString().contentEquals(VERSION))
-        LOGGER.warn(String.format("An update is available! '%s' -> '%s'", VERSION, version.toString()));
+        LOGGER.warn("An update is available! '%s' -> '%s'", VERSION, version.toString());
     } catch (Exception e) {
       LOGGER.catching(e);
     }
@@ -127,7 +127,7 @@ public class AuthMod {
             Arrays.stream(args).filter(Objects::nonNull).toArray(String[]::new));
   }
 
-  private void registerChangePasswordCommand(Boolean enabled, CommandDispatcher<CommandSource> commandDispatcher, GuardInterface guard) {
+  private void registerChangePasswordCommand(boolean enabled, CommandDispatcher<CommandSource> commandDispatcher, GuardInterface guard) {
     if (enabled) {
       LOGGER.info("Registering /changepassword command");
       commandDispatcher.register(new ChangePasswordCommand(this.handler, guard).getCommandBuilder());

@@ -30,7 +30,7 @@ class PlayerTest {
   @Test
   void testSetUuidIncorrect() {
     this.player.setUuid("15");
-    assertEquals(this.player.getUuid().length(), 0);
+    assertEquals(0, this.player.getUuid().length());
   }
 
   @Test
@@ -42,7 +42,7 @@ class PlayerTest {
   @Test
   void testSetUuidNullParam() {
     this.player.setUuid(null);
-    assertEquals(this.player.getUuid().length(), 0, "The UUID should be empty");
+    assertEquals(0, this.player.getUuid().length(), "The UUID should be empty");
   }
 
   @Test

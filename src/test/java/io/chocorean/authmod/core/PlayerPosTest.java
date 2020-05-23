@@ -12,22 +12,22 @@ class PlayerPosTest {
   private PlayerPos position;
 
   @BeforeEach
-  public void init() {
+  void init() {
     this.position = new PlayerPos(new BlockPos(1, 2, 3), 1, 2);
   }
 
   @Test
-  public void testGetYaw() {
+  void testGetYaw() {
     assertEquals(1, this.position.getYaw());
   }
 
   @Test
-  public void testGetPitch() {
+  void testGetPitch() {
     assertEquals(2, this.position.getPitch());
   }
 
   @Test
-  public void testGetPosition() {
+  void testGetPosition() {
     assertNotNull( this.position.getPosition());
   }
 

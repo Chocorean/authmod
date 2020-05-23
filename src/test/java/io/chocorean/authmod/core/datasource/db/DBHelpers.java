@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 public class DBHelpers {
@@ -41,20 +42,20 @@ public class DBHelpers {
     connection.close();
   }
 
-  private static void initTable(ConnectionFactoryInterface connectionFactory) throws Exception {
+  private static void initTable(ConnectionFactoryInterface connectionFactory) throws SQLException {
     Connection connection = connectionFactory.getConnection();
     Statement stmt = connection.createStatement();
     stmt.executeUpdate(getCreationTableQuery());
   }
 
-  public static void initTable(ConnectionFactoryInterface connectionFactory, String identifier) throws Exception {
+  public static void initTable(ConnectionFactoryInterface connectionFactory, String identifier) throws SQLException, IOException {
     initDatabaseFile();
     Connection connection = connectionFactory.getConnection();
     Statement stmt = connection.createStatement();
     stmt.executeUpdate(getCreationTableQuery().replace("identifier", identifier));
   }
 
-  public static ConnectionFactoryInterface initDatabase() throws Exception {
+  public static ConnectionFactoryInterface initDatabase() throws SQLException, IOException, ClassNotFoundException {
     initDatabaseFile();
     ConnectionFactoryInterface connectionFactory = new ConnectionFactory("jdbc:sqlite:" + file.getAbsolutePath(),"org.sqlite.JDBC");
     initTable(connectionFactory);

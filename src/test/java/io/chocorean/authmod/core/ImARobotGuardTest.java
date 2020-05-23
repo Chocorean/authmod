@@ -17,22 +17,22 @@ class ImARobotGuardTest {
   }
 
   @Test
-  public void testAuthenticate() throws AuthmodError {
+  void testAuthenticate() throws AuthmodError {
     assertTrue(this.guard.authenticate(new Payload(null, new String[]{"I'm", "not", "a", "robot"})));
   }
 
   @Test
-  public void testAuthenticateNullArgs() {
+  void testAuthenticateNullArgs() {
     assertThrows(Exception.class, () -> this.guard.authenticate(null));
   }
 
   @Test
-  public void testRegister() throws AuthmodError {
+  void testRegister() throws AuthmodError {
     assertTrue(this.guard.register(null));
   }
   
   @Test
-  public void testUpdate() throws AuthmodError {
+  void testUpdate() throws AuthmodError {
     assertTrue(this.guard.updatePassword(null));
   }
 

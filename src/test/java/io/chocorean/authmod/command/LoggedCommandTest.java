@@ -17,7 +17,7 @@ class LoggedCommandTest extends CommandTest {
   }
 
   @BeforeEach
-  public void init() throws Exception {
+  void init() throws Exception {
     super.initProperties("logged");
     this.command = new LoggedCommand(this.handler);
     this.guard.register(new Payload(this.player, new String[]{this.password, this.password}));

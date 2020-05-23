@@ -9,25 +9,24 @@ import static org.mockito.Mockito.mock;
 
 class PlayerDescriptorTest {
 
-
   private ServerPlayerEntity player;
   private PlayerDescriptor descriptor;
   private PlayerPos position;
 
   @BeforeEach
-  public void init() {
+  void init() {
     this.position = new PlayerPos( null, 4, 4);
     this.player = mock(ServerPlayerEntity.class);
     this.descriptor = new PlayerDescriptor(this.player, this.position);
   }
   
   @Test
-  public void testGetPlayer() {
+  void testGetPlayer() {
     assertEquals(descriptor.getPlayer(), player);
   }
 
   @Test
-  public void testGetPosition() {
+  void testGetPosition() {
     assertEquals(descriptor.getPosition(), position);
   }
 

@@ -9,24 +9,24 @@ import static org.junit.jupiter.api.Assertions.*;
 class ExceptionToMessageMapperTest {
 
   @Test
-  public void testInit(){
-    ExceptionToMessageMapper.init();
+  void testInit(){
+    assertDoesNotThrow(ExceptionToMessageMapper::init);
   }
 
   @Test
-  public void testGet(){
+  void testGet(){
     ExceptionToMessageMapper.init();
-    ExceptionToMessageMapper.getMessage(new WrongLoginUsageError());
+    assertNotNull(ExceptionToMessageMapper.getMessage(new WrongLoginUsageError()));
   }
 
   @Test
-  public void testGetDefault() {
+  void testGetDefault() {
     ExceptionToMessageMapper.init();
     assertNotNull(ExceptionToMessageMapper.getMessage(new AuthmodError()));
   }
 
   @Test
-  public void testGetDefaultOther() {
+  void testGetDefaultOther() {
     ExceptionToMessageMapper.init();
     assertNotNull(ExceptionToMessageMapper.getMessage(new Exception()));
   }

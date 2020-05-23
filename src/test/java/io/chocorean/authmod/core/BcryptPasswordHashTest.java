@@ -18,46 +18,46 @@ class BcryptPasswordHashTest {
   }
 
   @Test
-  public void testHash() {
+  void testHash() {
     String hashed = this.passwordHash.hash(this.password);
     assertNotNull(hashed);
   }
 
   @Test
-  public void testCheck() {
+  void testCheck() {
     String hashed = this.passwordHash.hash(this.password);
     assertNotNull(hashed);
     assertTrue(this.passwordHash.check(hashed, this.password));
   }
 
   @Test
-  public void testHashNullParam() {
+  void testHashNullParam() {
     String hashed = this.passwordHash.hash(null);
     assertNotNull(hashed);
   }
 
   @Test
-  public void testCheckEmptyParam() {
+  void testCheckEmptyParam() {
     assertFalse(this.passwordHash.check("", ""));
   }
 
   @Test
-  public void testCheckNullParams() {
+  void testCheckNullParams() {
     assertFalse(this.passwordHash.check(null, null));
   }
 
   @Test
-  public void testCheckNullParam1() {
+  void testCheckNullParam1() {
     assertFalse(this.passwordHash.check("hash", null));
   }
 
   @Test
-  public void testCheckNullParam2() {
+  void testCheckNullParam2() {
     assertFalse(this.passwordHash.check(null, this.password));
   }
 
   @Test
-  public void testCheckNotHash() {
+  void testCheckNotHash() {
     assertFalse(this.passwordHash.check("pelegrino", this.password));
   }
 
