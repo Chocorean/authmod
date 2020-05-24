@@ -6,6 +6,7 @@ import io.chocorean.authmod.config.AuthModConfig;
 import io.chocorean.authmod.core.PlayerDescriptor;
 import io.chocorean.authmod.core.PlayerPos;
 import io.chocorean.authmod.util.text.ServerTranslationTextComponent;
+import net.minecraft.command.CommandSource;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -91,13 +92,16 @@ public class Handler {
   @SubscribeEvent(priority = EventPriority.HIGHEST)
   public static void onCommand(CommandEvent event) throws CommandSyntaxException {
     List<? extends String> whitelist = AuthModConfig.get().commandWhitelist.get();
-    PlayerEntity playerEntity = event.getParseResults().getContext().getSource().asPlayer();
     String name = event.getParseResults().getContext().getNodes().get(0).getNode().getName();
     boolean isCommandAllowed = whitelist.contains(name);
-    if (descriptors.containsKey(playerEntity) && !isCommandAllowed && event.isCancelable()) {
-  	  AuthMod.LOGGER.info("Player %s tried to execute /%s without being logged in.", playerEntity.getName().getString(), name);
-  	  event.setCanceled(true);
+    CommandSource source = event.getParseResults().getContext().getSource();
+    if (source.getEntity() instanceof ServerPlayerEntity) {
+      PlayerEntity playerEntity = source.asPlayer();
+      if (descriptors.containsKey(playerEntity) && !isCommandAllowed && event.isCancelable()) {
+        AuthMod.LOGGER.info("Player %s tried to execute /%s without being logged in.", playerEntity.getName().getString(), name);
+        event.setCanceled(true);
         event.getParseResults().getContext().getSource().sendFeedback(new ServerTranslationTextComponent("welcome"), false);
+      }
     }
   }
 
