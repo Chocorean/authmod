@@ -24,7 +24,7 @@ public class ServerLanguageMap {
   private long lastUpdateTimeInMilliseconds;
   private static ServerLanguageMap instance;
   private static final Logger LOGGER = LogManager.getLogger();
-  private static final String DEFAULT_LANG = "en_us";
+  private static final String DEFAULT_LANG = "EN_US";
 
   private ServerLanguageMap(String language) {
     this.loadLangFile(DEFAULT_LANG);

@@ -28,8 +28,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedInputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -72,7 +74,7 @@ public class AuthMod {
 
   }
 
-  private GuardInterface createGuard(AuthModConfig.DataSource ds, boolean identifierRequired) throws Exception {
+  private GuardInterface createGuard(AuthModConfig.DataSource ds, boolean identifierRequired) throws IOException, ClassNotFoundException, SQLException {
     DataSourceStrategyInterface datasource;
     switch (ds) {
       case DATABASE:
@@ -107,14 +109,14 @@ public class AuthMod {
   private void checkForUpdates() {
     try (BufferedInputStream in = new BufferedInputStream(new URL(VERSION_URL).openStream())) {
       byte[] dataBuffer = new byte[1024];
-      StringBuilder version = new StringBuilder();
+      StringBuilder sb = new StringBuilder();
       while ((in.read(dataBuffer, 0, 1024)) != -1) {
-        version.append(new String(dataBuffer));
+        sb.append(new String(dataBuffer));
       }
       String pattern = "[^a-zA-Z0-9.]";
-      version = new StringBuilder(version.toString().replaceAll(pattern, ""));
-      if (!version.toString().contentEquals(VERSION))
-        LOGGER.warn("An update is available! '%s' -> '%s'", VERSION, version.toString());
+      String version = new StringBuilder(sb.toString().replaceAll(pattern, "")).toString();
+      if (!version.contentEquals(VERSION))
+        LOGGER.warn("An update is available! '%s' -> '%s'", VERSION, version);
     } catch (Exception e) {
       LOGGER.catching(e);
     }

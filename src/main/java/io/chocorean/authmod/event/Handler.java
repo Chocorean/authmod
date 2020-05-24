@@ -42,7 +42,8 @@ public class Handler {
     PlayerEntity entity = event.getPlayer();
     // initializing timer for kicking player if he/she hasn't logged
     BlockPos pos = entity.getPosition();
-    float yaw = entity.rotationYaw, pitch = entity.rotationPitch;
+    float yaw = entity.rotationYaw;
+    float pitch = entity.rotationPitch;
     PlayerPos pp = new PlayerPos(pos, yaw, pitch);
     PlayerDescriptor dc = new PlayerDescriptor(entity, pp);
     descriptors.put(entity, dc);
@@ -88,20 +89,15 @@ public class Handler {
   }
 
   @SubscribeEvent(priority = EventPriority.HIGHEST)
-  public static void onCommand(CommandEvent event) { 
-    try {
-      List<? extends String> whitelist = AuthModConfig.get().commandWhitelist.get();
-      PlayerEntity playerEntity = event.getParseResults().getContext().getSource().asPlayer();
-      String name = event.getParseResults().getContext().getNodes().get(0).getNode().getName();
-      boolean isCommandAllowed = whitelist.contains(name);
-      if (descriptors.containsKey(playerEntity))
-        if (!isCommandAllowed && event.isCancelable()) {
-    	  AuthMod.LOGGER.info("Player %s tried to execute /%s without being logged in.", playerEntity.getName().getString(), name);
-    	  event.setCanceled(true);
-          event.getParseResults().getContext().getSource().sendFeedback(new ServerTranslationTextComponent("welcome"), false);
-        }
-    } catch (CommandSyntaxException e) {
-      AuthMod.LOGGER.catching(e);
+  public static void onCommand(CommandEvent event) throws CommandSyntaxException {
+    List<? extends String> whitelist = AuthModConfig.get().commandWhitelist.get();
+    PlayerEntity playerEntity = event.getParseResults().getContext().getSource().asPlayer();
+    String name = event.getParseResults().getContext().getNodes().get(0).getNode().getName();
+    boolean isCommandAllowed = whitelist.contains(name);
+    if (descriptors.containsKey(playerEntity) && !isCommandAllowed && event.isCancelable()) {
+  	  AuthMod.LOGGER.info("Player %s tried to execute /%s without being logged in.", playerEntity.getName().getString(), name);
+  	  event.setCanceled(true);
+        event.getParseResults().getContext().getSource().sendFeedback(new ServerTranslationTextComponent("welcome"), false);
     }
   }
 

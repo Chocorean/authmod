@@ -26,6 +26,6 @@ public class ExceptionToMessageMapper {
     return messages.getOrDefault(e.getClass(), "Something goes wrong, see the server logs");
   }
 
-  private final static Map<Class<? extends AuthmodError>, String> messages = new HashMap<>();
+  private static final Map<Class<? extends AuthmodError>, String> messages = new HashMap<>();
 
 }

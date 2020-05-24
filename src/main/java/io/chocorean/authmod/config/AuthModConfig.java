@@ -17,7 +17,7 @@ public class AuthModConfig {
   public final DatabaseConfig database;
   public final I18nConfig i18n;
   public enum DataSource {FILE, DATABASE, NONE}
-  public enum Language {en_us, fr_fr, es_es}
+  public enum Language {EN_US, FR_FR, ES_ES}
   public final ForgeConfigSpec.BooleanValue identifierRequired;
   public final ForgeConfigSpec.BooleanValue enableLogin;
   public final ForgeConfigSpec.BooleanValue enableRegister;
@@ -52,7 +52,7 @@ public class AuthModConfig {
 
     this.language = builder
       .comment("lang file to use")
-      .defineEnum("language", Language.en_us);
+      .defineEnum("language", Language.EN_US);
 
     this.dataSource = builder.comment("The way you want to store player's data, choose between 'database' or 'file'. If the strategy is unknown, the server will be open for everyone.")
       .defineEnum("dataSource", DataSource.FILE);
