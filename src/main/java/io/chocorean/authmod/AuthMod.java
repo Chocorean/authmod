@@ -117,7 +117,7 @@ public class AuthMod {
       String version = new StringBuilder(sb.toString().replaceAll(pattern, "")).toString();
       if (!version.contentEquals(VERSION))
         LOGGER.warn("An update is available! '%s' -> '%s'", VERSION, version);
-    } catch (Exception e) {
+    } catch (IOException e) {
       LOGGER.catching(e);
     }
   }

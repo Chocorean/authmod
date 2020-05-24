@@ -46,7 +46,7 @@ public class DatabaseStrategy implements DataSourceStrategyInterface {
       stmt.setString(1, identifier);
       ResultSet rs = stmt.executeQuery();
       return this.createPlayer(rs);
-    } catch(Exception e) {
+    } catch (SQLException e) {
       AuthMod.LOGGER.catching(e);
     }
     return null;
@@ -59,7 +59,7 @@ public class DatabaseStrategy implements DataSourceStrategyInterface {
       stmt.setString(1, identifier);
       ResultSet rs = stmt.executeQuery();
       return this.createPlayer(rs);
-    } catch(Exception e) {
+    } catch (SQLException e) {
       AuthMod.LOGGER.catching(e);
     }
     return null;
@@ -86,7 +86,7 @@ public class DatabaseStrategy implements DataSourceStrategyInterface {
         stmt.setNull(4, Types.VARCHAR);
       stmt.executeUpdate();
       return true;
-    } catch(Exception e) {
+    } catch (SQLException e) {
       AuthMod.LOGGER.catching(e);
     }
     return false;
@@ -110,7 +110,7 @@ public class DatabaseStrategy implements DataSourceStrategyInterface {
       stmt.setString(1, player.getPassword());
       stmt.setString(2, player.getUsername());
       return stmt.executeUpdate() == 1;
-    } catch (Exception e) {
+    } catch (SQLException e) {
       AuthMod.LOGGER.catching(e);
     }
     return false;

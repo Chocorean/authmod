@@ -67,7 +67,7 @@ public class FileDataSourceStrategy implements DataSourceStrategyInterface {
       try {
         this.saveFile();
         return true;
-      } catch(Exception e) {
+      } catch(IOException e) {
         AuthMod.LOGGER.catching(e);
       }
     }
@@ -81,14 +81,16 @@ public class FileDataSourceStrategy implements DataSourceStrategyInterface {
   
   @Override
   public boolean updatePassword(DataSourcePlayerInterface player) {
-    try {
-      this.reloadFile();
-      if (this.exist(player)) {
-        this.players.remove(this.find(player.getIdentifier()));
-        return this.add(player);
+    if (player != null) {
+      try {
+        this.reloadFile();
+        if (this.exist(player)) {
+          this.players.remove(this.find(player.getIdentifier()));
+          return this.add(player);
+        }
+      } catch (IOException e) {
+        AuthMod.LOGGER.catching(e);
       }
-    } catch (Exception e) {
-      AuthMod.LOGGER.catching(e);
     }
     return false;
   }

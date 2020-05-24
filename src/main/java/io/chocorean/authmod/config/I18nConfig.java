@@ -8,6 +8,7 @@ import io.chocorean.authmod.util.text.ServerLanguageMap;
 import net.minecraft.util.JSONUtils;
 import net.minecraftforge.common.ForgeConfigSpec;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -31,8 +32,8 @@ public class I18nConfig {
         String s = ServerLanguageMap.NUMERIC_VARIABLE_PATTERN.matcher(JSONUtils.getString(entry.getValue(), entry.getKey())).replaceAll("%$1s");
         this.put(builder, entry.getKey(), s);
       }
-    } catch (Exception exception) {
-      AuthMod.LOGGER.catching(exception);
+    } catch (IOException e) {
+      AuthMod.LOGGER.catching(e);
     }
     builder.pop();
   }
