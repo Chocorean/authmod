@@ -1,6 +1,5 @@
 package io.chocorean.authmod.command;
 
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.chocorean.authmod.core.DataSourceGuard;
 import io.chocorean.authmod.core.Payload;
 import org.junit.jupiter.api.BeforeEach;

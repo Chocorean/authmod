@@ -6,6 +6,6 @@ public class ServerTranslationTextComponent extends TranslationTextComponent {
 
   public ServerTranslationTextComponent(String translationKey, Object... args) {
     super(ServerLanguageMap.getInstance().translateKey(translationKey), args);
-   }
+  }
 
 }

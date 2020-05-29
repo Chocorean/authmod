@@ -4,7 +4,6 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.core.GuardInterface;
 import io.chocorean.authmod.core.PayloadInterface;
 import io.chocorean.authmod.event.Handler;
@@ -28,7 +27,7 @@ public class RegisterWithIdentifierCommand extends RegisterCommand implements Co
   @Override
   public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
     return execute(context.getSource(), this.handler, this.guard,
-      AuthMod.toPayload(
+      CommandInterface.toPayload(
         context.getSource().asPlayer(),
         StringArgumentType.getString(context, "identifier") ,
         StringArgumentType.getString(context, "password") ,

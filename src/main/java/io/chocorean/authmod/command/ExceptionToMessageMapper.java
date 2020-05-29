@@ -8,6 +8,8 @@ import java.util.Map;
 
 public class ExceptionToMessageMapper {
 
+  private static final Map<Class<? extends AuthmodError>, String> messages = new HashMap<>();
+
   private ExceptionToMessageMapper() {}
 
   public static void init() {
@@ -25,7 +27,5 @@ public class ExceptionToMessageMapper {
   public static String getMessage(Exception e) {
     return messages.getOrDefault(e.getClass(), "Something goes wrong, see the server logs");
   }
-
-  private static final Map<Class<? extends AuthmodError>, String> messages = new HashMap<>();
 
 }

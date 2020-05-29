@@ -1,6 +1,5 @@
 package io.chocorean.authmod.command;
 
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.chocorean.authmod.core.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

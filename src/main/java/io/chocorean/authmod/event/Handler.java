@@ -98,7 +98,7 @@ public class Handler {
     if (source.getEntity() instanceof ServerPlayerEntity) {
       PlayerEntity playerEntity = source.asPlayer();
       if (descriptors.containsKey(playerEntity) && !isCommandAllowed && event.isCancelable()) {
-        AuthMod.LOGGER.info("Player %s tried to execute /%s without being logged in.", playerEntity.getName().getString(), name);
+        AuthMod.LOGGER.info("Player {} tried to execute /{} without being logged in.", playerEntity.getName().getString(), name);
         event.setCanceled(true);
         event.getParseResults().getContext().getSource().sendFeedback(new ServerTranslationTextComponent("welcome"), false);
       }

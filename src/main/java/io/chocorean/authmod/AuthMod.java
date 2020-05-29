@@ -52,7 +52,7 @@ public class AuthMod {
     modEventBus.register(AuthModConfig.class);
     MinecraftForge.EVENT_BUS.addListener( this::serverStart );
     ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, AuthModConfig.serverSpec);
-    LOGGER.info("%s %s", NAME, VERSION);
+    LOGGER.info("{} {}", NAME, VERSION);
     this.checkForUpdates();
   }
 
@@ -67,7 +67,7 @@ public class AuthMod {
           this.registerRegisterCommand(AuthModConfig.get().enableRegister.get(), identifierRequired, event.getCommandDispatcher(), guard);
           this.registerChangePasswordCommand(AuthModConfig.get().enableRegister.get(), event.getCommandDispatcher(), guard);
         } else {
-          LOGGER.warn("%s is disabled because guard is NULL", AuthMod.MODID);
+          LOGGER.warn("{} is disabled because guard is NULL", AuthMod.MODID);
         }
       } catch(Exception e) { LOGGER.catching(e); }
     }
@@ -102,7 +102,7 @@ public class AuthMod {
       default:
         return null;
     }
-    LOGGER.info("Use guard %s", datasource);
+    LOGGER.info("Use guard {}", datasource);
     return new DataSourceGuard(datasource, identifierRequired);
   }
 
@@ -114,19 +114,12 @@ public class AuthMod {
         sb.append(new String(dataBuffer));
       }
       String pattern = "[^a-zA-Z0-9.]";
-      String version = new StringBuilder(sb.toString().replaceAll(pattern, "")).toString();
+      String version = sb.toString().replaceAll(pattern, "");
       if (!version.contentEquals(VERSION))
-        LOGGER.warn("An update is available! '%s' -> '%s'", VERSION, version);
+        LOGGER.warn("An update is available! '{}' -> '{}'", VERSION, version);
     } catch (IOException e) {
       LOGGER.catching(e);
     }
-  }
-
-  public static PayloadInterface toPayload(PlayerEntity entity, String ...args) {
-    // TODO when offline, UUID is not the mojang UUID
-    String uuid = PlayerEntity.getUUID(entity.getGameProfile()).toString();
-    return new Payload(new Player(entity.getDisplayName().getString(), uuid),
-            Arrays.stream(args).filter(Objects::nonNull).toArray(String[]::new));
   }
 
   private void registerChangePasswordCommand(boolean enabled, CommandDispatcher<CommandSource> commandDispatcher, GuardInterface guard) {
