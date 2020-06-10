@@ -164,17 +164,6 @@ public class Handler {
     }
   }
 
-  /*
-   * Unused so far
-  private static void cancelEventAndSayHello(PlayerEvent event) {
-    PlayerEntity entity = event.getPlayer();
-    if (event.isCancelable() && descriptors.containsKey(entity)) {
-      event.setCanceled(true);
-      sayWelcome(entity);
-    }
-  }
-  */
-
   public void authorizePlayer(PlayerEntity player) {
     logged.put(player, true);
     descriptors.remove(player);
