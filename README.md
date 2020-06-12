@@ -38,6 +38,9 @@
 <a href="https://sonarcloud.io/dashboard?id=Chocorean_authmod" target="_blank">
     <img src="https://sonarcloud.io/api/project_badges/measure?project=Chocorean_authmod&metric=vulnerabilities" alt="vulnerabilities" />
 </a>
+<a href="https://lgtm.com/projects/g/Chocorean/authmod/alerts/" target="_blank">
+    <img src="https://img.shields.io/lgtm/alerts/g/Chocorean/authmod.svg?logo=lgtm&logoWidth=18" alt="vulnerabilities" />
+</a>
 </p>
 
 
