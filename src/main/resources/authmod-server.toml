@@ -1,96 +1,94 @@
 
 #Server configuration settings
 [server]
-	#Identifier must be provided for registration and authentication
-	identifierRequired = false
 	#Enable or disable the /login command. If disabled, the server will be opened to everyone).
 	enableLogin = false
-	#Enable or disable the /register command.
-	enableRegister = false
-	#Enable or disable the /changepassword command.
-	enableChangePassword = false
 	#delay in seconds a player can authenticate before being automatically kicked from the server.
 	#Range: 1 ~ 1024
 	delay = 60
 	#lang file to use
-	#Allowed Values: en_us, fr_fr
-	language = "en_us"
+	#Allowed Values: EN_US, FR_FR, ES_ES
+	language = "EN_US"
+	#Whitelisted commands (can be used without being logged)
+	whitelist = ["register", "login", "logged", "help"]
+	#Identifier must be provided for registration and authentication
+	identifierRequired = false
+	#Enable or disable the /register command.
+	enableRegister = false
+	#Enable or disable the /changepassword command.
+	enableChangePassword = false
 	#The way you want to store player's data, choose between 'database' or 'file'. If the strategy is unknown, the server will be open for everyone.
 	#Allowed Values: FILE, DATABASE, NONE
 	dataSource = "FILE"
-	#Whitelisted commands (can be used without being logged)
-	whitelist = ["register", "login", "logged", "help"]
 
 [Database]
-	#Column for the identifier
-	columnIdentifier = "email"
-	#Column telling whether the player is banned
-	columnBan = "banned"
-	#Column for the username
-	colummUsername = "username"
 	#Column for UUID
 	colummUuid = "uuid"
-	#Column for the encrypted password
-	columnPassword = "password"
-	#Name of the database
-	database = "minecraft"
 	#SQL dialect
 	dialect = "mariadb"
-	#Server hosting the database
-	host = "localhost"
-	#JDBC driver to use
-	driver = "org.mariadb.jdbc.Driver"
-	#Database user
-	user = "user"
+	#Column for the encrypted password
+	columnPassword = "password"
+	#Column telling whether the player is banned
+	columnBan = "banned"
+	#Name of the database
+	database = "minecraft"
 	#Database users's password
 	password = "user"
+	#Column for the username
+	colummUsername = "username"
+	#JDBC driver to use
+	driver = "org.mariadb.jdbc.Driver"
 	#Port to be used
 	#Range: 1024 ~ 65535
 	port = 3306
+	#Server hosting the database
+	host = "localhost"
+	#Database user
+	user = "user"
+	#Column for the identifier
+	columnIdentifier = "email"
 	#Table to be used
 	table = "players"
 
 [I18n]
-	#Something was wrong. Please contact the admins.
-	error = ""
-	#Use /register to sign up or /login to sign in.
-	welcome = ""
-	#Wake up, you have only %s seconds to log in.
-	wakeUp = ""
-	#You've been banned. Please contact the admins.
-	banned = ""
 	#Wrong password. Please try again.
 	wrongPassword = ""
-	#The password confirmation doesn't match. Please retry.
-	wrongPasswordConfirmation = ""
 	#yes
 	loggedYes = ""
-	#no
-	loggedNo = ""
-	#/login <email> <password> - Allows you to authenticate on the server
-	loginUsage = ""
-	#%s is not registered on this server.
-	loginNotfound = ""
-	#Have fun!
-	loginSuccess = ""
-	#/logged - tells you whether you are authenticated or not
-	loggedUsage = ""
-	#Wrong UUID. Please be sure you use the same UUID when you registered your account.
-	loginWronguuid = ""
 	#Your username does not correspond to your credentials.
 	loginWrongusername = ""
-	#Someone has already registered with the username %s.
-	registerExist = ""
-	#/register <email> <password> <password>- Be careful when choosing it, you'll be asked to login each time you play.
-	registerUsage = ""
 	#You are registered and authenticated, have fun!
 	registerSuccess = ""
-	#Password changed!
-	changepasswordSuccess = ""
-	#Wrong password.
-	changepasswordError = ""
-	#New password should be different than the previous one.
-	changepasswordSamepassword = ""
 	#/changepassword <old_password> <new_password> <new_password> - Change your password.
 	changepasswordUsage = ""
+	#/register <email> <password> <password>- Be careful when choosing it, you'll be asked to login each time you play.
+	registerUsage = ""
+	#Wake up, you have only %s seconds to log in.
+	wakeUp = ""
+	#Password changed!
+	changepasswordSuccess = ""
+	#Something was wrong. Please contact the admins.
+	error = ""
+	#/logged - tells you whether you are authenticated or not
+	loggedUsage = ""
+	#Someone has already registered with the username %s.
+	registerExist = ""
+	#Have fun!
+	loginSuccess = ""
+	#The password confirmation doesn't match. Try again.
+	wrongPasswordConfirmation = ""
+	#no
+	loggedNo = ""
+	#%s is not registered on this server.
+	loginNotfound = ""
+	#New password should be different than the previous one.
+	changepasswordSamepassword = ""
+	#Wrong UUID. Please be sure you use the same UUID when you registered your account.
+	loginWronguuid = ""
+	#You've been banned. Please contact the admins.
+	banned = ""
+	#Use /register to sign up or /login to sign in.
+	welcome = ""
+	#/login <email> <password> - Allows you to authenticate on the server
+	loginUsage = ""
 
