@@ -1,19 +1,20 @@
 package io.chocorean.authmod.core;
 
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class PlayerPos {
-  private final BlockPos pos;
+  private final Vector3d pos;
   private final float yaw;
   private final float pitch;
 
-  public PlayerPos(BlockPos pos, float yaw, float pitch) {
+  public PlayerPos(Vector3d pos, float yaw, float pitch) {
     this.pos = pos;
     this.yaw = yaw;
     this.pitch = pitch;
   }
 
-  public BlockPos getPosition() {
+  public Vector3d getPosition() {
     return pos;
   }
 

@@ -4,7 +4,8 @@ import com.mojang.brigadier.CommandDispatcher;
 import io.chocorean.authmod.command.*;
 import io.chocorean.authmod.config.AuthModConfig;
 import io.chocorean.authmod.config.DatabaseConfig;
-import io.chocorean.authmod.core.*;
+import io.chocorean.authmod.core.DataSourceGuard;
+import io.chocorean.authmod.core.GuardInterface;
 import io.chocorean.authmod.core.datasource.BcryptPasswordHash;
 import io.chocorean.authmod.core.datasource.DataSourceStrategyInterface;
 import io.chocorean.authmod.core.datasource.DatabaseStrategy;
@@ -13,17 +14,16 @@ import io.chocorean.authmod.core.datasource.db.ConnectionFactory;
 import io.chocorean.authmod.core.datasource.db.ConnectionFactoryInterface;
 import io.chocorean.authmod.event.Handler;
 import net.minecraft.command.CommandSource;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.loading.FMLPaths;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -32,10 +32,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 @Mod(AuthMod.MODID)
 public class AuthMod {
@@ -56,22 +54,21 @@ public class AuthMod {
     this.checkForUpdates();
   }
 
-  private void serverStart(FMLServerStartingEvent event) {
-    if (FMLEnvironment.dist.isDedicatedServer() && AuthModConfig.get().enableAuthmod()) {
+  public void serverStart(RegisterCommandsEvent event) {
+    if (AuthModConfig.get().enableAuthmod()) {
       try {
         boolean identifierRequired = AuthModConfig.get().identifierRequired.get();
         GuardInterface guard = this.createGuard(AuthModConfig.get().dataSource.get(), identifierRequired);
         this.handler = new Handler();
         if(guard != null) {
-          this.registerLoginCommands(AuthModConfig.get().enableLogin.get(), identifierRequired, event.getCommandDispatcher(), guard);
-          this.registerRegisterCommand(AuthModConfig.get().enableRegister.get(), identifierRequired, event.getCommandDispatcher(), guard);
-          this.registerChangePasswordCommand(AuthModConfig.get().enableRegister.get(), event.getCommandDispatcher(), guard);
+          this.registerLoginCommands(AuthModConfig.get().enableLogin.get(), identifierRequired, event.getDispatcher() , guard);
+          this.registerRegisterCommand(AuthModConfig.get().enableRegister.get(), identifierRequired, event.getDispatcher(), guard);
+          this.registerChangePasswordCommand(AuthModConfig.get().enableRegister.get(), event.getDispatcher(), guard);
         } else {
           LOGGER.warn("{} is disabled because guard is NULL", AuthMod.MODID);
         }
       } catch(Exception e) { LOGGER.catching(e); }
     }
-
   }
 
   private GuardInterface createGuard(AuthModConfig.DataSource ds, boolean identifierRequired) throws IOException, ClassNotFoundException, SQLException {

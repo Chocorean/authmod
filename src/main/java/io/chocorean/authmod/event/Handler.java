@@ -12,6 +12,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.play.server.SDisconnectPacket;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.TickEvent;
@@ -42,7 +43,7 @@ public class Handler {
   public static void onJoin(PlayerEvent.PlayerLoggedInEvent event) {
     PlayerEntity entity = event.getPlayer();
     // initializing timer for kicking player if he/she hasn't logged
-    BlockPos pos = entity.getPosition();
+    Vector3d pos = entity.getPositionVec();
     float yaw = entity.rotationYaw;
     float pitch = entity.rotationPitch;
     PlayerPos pp = new PlayerPos(pos, yaw, pitch);
@@ -75,7 +76,7 @@ public class Handler {
   public static void onPlayerTickEvent(TickEvent.PlayerTickEvent event) {
     if (descriptors.containsKey(event.player) && event.side == LogicalSide.SERVER) {
       PlayerPos pp = descriptors.get(event.player).getPosition();
-      BlockPos pos = pp.getPosition();
+      Vector3d pos = pp.getPosition();
       ((ServerPlayerEntity) event.player).connection.setPlayerLocation(pos.getX(), pos.getY(), pos.getZ(), 0, 0);
     }
   }
@@ -170,7 +171,7 @@ public class Handler {
   }
 
   private static void sayWelcome(Entity playerEntity) {
-    playerEntity.sendMessage(new ServerTranslationTextComponent("welcome"));
+    playerEntity.sendMessage(new ServerTranslationTextComponent("welcome"), null);
   }
 
   private static ServerTranslationTextComponent wakeUp() {

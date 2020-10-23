@@ -1,6 +1,7 @@
 package io.chocorean.authmod.core;
 
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +14,7 @@ class PlayerPosTest {
 
   @BeforeEach
   void init() {
-    this.position = new PlayerPos(new BlockPos(1, 2, 3), 1, 2);
+    this.position = new PlayerPos(new Vector3d(1, 2, 3), 1, 2);
   }
 
   @Test
