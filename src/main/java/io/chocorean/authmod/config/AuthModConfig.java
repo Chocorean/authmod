@@ -68,8 +68,8 @@ public class AuthModConfig {
   }
 
   private static void afterLoadedConfig() {
-    ServerLanguageMap.init(AuthModConfig.get().language.get().name());
-    ServerLanguageMap.replaceWith(AuthModConfig.get().i18n.getTranslations());
+    ServerLanguageMap.init(SERVER.language.get().name());
+    ServerLanguageMap.replaceWith(SERVER.i18n.getTranslations());
     ExceptionToMessageMapper.init();
   }
 
@@ -89,16 +89,12 @@ public class AuthModConfig {
     return this.enableLogin.get() || this.enableRegister.get();
   }
 
-  public static final ForgeConfigSpec serverSpec;
-  private static final AuthModConfig SERVER;
+  public static final ForgeConfigSpec  serverSpec;
+  public static final AuthModConfig SERVER;
   static {
     final Pair<AuthModConfig, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(AuthModConfig::new);
     serverSpec = specPair.getRight();
     SERVER = specPair.getLeft();
-  }
-
-  public static AuthModConfig get() {
-    return SERVER;
   }
 
 }

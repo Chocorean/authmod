@@ -13,16 +13,21 @@ import io.chocorean.authmod.core.datasource.FileDataSourceStrategy;
 import io.chocorean.authmod.core.datasource.db.ConnectionFactory;
 import io.chocorean.authmod.core.datasource.db.ConnectionFactoryInterface;
 import io.chocorean.authmod.event.Handler;
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.command.CommandSource;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.lifecycle.*;
+import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.loading.FMLPaths;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,6 +39,8 @@ import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 
 @Mod(AuthMod.MODID)
 public class AuthMod {
@@ -46,62 +53,25 @@ public class AuthMod {
 
   public AuthMod() {
     final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-    modEventBus.register(this);
-    modEventBus.register(AuthModConfig.class);
-    MinecraftForge.EVENT_BUS.addListener( this::serverStart );
-    ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, AuthModConfig.serverSpec);
+    final ModLoadingContext modLoadingContext = ModLoadingContext.get();
+
+    modLoadingContext.registerConfig(ModConfig.Type.SERVER, AuthModConfig.serverSpec);
+    MinecraftForge.EVENT_BUS.register(this);
+  }
+
+
+  @SubscribeEvent
+  public void onServerStarting(FMLServerStartingEvent event) {
     LOGGER.info("{} {}", NAME, VERSION);
-    this.checkForUpdates();
   }
 
-  public void serverStart(RegisterCommandsEvent event) {
-    if (AuthModConfig.get().enableAuthmod()) {
-      try {
-        boolean identifierRequired = AuthModConfig.get().identifierRequired.get();
-        GuardInterface guard = this.createGuard(AuthModConfig.get().dataSource.get(), identifierRequired);
-        this.handler = new Handler();
-        if(guard != null) {
-          this.registerLoginCommands(AuthModConfig.get().enableLogin.get(), identifierRequired, event.getDispatcher() , guard);
-          this.registerRegisterCommand(AuthModConfig.get().enableRegister.get(), identifierRequired, event.getDispatcher(), guard);
-          this.registerChangePasswordCommand(AuthModConfig.get().enableRegister.get(), event.getDispatcher(), guard);
-        } else {
-          LOGGER.warn("{} is disabled because guard is NULL", AuthMod.MODID);
-        }
-      } catch(Exception e) { LOGGER.catching(e); }
-    }
+
+  @SubscribeEvent
+  public void onCommandsRegister(RegisterCommandsEvent event) {
+    LOGGER.info("Register commands");
+    AuthmodCommands.registerCommands(event);
   }
 
-  private GuardInterface createGuard(AuthModConfig.DataSource ds, boolean identifierRequired) throws IOException, ClassNotFoundException, SQLException {
-    DataSourceStrategyInterface datasource;
-    switch (ds) {
-      case DATABASE:
-        Map<String, String> columns = new HashMap<>();
-        DatabaseConfig dbconfig = AuthModConfig.get().database;
-        columns.put(DatabaseStrategy.IDENTIFIER_COLUMN, dbconfig.columnIdentifier.get().trim());
-        columns.put(DatabaseStrategy.USERNAME_COLUMN, dbconfig.columnUsername.get().trim());
-        columns.put(DatabaseStrategy.UUID_COLUMN, dbconfig.columnUuid.get().trim());
-        columns.put(DatabaseStrategy.PASSWORD_COLUMN, dbconfig.columnPassword.get().trim());
-        columns.put(DatabaseStrategy.BANNED_COLUMN, dbconfig.columnBan.get().trim());
-        ConnectionFactoryInterface connectionFactory = new ConnectionFactory(
-                dbconfig.dialect.get().trim(),
-                dbconfig.host.get().trim(),
-                dbconfig.port.get(),
-                dbconfig.database.get().trim(),
-                dbconfig.user.get().trim(),
-                dbconfig.password.get(),
-                dbconfig.driver.get());
-        datasource = new DatabaseStrategy(dbconfig.table.get().trim(), connectionFactory, columns, new BcryptPasswordHash());
-        break;
-      case FILE:
-        datasource = new FileDataSourceStrategy(Paths.get(FMLPaths.CONFIGDIR.get().toString(), MODID + ".csv").toFile());
-        break;
-      case NONE:
-      default:
-        return null;
-    }
-    LOGGER.info("Use guard {}", datasource);
-    return new DataSourceGuard(datasource, identifierRequired);
-  }
 
   private void checkForUpdates() {
     try (BufferedInputStream in = new BufferedInputStream(new URL(VERSION_URL).openStream())) {
@@ -119,34 +89,4 @@ public class AuthMod {
     }
   }
 
-  private void registerChangePasswordCommand(boolean enabled, CommandDispatcher<CommandSource> commandDispatcher, GuardInterface guard) {
-    if (enabled) {
-      LOGGER.info("Registering /changepassword command");
-      commandDispatcher.register(new ChangePasswordCommand(this.handler, guard).getCommandBuilder());
-    }
-  }
-
-  private void registerRegisterCommand(boolean enabled, boolean identifierRequired, CommandDispatcher<CommandSource> commandDispatcher, GuardInterface guard) {
-    if (enabled) {
-      LOGGER.info("Registering /register command");
-      RegisterCommand command = new RegisterCommand(this.handler, guard);
-      if (identifierRequired) {
-        command = new RegisterWithIdentifierCommand(this.handler, guard);
-      }
-      commandDispatcher.register(command.getCommandBuilder());
-    }
-  }
-
-  private void registerLoginCommands(boolean enabled, boolean identifierRequired, CommandDispatcher<CommandSource> commandDispatcher, GuardInterface guard) {
-    if (enabled) {
-      LOGGER.info("Registering /login command");
-      LoginCommand command = new LoginCommand(this.handler, guard);
-      if (identifierRequired) {
-        command = new LoginWithIdentifierCommand(this.handler, guard);
-      }
-      commandDispatcher.register(command.getCommandBuilder());
-      LOGGER.info("Registering /logged command");
-      commandDispatcher.register(new LoggedCommand(this.handler).getCommandBuilder());
-    }
-  }
 }

@@ -56,7 +56,7 @@ public class Handler {
             logged.remove(entity);
             ((ServerPlayerEntity) event.getPlayer()).connection.sendPacket(new SDisconnectPacket(wakeUp()));
           }
-        }, AuthModConfig.get().delay.get(), TimeUnit.SECONDS);
+        }, AuthModConfig.SERVER.delay.get(), TimeUnit.SECONDS);
   }
 
   @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -92,7 +92,7 @@ public class Handler {
 
   @SubscribeEvent(priority = EventPriority.HIGHEST)
   public static void onCommand(CommandEvent event) throws CommandSyntaxException {
-    List<? extends String> whitelist = AuthModConfig.get().commandWhitelist.get();
+    List<? extends String> whitelist = AuthModConfig.SERVER.commandWhitelist.get();
     String name = event.getParseResults().getContext().getNodes().get(0).getNode().getName();
     boolean isCommandAllowed = whitelist.contains(name);
     CommandSource source = event.getParseResults().getContext().getSource();
@@ -175,7 +175,7 @@ public class Handler {
   }
 
   private static ServerTranslationTextComponent wakeUp() {
-    return new ServerTranslationTextComponent("wakeUp", AuthModConfig.get().delay.get());
+    return new ServerTranslationTextComponent("wakeUp", AuthModConfig.SERVER  .delay.get());
   }
 
   public boolean isLogged(PlayerEntity player) {
