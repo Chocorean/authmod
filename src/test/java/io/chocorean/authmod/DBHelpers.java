@@ -14,7 +14,7 @@ public class DBHelpers {
   public static File dataFile;
 
   public static void initDatabaseFile() throws IOException {
-    DBHelpers.dataFile = File.createTempFile(System.getProperty("java.io.tmpdir"), "authmod.csv");
+    DBHelpers.dataFile = File.createTempFile(System.getProperty("java.io.tmpdir"), "authmod.db");
     if (DBHelpers.dataFile.exists()) {
       assert DBHelpers.dataFile.delete();
     }
@@ -44,6 +44,7 @@ public class DBHelpers {
       Statement stmt = connection.createStatement();
       stmt.executeUpdate(getCreationTableQuery().replace("players", table));
     }
+    connection.close();
   }
 
   public static IConnectionFactory getConnectionFactory() throws IOException {

@@ -3,6 +3,7 @@ package io.chocorean.authmod.datasource;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -43,7 +44,7 @@ class DatabaseSourceStrategyTest {
 
   @Test
   void testConstructorTableIsDifferent() throws SQLException {
-    DBHelpers.dataFile.delete();
+    assert DBHelpers.dataFile.delete();
     Statement stmt = connectionFactory.getConnection().createStatement();
     stmt.executeUpdate(
         "CREATE TABLE players ("
@@ -78,12 +79,11 @@ class DatabaseSourceStrategyTest {
   }
 
   @Test
-  void testAddSQLError() throws AuthmodException, SQLException {
+  void testAddSQLError() throws AuthmodException, SQLException, IOException {
     this.dataSource = new DatabaseSourceStrategy(connectionFactory);
     this.player = PlayerFactory.create();
     assert DBHelpers.dataFile.delete();
-    boolean added = dataSource.add(this.player);
-    assertFalse(added, "The player should not be registered");
+    assertFalse(dataSource.add(this.player), "The player should not be registered");
   }
 
   @Test
@@ -96,7 +96,7 @@ class DatabaseSourceStrategyTest {
   void testFindByEmailSQLError() throws SQLException {
     this.dataSource = new DatabaseSourceStrategy(connectionFactory);
     this.player = PlayerFactory.create();
-    DBHelpers.dataFile.delete();
+    assert DBHelpers.dataFile.delete();
     assertNull(dataSource.find(this.player.getEmail(), null), "The player should not exist");
   }
 
@@ -121,7 +121,7 @@ class DatabaseSourceStrategyTest {
 
   @Test
   void testFindNullParams() throws AuthmodException, SQLException {
-    this.registerPlayer();
+    this.registerPlayer();	
     assertNull(dataSource.find(null, null), "It should return null");
   }
 }
