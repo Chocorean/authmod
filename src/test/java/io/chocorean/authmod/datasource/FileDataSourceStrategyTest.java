@@ -6,7 +6,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Paths;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,10 +24,10 @@ class FileDataSourceStrategyTest {
   private IDataSourceStrategy dataSource;
 
   @BeforeEach
-  void init() {
-    this.dataFile = Paths.get(System.getProperty("java.io.tmpdir"), "authmod.csv").toFile();
+  void init() throws IOException {
+	this.dataFile = File.createTempFile(System.getProperty("java.io.tmpdir"), "authmod.csv");
     if (this.dataFile.exists()) {
-      this.dataFile.delete();
+      assert this.dataFile.delete();
     }
   }
 
