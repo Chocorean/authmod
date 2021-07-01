@@ -2,6 +2,7 @@ package io.chocorean.authmod.datasource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -24,7 +25,7 @@ class DatabaseSourceStrategyTest {
   private IConnectionFactory connectionFactory;
 
   @BeforeEach
-  void setupConnection() throws SQLException {
+  void setupConnection() throws SQLException, IOException {
     this.connectionFactory = DBHelpers.getConnectionFactory();
     DBHelpers.initTable(this.connectionFactory);
   }
@@ -66,7 +67,7 @@ class DatabaseSourceStrategyTest {
   }
 
   @Test
-  void testConstructorCustomTable() throws AuthmodException, SQLException {
+  void testConstructorCustomTable() throws AuthmodException, SQLException, IOException {
     DBHelpers.dataFile.delete();
     String table = "my_table";
     this.connectionFactory = DBHelpers.getConnectionFactory();
@@ -80,7 +81,7 @@ class DatabaseSourceStrategyTest {
   void testAddSQLError() throws AuthmodException, SQLException {
     this.dataSource = new DatabaseSourceStrategy(connectionFactory);
     this.player = PlayerFactory.create();
-    DBHelpers.dataFile.delete();
+    assert DBHelpers.dataFile.delete();
     boolean added = dataSource.add(this.player);
     assertFalse(added, "The player should not be registered");
   }

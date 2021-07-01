@@ -2,6 +2,7 @@ package io.chocorean.authmod.datasource.db;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
@@ -20,7 +21,7 @@ class PlayerDAOTest {
   private IConnectionFactory connectionFactory;
 
   @BeforeEach
-  void init() throws SQLException {
+  void init() throws SQLException, IOException {
     this.connectionFactory = DBHelpers.getConnectionFactory();
     DBHelpers.initTable(this.connectionFactory);
   }
@@ -40,7 +41,7 @@ class PlayerDAOTest {
   }
 
   @Test
-  void testConstructorCustomColumns() throws SQLException {
+  void testConstructorCustomColumns() throws SQLException, IOException {
     this.connectionFactory = DBHelpers.getConnectionFactory();
     String query = DBHelpers.getCreationTableQuery();
     query = query.replaceAll("username", "pseudo");

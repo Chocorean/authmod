@@ -1,6 +1,7 @@
 package io.chocorean.authmod;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -12,10 +13,10 @@ import io.chocorean.authmod.guard.datasource.db.IConnectionFactory;
 public class DBHelpers {
   public static File dataFile;
 
-  public static void initDatabaseFile() {
-    DBHelpers.dataFile = Paths.get(System.getProperty("java.io.tmpdir"), "authmod.csv").toFile();
+  public static void initDatabaseFile() throws IOException {
+    DBHelpers.dataFile = File.createTempFile(System.getProperty("java.io.tmpdir"), "authmod.csv");
     if (DBHelpers.dataFile.exists()) {
-      DBHelpers.dataFile.delete();
+      assert DBHelpers.dataFile.delete();
     }
   }
 
@@ -45,7 +46,7 @@ public class DBHelpers {
     }
   }
 
-  public static IConnectionFactory getConnectionFactory() {
+  public static IConnectionFactory getConnectionFactory() throws IOException {
     initDatabaseFile();
     return new ConnectionFactory("jdbc:sqlite:" + dataFile.getAbsolutePath());
   }
