@@ -91,13 +91,16 @@ public class PlayersDAO implements IPlayersDAO<IPlayer> {
         PreparedStatement stmt =
             conn.prepareStatement(
                 String.format(
-                    "SELECT * FROM %s WHERE %s = ? OR %s = ?",
+                    "SELECT * FROM %s WHERE (%s = ? AND %s != '') OR %s = ?",
                     this.table,
+                    this.columns.get(EMAIL_COLUMN),
                     this.columns.get(EMAIL_COLUMN),
                     this.columns.get(USERNAME_COLUMN)))) {
       stmt.setString(1, player.getEmail());
       stmt.setString(2, player.getUsername());
+      LOGGER.info(stmt.toString());
       ResultSet rs = stmt.executeQuery();
+      LOGGER.info(rs.toString());
       return createPlayer(rs);
     }
   }
