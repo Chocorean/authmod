@@ -120,4 +120,22 @@ public class PlayersDAO implements IPlayersDAO<IPlayer> {
     }
     return player;
   }
+
+	@Override
+	public boolean remove(IPlayer player) throws SQLException {
+		try {
+			this.find(player);
+			Connection conn = this.connectionFactory.getConnection();
+			Statement stmt = conn.createStatement();
+			stmt.execute(String.format(
+									"DELETE FROM %s WHERE %s = \"%s\"",
+				                    this.table,
+				                    this.columns.get(USERNAME_COLUMN),
+				                    player.getUsername()));
+			return true;
+		} catch (SQLException e) {
+			LOGGER.catching(e);
+			return false;
+		}
+	}
 }

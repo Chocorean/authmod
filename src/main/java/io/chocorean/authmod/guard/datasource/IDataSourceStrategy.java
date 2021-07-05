@@ -10,4 +10,6 @@ public interface IDataSourceStrategy {
   boolean add(IPlayer player) throws RegistrationException;
 
   boolean exist(IPlayer player);
+  
+  boolean remove(String username);
 }

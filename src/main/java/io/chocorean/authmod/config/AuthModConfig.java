@@ -18,6 +18,9 @@ public class AuthModConfig {
   @Comment("Enable or disable the /register command")
   public static boolean enableRegistration = true;
 
+  @Comment("Enable or disable the /changepassword command")
+  public static boolean enableChangePassword = true;
+
   public enum Strategies {
     FILE,
     DATABASE
@@ -131,5 +134,11 @@ public class AuthModConfig {
 
     @Comment("Usage for /logged")
     public String loggedUsage = "/logged - tells you whether you are authenticated or not";
+    
+    @Comment("Message displayed to a player when they try to change their password")
+    public String changePasswordUsage = "/changepassword <old_password> <new_password> <new_pasword>";
+    
+    @Comment("Message displayed when a player successfully changed their password.")
+    public String changePasswordSuccess = "Your password has been changed.";
   }
 }

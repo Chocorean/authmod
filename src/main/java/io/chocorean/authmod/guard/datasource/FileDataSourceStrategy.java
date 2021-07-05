@@ -107,6 +107,14 @@ public class FileDataSourceStrategy implements IDataSourceStrategy {
             .orElse(null);
     return p != null;
   }
+  
+  @Override
+  public boolean remove(String username) {
+      this.reloadFile();
+      IPlayer player = find(null, username);
+      if (player == null) return false;
+	  return this.players.remove(player);
+  }
 
   private void saveFile() {
     try (BufferedWriter bw = new BufferedWriter(new FileWriter(this.authFile))) {

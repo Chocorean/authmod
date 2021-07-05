@@ -62,4 +62,18 @@ public class DatabaseSourceStrategy implements IDataSourceStrategy {
     }
     return false;
   }
+
+  
+  @Override
+  public boolean remove(String username) {
+	  IPlayer player = this.find(null, username);
+	  if (player == null) return false;
+	  try {
+		  return this.playersDAO.remove(player);
+	  } catch (SQLException e) {
+		  LOGGER.info(e.getMessage());
+	      LOGGER.catching(Level.ERROR, e);
+		  return false;
+	  }
+  }
 }

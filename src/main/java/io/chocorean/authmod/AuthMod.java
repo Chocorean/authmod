@@ -1,5 +1,6 @@
 package io.chocorean.authmod;
 
+import io.chocorean.authmod.command.ChangePasswordCommand;
 import io.chocorean.authmod.command.LoggedCommand;
 import io.chocorean.authmod.command.LoginCommand;
 import io.chocorean.authmod.command.RegisterCommand;
@@ -20,6 +21,7 @@ import java.nio.file.Paths;
 
 import static io.chocorean.authmod.config.AuthModConfig.enableAuthentication;
 import static io.chocorean.authmod.config.AuthModConfig.enableRegistration;
+import static io.chocorean.authmod.config.AuthModConfig.enableChangePassword;
 
 @Mod(modid = AuthMod.MODID, name = AuthMod.NAME, version = AuthMod.VERSION, serverSideOnly = true, acceptableRemoteVersions = "*")
 public class AuthMod {
@@ -79,6 +81,10 @@ public class AuthMod {
       if (enableRegistration) {
         LOGGER.info("Registering AuthMod /register command");
         event.registerServerCommand(new RegisterCommand(this.handler, this.dataSourceStrategy, AuthModConfig.emailRequired));
+      }
+      if (enableChangePassword) {
+          LOGGER.info("Registering AuthMod /changepassword command");
+          event.registerServerCommand(new ChangePasswordCommand(this.handler, this.dataSourceStrategy));
       }
     }
   }
