@@ -4,6 +4,6 @@ public class BannedPlayerException extends LoginException {
   private static final long serialVersionUID = 1L;
 
   public BannedPlayerException() {
-    super("you've banned from this server");
+    super("You're banned from this server");
   }
 }
