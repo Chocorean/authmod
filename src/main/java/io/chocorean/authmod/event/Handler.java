@@ -9,7 +9,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.play.server.SPacketDisconnect;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
@@ -44,9 +44,9 @@ public class Handler {
   public static void onJoin(PlayerLoggedInEvent event) {
     EntityPlayer entity = event.player;
     // initializing timer for kicking player if he/she hasn't logged in a minute
-    BlockPos pos = entity.getPosition();
+    Vec3d posVector = entity.getPositionVector();
     float yaw = entity.rotationYaw, pitch = entity.rotationPitch;
-    PlayerPos pp = new PlayerPos(pos, yaw, pitch);
+    PlayerPos pp = new PlayerPos(posVector, yaw, pitch);
     PlayerDescriptor dc = new PlayerDescriptor(entity, pp);
     descriptors.put(entity, dc);
     scheduler.schedule(
@@ -68,8 +68,8 @@ public class Handler {
   public static void onPlayerTickEvent(TickEvent.PlayerTickEvent event) {
     if (descriptors.containsKey(event.player)) {
       PlayerPos pp = descriptors.get(event.player).getPosition();
-      BlockPos pos = pp.getPosition();
-      ((EntityPlayerMP) event.player).connection.setPlayerLocation(pos.getX(), pos.getY(), pos.getZ(), pp.getYaw(), pp.getPitch());
+      Vec3d pos = pp.getPosition();
+      ((EntityPlayerMP) event.player).connection.setPlayerLocation(pos.x, pos.y, pos.z, pp.getYaw(), pp.getPitch());
     }
   }
 
