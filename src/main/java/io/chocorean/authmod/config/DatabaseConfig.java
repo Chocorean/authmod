@@ -1,9 +1,10 @@
 package io.chocorean.authmod.config;
 
 import io.chocorean.authmod.core.datasource.DatabaseStrategy;
-import java.util.HashMap;
-import java.util.Map;
 import net.minecraftforge.common.ForgeConfigSpec;
+
+import java.util.EnumMap;
+import java.util.Map;
 
 public class DatabaseConfig {
 
@@ -15,7 +16,7 @@ public class DatabaseConfig {
   public final ForgeConfigSpec.IntValue port;
   public final ForgeConfigSpec.ConfigValue<String> table;
   public final ForgeConfigSpec.ConfigValue<String> driver;
-  public final Map<DatabaseStrategy.Column, ForgeConfigSpec.ConfigValue<String>> columns = new HashMap<>();
+  public final Map<DatabaseStrategy.Column, ForgeConfigSpec.ConfigValue<String>> columns = new EnumMap<>(DatabaseStrategy.Column.class);
 
   public DatabaseConfig(ForgeConfigSpec.Builder builder) {
     builder.push("Database");

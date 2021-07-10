@@ -17,12 +17,11 @@ public class AuthMod {
 
   public static final String MODID = "authmod";
   public static final String NAME = "AuthMod";
-  public static ArtifactVersion VERSION;
   public static final Logger LOGGER = LogManager.getLogger(NAME);
 
   public AuthMod() throws Exception {
-    VERSION = ModLoadingContext.get().getActiveContainer().getModInfo().getVersion();
-    LOGGER.info("{} {}", NAME, VERSION);
+    ArtifactVersion version = ModLoadingContext.get().getActiveContainer().getModInfo().getVersion();
+    LOGGER.info("{} {}", NAME, version);
     LOGGER.info("Register configuration");
     Config.register(ModLoadingContext.get());
     Config.loadConfig();

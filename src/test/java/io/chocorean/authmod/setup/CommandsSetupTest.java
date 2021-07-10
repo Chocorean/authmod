@@ -1,5 +1,6 @@
 package io.chocorean.authmod.setup;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
 
@@ -18,13 +19,13 @@ class CommandsSetupTest {
   }
 
   @Test
-  public void testConstructor() {
+  void testConstructor() {
     assertNotNull(this.setup);
   }
 
   @Test
-  public void testOnRegisterCommands() throws Exception {
+  void testOnRegisterCommands() throws Exception {
     RegisterCommandsEvent event = mock(RegisterCommandsEvent.class);
-    this.setup.onCommandsRegister(event);
+    assertDoesNotThrow(() -> this.setup.onCommandsRegister(event));
   }
 }

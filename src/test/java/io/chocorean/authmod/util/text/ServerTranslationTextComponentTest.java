@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Test;
 class ServerTranslationTextComponentTest {
 
   @Test
-  public void testConstructor() {
+  void testConstructor() {
     ServerTranslationTextComponent component = new ServerTranslationTextComponent("authmod.logged.yes");
-    assertEquals(component.getContents(), "yes");
+    assertEquals("yes", component.getContents());
   }
 }

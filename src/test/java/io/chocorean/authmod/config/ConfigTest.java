@@ -1,40 +1,39 @@
 package io.chocorean.authmod.config;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-
 import io.chocorean.authmod.AuthMod;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.junit.jupiter.api.Test;
 
-public class ConfigTest {
+import static org.junit.jupiter.api.Assertions.*;
+
+class ConfigTest {
 
   private final Path file = Paths
     .get("src", "main", "resources", String.format("%s-server.toml", AuthMod.MODID))
     .toAbsolutePath();
 
   @Test
-  public void testLoadConfig() {
-    Config.loadConfig(this.file);
+  void testLoadConfig() {
+    assertDoesNotThrow(() -> Config.loadConfig(this.file));
   }
 
   @Test
-  public void testAuthmodEnabled() {
+  void testAuthmodEnabled() {
     Config.loadConfig(this.file);
     assertFalse(Config.authmodEnabled());
   }
 
   @Test
-  public void testOnReload() {
+  void testOnReload() {
     Config.loadConfig(this.file);
     Config.onReload(null);
-    assertEquals(Config.delay.get(), 60);
+    assertEquals(60, Config.delay.get());
   }
 
   @Test
-  public void testOnLoad() {
+  void testOnLoad() {
     Config.loadConfig(this.file);
-    Config.onLoad(null);
+    assertDoesNotThrow(() -> Config.onLoad(null));
   }
 }

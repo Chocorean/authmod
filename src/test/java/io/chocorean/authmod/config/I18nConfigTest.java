@@ -17,7 +17,7 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class I18nConfigTest {
+class I18nConfigTest {
 
   private Path copied;
 
@@ -37,13 +37,13 @@ public class I18nConfigTest {
   }
 
   @Test
-  public void testGetTranslations() {
+  void testGetTranslations() {
     Config.loadConfig(copied);
     assertTrue(Config.i18n.getTranslations().isEmpty());
   }
 
   @Test
-  public void testGetTranslationsOverwrite2keys() throws IOException {
+  void testGetTranslationsOverwrite2keys() throws IOException {
     Map<String, String> newTranslations = new HashMap<>();
     newTranslations.put("authmod.changepassword.samePassword", "It does exist");
     newTranslations.put("authmod.register.exist", "Not the same password");

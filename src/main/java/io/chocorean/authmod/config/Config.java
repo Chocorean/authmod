@@ -10,10 +10,8 @@ import io.chocorean.authmod.core.datasource.DataSourceStrategyInterface;
 import io.chocorean.authmod.core.datasource.DatabaseStrategy;
 import io.chocorean.authmod.core.i18n.ServerLanguageMap;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -36,6 +34,8 @@ public class Config {
   public static final ForgeConfigSpec.IntValue delay;
   public static final ForgeConfigSpec.EnumValue<DataSourceStrategyInterface.Strategy> dataSource;
   public static final ForgeConfigSpec.ConfigValue<List<? extends String>> commandWhitelist;
+
+  private Config(){}
 
   static {
     BUILDER.comment("Server configuration settings").push("server");
@@ -124,15 +124,11 @@ public class Config {
   }
 
   public static Path getConfigurationFile() {
-    Path p = FMLPaths.CONFIGDIR.get();
-    if (p != null) {
-      p = p.resolve("../world/serverconfig/authmod-server.toml").normalize();
-    }
-    return p;
+    return FMLPaths.CONFIGDIR.get().resolve("../world/serverconfig/authmod-server.toml").normalize();
   }
 
   public static FactoryConfig getFactoryConfig() {
-    Map<DatabaseStrategy.Column, String> columns = new HashMap<>();
+    Map<DatabaseStrategy.Column, String> columns = new EnumMap<>(DatabaseStrategy.Column.class);
     for (DatabaseStrategy.Column c : DatabaseStrategy.Column.values()) {
       columns.put(c, Config.database.columns.get(c).get());
     }
