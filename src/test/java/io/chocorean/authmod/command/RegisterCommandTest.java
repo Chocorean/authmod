@@ -1,18 +1,20 @@
 package io.chocorean.authmod.command;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import com.mojang.authlib.GameProfile;
-import io.chocorean.authmod.core.*;
+import io.chocorean.authmod.core.Payload;
+import io.chocorean.authmod.core.PayloadInterface;
+import io.chocorean.authmod.core.Player;
+import io.chocorean.authmod.core.PlayerInterface;
+import java.util.UUID;
 import net.minecraft.command.CommandSource;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.text.StringTextComponent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 class RegisterCommandTest extends CommandTest {
 
@@ -20,7 +22,7 @@ class RegisterCommandTest extends CommandTest {
   void init() throws Exception {
     super.initProperties("register");
     this.command = new RegisterCommand(this.handler, this.guard);
-    this.payload = new Payload(player, new String[]{this.password, this.password});
+    this.payload = new Payload(player, new String[] { this.password, this.password });
   }
 
   @Test
@@ -40,12 +42,11 @@ class RegisterCommandTest extends CommandTest {
 
   @Test
   void testExecuteWrongNumberOfArgs() {
-    this.payload = new Payload(this.player, new String[]{});
+    this.payload = new Payload(this.player, new String[] {});
     int res = RegisterCommand.execute(this.source, this.handler, this.guard, this.payload);
     assertNotEquals(0, res);
     assertFalse(this.handler.isLogged(this.playerEntity));
   }
-
 
   @Test
   void testExecuteAlreadyLogged() {
@@ -53,6 +54,16 @@ class RegisterCommandTest extends CommandTest {
     assertTrue(this.handler.isLogged(this.playerEntity));
     int res = RegisterCommand.execute(this.source, this.handler, this.guard, this.payload);
     assertEquals(0, res);
+    assertTrue(this.handler.isLogged(this.playerEntity));
+  }
+
+  @Test
+  void testExecuteAlreadyLoggedWrongPassword() {
+    this.payload = new Payload(this.player, new String[] {});
+    handler.authorizePlayer(this.playerEntity);
+    assertTrue(this.handler.isLogged(this.playerEntity));
+    int res = RegisterCommand.execute(this.source, this.handler, this.guard, this.payload);
+    assertNotEquals(0, res);
     assertTrue(this.handler.isLogged(this.playerEntity));
   }
 
@@ -70,15 +81,16 @@ class RegisterCommandTest extends CommandTest {
     // Init
     PlayerInterface secondPlayer = new Player("Superman", "094b0779-992c-4fac-90f5-fa839dc77dbc");
     ServerPlayerEntity secondPlayerEntity = mock(ServerPlayerEntity.class);
-    when(secondPlayerEntity.getGameProfile()).thenReturn(new GameProfile(UUID.fromString(secondPlayer.getUuid()), secondPlayer.getUsername()));
+    when(secondPlayerEntity.getGameProfile())
+      .thenReturn(new GameProfile(UUID.fromString(secondPlayer.getUuid()), secondPlayer.getUsername()));
     when(secondPlayerEntity.getDisplayName()).thenReturn(new StringTextComponent(secondPlayer.getUsername()));
-    PayloadInterface secondPayload = new Payload(secondPlayer, new String[]{"sliprouge", "sliprouge"});
-    
+    PayloadInterface secondPayload = new Payload(secondPlayer, new String[] { "sliprouge", "sliprouge" });
+
     // Scenario
     this.handler.authorizePlayer(this.playerEntity);
     assertTrue(this.handler.isLogged(this.playerEntity));
     CommandSource secondSource = mock(CommandSource.class);
-    when(secondSource.asPlayer()).thenReturn(secondPlayerEntity);
+    when(secondSource.getPlayerOrException()).thenReturn(secondPlayerEntity);
     int res = RegisterCommand.execute(secondSource, this.handler, this.guard, secondPayload);
     assertEquals(0, res);
     assertTrue(this.handler.isLogged(secondPlayerEntity));
