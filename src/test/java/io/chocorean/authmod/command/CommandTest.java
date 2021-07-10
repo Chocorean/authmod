@@ -79,7 +79,7 @@ abstract class CommandTest {
   }
 
   @Test
-  void testExecute() throws CommandException {
-    this.command.execute(this.server, this.playerEntity, new String[] {});
+  void testExecute() {
+    assertDoesNotThrow(() -> this.command.execute(this.server, this.playerEntity, new String[] {}));
   }
 }

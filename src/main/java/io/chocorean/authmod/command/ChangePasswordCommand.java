@@ -20,11 +20,13 @@ public class ChangePasswordCommand implements CommandInterface {
   protected final Handler handler;
   protected final GuardInterface guard;
   private final List<String> aliases;
+  private final List<String> completions;
 
   public ChangePasswordCommand(Handler handler, GuardInterface guard) {
     this.handler = handler;
     this.guard = guard;
     this.aliases = new ArrayList<>();
+    this.completions = new ArrayList<>();
   }
 
   @Override
@@ -64,13 +66,9 @@ public class ChangePasswordCommand implements CommandInterface {
   }
 
   @Override
-  public List<String> getTabCompletions(
-    MinecraftServer minecraftServer,
-    ICommandSender iCommandSender,
-    String[] strings,
-    @Nullable BlockPos blockPos
-  ) {
-    return null;
+  public List<String> getTabCompletions(MinecraftServer minecraftServer, ICommandSender iCommandSender,
+    String[] strings, @Nullable BlockPos blockPos) {
+    return this.completions;
   }
 
   @Override

@@ -20,14 +20,14 @@ public class AuthMod {
   static final String VERSION = "1.0.0";
   public static final Logger LOGGER = LogManager.getLogger(NAME);
 
-  public AuthMod() throws Exception {
+  public AuthMod() {
     LOGGER.info("{} {}", NAME, VERSION);
     LOGGER.info("Register configuration");
   }
 
   @Mod.EventHandler
-  public void preInit(FMLPreInitializationEvent event) throws Exception {
-    Config.load(event);
+  public void preInit(FMLPreInitializationEvent event) {
+    Config.load();
     MinecraftForge.EVENT_BUS.register(this);
   }
 

@@ -1,5 +1,6 @@
 package io.chocorean.authmod.setup;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
 
@@ -18,13 +19,13 @@ class CommandsSetupTest {
   }
 
   @Test
-  public void testConstructor() {
+  void testConstructor() {
     assertNotNull(this.setup);
   }
 
   @Test
-  public void testOnRegisterCommands() {
+  void testOnRegisterCommands() {
     FMLServerStartingEvent event = mock(FMLServerStartingEvent.class);
-    this.setup.registerCommands(event);
+    assertDoesNotThrow(() -> this.setup.registerCommands(event));
   }
 }
