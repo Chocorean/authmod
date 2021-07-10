@@ -4,7 +4,7 @@ name: "tagged-release"
 on:
   push:
     tags:
-      - "v*"
+      - "v1.12.2*"
 
 jobs:
   tagged-release:
@@ -22,12 +22,11 @@ jobs:
       - name: Get the version
         uses: battila7/get-version-action@v2
         id: get_version
+      - name: Build and test the project
+        run: ./gradlew -Pversion="${{ steps.get_version.outputs.version-without-v }}" build test
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-      - name: Build and test the project
-        run: ./gradlew -Pversion="${{ steps.get_version.outputs.version-without-v }}" build test
-      - name: Release
-        run: ./gradlew -Pversion="${{ steps.get_version.outputs.version-without-v }}" publish
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          prerelease: false
+          files: |
+            build/libs/*.jar
