@@ -1,34 +1,27 @@
 package io.chocorean.authmod.command;
 
-import io.chocorean.authmod.AuthMod;
-import io.chocorean.authmod.config.AuthModConfig;
+import io.chocorean.authmod.core.i18n.ServerLanguageMap;
 import io.chocorean.authmod.event.Handler;
+import io.chocorean.authmod.util.text.ServerTranslationTextComponent;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
-import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LoggedCommand implements ICommand {
-  private static final Logger LOGGER = AuthMod.LOGGER;
+public class LoggedCommand implements CommandInterface {
 
   private final List<String> aliases;
   private final Handler handler;
-  private final String no;
-  private final String yes;
 
   public LoggedCommand(Handler handler) {
     this.handler = handler;
     this.aliases = new ArrayList<>();
     this.aliases.add("logged?");
-    this.yes = AuthModConfig.i18n.loggedYes;
-    this.no = AuthModConfig.i18n.loggedNo;
   }
 
   @Override
@@ -38,7 +31,7 @@ public class LoggedCommand implements ICommand {
 
   @Override
   public String getUsage(ICommandSender sender) {
-    return AuthModConfig.i18n.loggedUsage;
+    return ServerLanguageMap.getInstance().getOrDefault("authmod.logged.usage");
   }
 
   @Override
@@ -48,10 +41,9 @@ public class LoggedCommand implements ICommand {
 
   @Override
   public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
-    EntityPlayer player = (EntityPlayer) sender;
-    LOGGER.info(String.format("%s is using /logged", player.getDisplayNameString()));
-    boolean logged = this.handler.isLogged(player);
-    sender.sendMessage(new TextComponentString(logged ? this.yes : this.no));
+    boolean logged = handler.isLogged((EntityPlayer) sender);
+    String translationKey = "authmod.logged." + (logged ? "yes" : "no");
+    sender.sendMessage(new ServerTranslationTextComponent(translationKey));
   }
 
   @Override
@@ -66,7 +58,7 @@ public class LoggedCommand implements ICommand {
 
   @Override
   public boolean isUsernameIndex(String[] args, int index) {
-    return true;
+    return false;
   }
 
   @Override

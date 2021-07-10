@@ -1,24 +1,27 @@
 package io.chocorean.authmod.event;
 
-import io.chocorean.authmod.AuthMod;
-import io.chocorean.authmod.config.AuthModConfig;
-import io.chocorean.authmod.model.PlayerDescriptor;
-import io.chocorean.authmod.model.PlayerPos;
+import io.chocorean.authmod.config.Config;
+import io.chocorean.authmod.core.PlayerDescriptor;
+import io.chocorean.authmod.util.text.ServerTranslationTextComponent;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.play.server.SPacketDisconnect;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.common.config.Config;
-import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -26,37 +29,30 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-
 @Mod.EventBusSubscriber
 public class Handler {
+
   private static final ScheduledExecutorService scheduler = new ScheduledThreadPoolExecutor(1);
   private static final Map<EntityPlayer, PlayerDescriptor> descriptors = new HashMap<>();
   private static final Map<EntityPlayer, Boolean> logged = new HashMap<>();
-  private static final String WELCOME = AuthModConfig.i18n.welcome;
-  private static final String WAKE_UP = String.format(AuthModConfig.i18n.delay, Integer.toString(AuthModConfig.delay));
 
   @SubscribeEvent(priority = EventPriority.HIGHEST)
   public static void onJoin(PlayerLoggedInEvent event) {
     EntityPlayer entity = event.player;
-    // initializing timer for kicking player if he/she hasn't logged in a minute
-    Vec3d posVector = entity.getPositionVector();
-    float yaw = entity.rotationYaw, pitch = entity.rotationPitch;
-    PlayerPos pp = new PlayerPos(posVector, yaw, pitch);
-    PlayerDescriptor dc = new PlayerDescriptor(entity, pp);
-    descriptors.put(entity, dc);
+    Vec3d pos = entity.getPositionVector();
+    PlayerDescriptor descriptor = new PlayerDescriptor(pos.x, pos.y, pos.z);
+    descriptors.put(entity, descriptor);
     scheduler.schedule(
-        () -> {
-          if (descriptors.containsKey(entity)) {
-            descriptors.remove(entity);
-            logged.remove(entity);
-            ((EntityPlayerMP) entity).connection.sendPacket(new SPacketDisconnect(new TextComponentString(WAKE_UP)));
-          }
-        }, AuthModConfig.delay, TimeUnit.SECONDS);
+      () -> {
+        if (descriptors.containsKey(entity)) {
+          descriptors.remove(entity);
+          logged.remove(entity);
+          ((EntityPlayerMP) entity).connection.sendPacket(new SPacketDisconnect(wakeUp()));
+        }
+      },
+      Config.delay,
+      TimeUnit.SECONDS
+    );
   }
 
   @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -67,9 +63,7 @@ public class Handler {
   @SubscribeEvent
   public static void onPlayerTickEvent(TickEvent.PlayerTickEvent event) {
     if (descriptors.containsKey(event.player)) {
-      PlayerPos pp = descriptors.get(event.player).getPosition();
-      Vec3d pos = pp.getPosition();
-      ((EntityPlayerMP) event.player).connection.setPlayerLocation(pos.x, pos.y, pos.z, pp.getYaw(), pp.getPitch());
+      teleportTo(event.player, descriptors.get(event.player));
     }
   }
 
@@ -78,19 +72,19 @@ public class Handler {
     EntityPlayer entity = event.getEntityPlayer();
     if (descriptors.containsKey(entity) && event.isCancelable()) {
       event.setCanceled(true);
-      entity.sendMessage(new TextComponentString(WELCOME));
+      sayWelcome(entity);
     }
   }
 
   @SubscribeEvent(priority = EventPriority.HIGHEST)
-  public static void onCommand(CommandEvent event) {
+  public void onCommand(CommandEvent event) {
+    List<String> whitelist = Arrays.asList(Config.allowlist);
     String name = event.getCommand().getName();
-    if (descriptors.containsKey(event.getSender())
-        && !(name.equals("register") || name.equals("login") || name.equals("logged"))
-        && event.getSender() instanceof EntityPlayer
-        && event.isCancelable()) {
+    boolean isCommandAllowed = whitelist.contains(name);
+    EntityPlayer playerEntity = (EntityPlayer) event.getSender();
+    if (descriptors.containsKey(playerEntity) && !isCommandAllowed && event.isCancelable()) {
       event.setCanceled(true);
-      event.getSender().sendMessage(new TextComponentString(WELCOME));
+      sayWelcome(playerEntity);
     }
   }
 
@@ -99,7 +93,7 @@ public class Handler {
     EntityPlayerMP entity = event.getPlayer();
     if (event.isCancelable() && descriptors.containsKey(entity)) {
       event.setCanceled(true);
-      event.getPlayer().sendMessage(new TextComponentString(WELCOME));
+      sayWelcome(entity);
     }
   }
 
@@ -109,7 +103,7 @@ public class Handler {
     if (event.isCancelable() && descriptors.containsKey(entity)) {
       event.setCanceled(true);
       entity.inventory.addItemStackToInventory(event.getEntityItem().getItem());
-      event.getPlayer().sendMessage(new TextComponentString(WELCOME));
+      sayWelcome(entity);
     }
   }
 
@@ -120,7 +114,7 @@ public class Handler {
   private static void handleLivingEvents(LivingEvent event, Entity entity) {
     if (event.getEntity() instanceof EntityPlayer && event.isCancelable() && descriptors.containsKey(entity)) {
       event.setCanceled(true);
-      entity.sendMessage(new TextComponentString(WELCOME));
+      sayWelcome(entity);
     }
   }
 
@@ -157,13 +151,6 @@ public class Handler {
     }
   }
 
-  @SubscribeEvent
-  public static void onConfigChanged(final ConfigChangedEvent.OnConfigChangedEvent event) {
-    if (event.getModID().equals(AuthMod.MODID)) {
-      ConfigManager.sync(AuthMod.MODID, Config.Type.INSTANCE);
-    }
-  }
-
   public void authorizePlayer(EntityPlayer player) {
     logged.put(player, true);
     descriptors.remove(player);
@@ -173,4 +160,15 @@ public class Handler {
     return logged.getOrDefault(player, false);
   }
 
+  private static void sayWelcome(Entity playerEntity) {
+    playerEntity.sendMessage(new ServerTranslationTextComponent("authmod.welcome"));
+  }
+
+  private static ServerTranslationTextComponent wakeUp() {
+    return new ServerTranslationTextComponent("authmod.wakeUp", Config.delay);
+  }
+
+  private static void teleportTo(EntityPlayer player, PlayerDescriptor pos) {
+    ((EntityPlayerMP) player).connection.setPlayerLocation(pos.getX(), pos.getY(), pos.getZ(), 0, 0);
+  }
 }
