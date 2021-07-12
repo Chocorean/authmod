@@ -1,7 +1,6 @@
 package io.chocorean.authmod.event;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.config.Config;
 import io.chocorean.authmod.core.PlayerDescriptor;
 import io.chocorean.authmod.util.text.ServerTranslationTextComponent;

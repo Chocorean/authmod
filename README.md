@@ -24,19 +24,19 @@
     <img src="https://github.com/Chocorean/authmod/workflows/build/badge.svg?branch=master" alt="build status"/>
 </a>
 <a href="https://sonarcloud.io/dashboard?id=Chocorean_authmod-core" target="_blank">
-    <img src="https://sonarcloud.io/api/project_badges/measure?project=Chocorean_authmod-core&metric=bugs" alt="bugs"/>
+    <img src="https://sonarcloud.io/api/project_badges/measure?project=Chocorean_authmod&metric=bugs" alt="bugs"/>
 </a>
-<a href="https://sonarcloud.io/dashboard?id=Chocorean_authmod-core" target="_blank">
-    <img src="https://sonarcloud.io/api/project_badges/measure?project=Chocorean_authmod-core&metric=code_smells" alt="code smells"/>
+<a href="https://sonarcloud.io/dashboard?id=Chocorean_authmod" target="_blank">
+    <img src="https://sonarcloud.io/api/project_badges/measure?project=Chocorean_authmod&metric=code_smells" alt="code smells"/>
 </a>
-<a href="https://sonarcloud.io/dashboard?id=Chocorean_authmod-core" target="_blank">
-    <img src="https://sonarcloud.io/api/project_badges/measure?project=Chocorean_authmod-core&metric=sqale_rating" alt="maintainability" />
+<a href="https://sonarcloud.io/dashboard?id=Chocorean_authmod" target="_blank">
+    <img src="https://sonarcloud.io/api/project_badges/measure?project=Chocorean_authmod&metric=sqale_rating" alt="maintainability" />
 </a>
-<a href="https://sonarcloud.io/dashboard?id=Chocorean_authmod-core" target="_blank">
-    <img src="https://sonarcloud.io/api/project_badges/measure?project=Chocorean_authmod-core&metric=vulnerabilities" alt="vulnerabilities" />
+<a href="https://sonarcloud.io/dashboard?id=Chocorean_authmod" target="_blank">
+    <img src="https://sonarcloud.io/api/project_badges/measure?project=Chocorean_authmod&metric=vulnerabilities" alt="vulnerabilities" />
 </a>
-<a href="https://lgtm.com/projects/g/Chocorean/authmod-core/alerts/" target="_blank">
-    <img src="https://img.shields.io/lgtm/alerts/g/Chocorean/authmod-core.svg?logo=lgtm&logoWidth=18" alt="vulnerabilities" />
+<a href="https://lgtm.com/projects/g/Chocorean/authmod/alerts/" target="_blank">
+    <img src="https://img.shields.io/lgtm/alerts/g/Chocorean/authmod.svg?logo=lgtm&logoWidth=18" alt="vulnerabilities" />
 </a>
 <a href="https://lgtm.com/projects/g/Chocorean/authmod/alerts/" target="_blank">
     <img src="https://img.shields.io/lgtm/alerts/g/Chocorean/authmod.svg?logo=lgtm&logoWidth=18" alt="vulnerabilities" />
