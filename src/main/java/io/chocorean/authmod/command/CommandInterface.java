@@ -15,8 +15,7 @@ public interface CommandInterface extends Command<CommandSource> {
   RequiredArgumentBuilder<CommandSource, String> getParameters();
 
   LiteralArgumentBuilder<CommandSource> getCommandBuilder();
-
-  // TODO when offline, UUID is not the mojang UUID
+  
   static PayloadInterface toPayload(PlayerEntity entity, String... args) {
     String uuid = entity.getStringUUID();
     return new Payload(
