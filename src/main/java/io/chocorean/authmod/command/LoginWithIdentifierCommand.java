@@ -16,8 +16,9 @@ public class LoginWithIdentifierCommand extends LoginCommand implements CommandI
     super(handler, guard);
   }
 
+  @Override
   public RequiredArgumentBuilder<CommandSource, String> getParameters() {
-    return Commands.argument("identifier", StringArgumentType.word()).then(super.getParameters());
+    return Commands.argument("identifier", StringArgumentType.string()).then(super.getParameters());
   }
 
   public static int execute(CommandSource source, Handler handler, GuardInterface guard, PayloadInterface payload) {
@@ -26,12 +27,15 @@ public class LoginWithIdentifierCommand extends LoginCommand implements CommandI
 
   @Override
   public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
-    return execute(context.getSource(), this.handler, this.guard,
+    return execute(
+      context.getSource(),
+      this.handler,
+      this.guard,
       CommandInterface.toPayload(
-        context.getSource().asPlayer(),
-        StringArgumentType.getString(context, "identifier") ,
-        StringArgumentType.getString(context, "password")));
+        context.getSource().getPlayerOrException(),
+        StringArgumentType.getString(context, "identifier"),
+        StringArgumentType.getString(context, "password")
+      )
+    );
   }
-
 }
-

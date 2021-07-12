@@ -8,7 +8,7 @@ import io.chocorean.authmod.event.Handler;
 import io.chocorean.authmod.util.text.ServerTranslationTextComponent;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 
 public class LoggedCommand implements CommandInterface {
 
@@ -30,14 +30,13 @@ public class LoggedCommand implements CommandInterface {
 
   @Override
   public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
-    return execute(context.getSource(), context.getSource().asPlayer(), this.handler);
+    return execute(context.getSource(), context.getSource().getPlayerOrException(), this.handler);
   }
 
-  public static int execute(CommandSource source, PlayerEntity player, Handler handler) {
+  public static int execute(CommandSource source, ServerPlayerEntity player, Handler handler) {
     boolean logged = handler.isLogged(player);
-    String translationKey = "logged." + (logged ? "yes" : "no");
-    source.sendFeedback(new ServerTranslationTextComponent(translationKey), false);
+    String translationKey = "authmod.logged." + (logged ? "yes" : "no");
+    source.sendSuccess(new ServerTranslationTextComponent(translationKey), false);
     return 0;
   }
-
 }

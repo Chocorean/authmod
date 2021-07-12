@@ -5,6 +5,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.core.GuardInterface;
 import io.chocorean.authmod.core.PayloadInterface;
 import io.chocorean.authmod.core.exception.AuthmodError;
@@ -26,9 +27,13 @@ public class ChangePasswordCommand implements CommandInterface {
 
   @Override
   public RequiredArgumentBuilder<CommandSource, String> getParameters() {
-    return Commands.argument("old", StringArgumentType.string())
-        .then(Commands.argument("new", StringArgumentType.string())
-        .then(Commands.argument("confirmation", StringArgumentType.string()).executes(this)));
+    return Commands
+      .argument("old", StringArgumentType.string())
+      .then(
+        Commands
+          .argument("new", StringArgumentType.string())
+          .then(Commands.argument("confirmation", StringArgumentType.string()).executes(this))
+      );
   }
 
   @Override
@@ -38,15 +43,17 @@ public class ChangePasswordCommand implements CommandInterface {
 
   @Override
   public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
-    return execute(context.getSource(),
+    return execute(
+      context.getSource(),
       this.handler,
       this.guard,
       CommandInterface.toPayload(
-        context.getSource().asPlayer(),
+        context.getSource().getPlayerOrException(),
         StringArgumentType.getString(context, "old"),
         StringArgumentType.getString(context, "new"),
         StringArgumentType.getString(context, "confirmation")
-      ));
+      )
+    );
   }
 
   /**
@@ -54,17 +61,18 @@ public class ChangePasswordCommand implements CommandInterface {
    */
   public static int execute(CommandSource source, Handler handler, GuardInterface guard, PayloadInterface payload) {
     try {
-      PlayerEntity player = source.asPlayer();
+      PlayerEntity player = source.getPlayerOrException();
       if (handler.isLogged(player)) {
         guard.updatePassword(payload);
-        source.sendFeedback(new ServerTranslationTextComponent("changepassword.success"), true);
+        source.sendSuccess(new ServerTranslationTextComponent("authmod.changepassword.success"), true);
         return 0;
+      } else {
+        source.sendSuccess(new ServerTranslationTextComponent("authmod.welcome"), true);
       }
-      else {
-        source.sendFeedback(new ServerTranslationTextComponent("welcome"), true);
-      }
-    } catch (AuthmodError | CommandSyntaxException e) {
-      source.sendFeedback(new ServerTranslationTextComponent(ExceptionToMessageMapper.getMessage(e)), false);
+    } catch (AuthmodError e) {
+      source.sendFailure(new ServerTranslationTextComponent(e.getTranslationKey()));
+    } catch (CommandSyntaxException e) {
+      AuthMod.LOGGER.catching(e);
     }
     return 1;
   }

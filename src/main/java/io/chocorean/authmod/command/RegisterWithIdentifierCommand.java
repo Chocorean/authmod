@@ -16,6 +16,7 @@ public class RegisterWithIdentifierCommand extends RegisterCommand implements Co
     super(handler, guard);
   }
 
+  @Override
   public RequiredArgumentBuilder<CommandSource, String> getParameters() {
     return Commands.argument("identifier", StringArgumentType.string()).then(super.getParameters());
   }
@@ -26,13 +27,16 @@ public class RegisterWithIdentifierCommand extends RegisterCommand implements Co
 
   @Override
   public int run(CommandContext<CommandSource> context) throws CommandSyntaxException {
-    return execute(context.getSource(), this.handler, this.guard,
+    return execute(
+      context.getSource(),
+      this.handler,
+      this.guard,
       CommandInterface.toPayload(
-        context.getSource().asPlayer(),
-        StringArgumentType.getString(context, "identifier") ,
-        StringArgumentType.getString(context, "password") ,
-        StringArgumentType.getString(context, "confirmation")));
+        context.getSource().getPlayerOrException(),
+        StringArgumentType.getString(context, "identifier"),
+        StringArgumentType.getString(context, "password"),
+        StringArgumentType.getString(context, "confirmation")
+      )
+    );
   }
-
 }
-

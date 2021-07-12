@@ -11,31 +11,31 @@
 	language = "EN_US"
 	#Whitelisted commands (can be used without being logged)
 	whitelist = ["register", "login", "logged", "help"]
-	#Identifier must be provided for registration and authentication
+	#Identifier must be provided for registration and authentication (an email address for instance).
 	identifierRequired = false
 	#Enable or disable the /register command.
 	enableRegister = false
 	#Enable or disable the /changepassword command.
 	enableChangePassword = false
 	#The way you want to store player's data, choose between 'database' or 'file'. If the strategy is unknown, the server will be open for everyone.
-	#Allowed Values: FILE, DATABASE, NONE
+	#Allowed Values: FILE, DATABASE
 	dataSource = "FILE"
 
 [Database]
-	#Column for UUID
-	colummUuid = "uuid"
+	#Column name of BANNED
+	columnBanned = "banned"
 	#SQL dialect
 	dialect = "mariadb"
-	#Column for the encrypted password
+	#Column name of PASSWORD
 	columnPassword = "password"
-	#Column telling whether the player is banned
-	columnBan = "banned"
+	#Column name of UUID
+	columnUuid = "uuid"
+	#Column name of USERNAME
+	columnUsername = "username"
 	#Name of the database
 	database = "minecraft"
 	#Database users's password
-	password = "user"
-	#Column for the username
-	colummUsername = "username"
+	password = "password"
 	#JDBC driver to use
 	driver = "org.mariadb.jdbc.Driver"
 	#Port to be used
@@ -45,50 +45,60 @@
 	host = "localhost"
 	#Database user
 	user = "user"
-	#Column for the identifier
-	columnIdentifier = "email"
 	#Table to be used
 	table = "players"
+	#Column name of IDENTIFIER
+	columnIdentifier = "identifier"
 
 [I18n]
-	#Wrong password. Please try again.
-	wrongPassword = ""
-	#yes
-	loggedYes = ""
-	#Your username does not correspond to your credentials.
-	loginWrongusername = ""
-	#You are registered and authenticated, have fun!
-	registerSuccess = ""
-	#/changepassword <old_password> <new_password> <new_password> - Change your password.
-	changepasswordUsage = ""
-	#/register <email> <password> <password>- Be careful when choosing it, you'll be asked to login each time you play.
-	registerUsage = ""
-	#Wake up, you have only %s seconds to log in.
-	wakeUp = ""
-	#Password changed!
-	changepasswordSuccess = ""
-	#Something was wrong. Please contact the admins.
-	error = ""
-	#/logged - tells you whether you are authenticated or not
-	loggedUsage = ""
-	#Someone has already registered with the username %s.
-	registerExist = ""
-	#Have fun!
-	loginSuccess = ""
-	#The password confirmation doesn't match. Try again.
-	wrongPasswordConfirmation = ""
-	#no
-	loggedNo = ""
-	#%s is not registered on this server.
-	loginNotfound = ""
-	#New password should be different than the previous one.
-	changepasswordSamepassword = ""
-	#Wrong UUID. Please be sure you use the same UUID when you registered your account.
-	loginWronguuid = ""
-	#You've been banned. Please contact the admins.
-	banned = ""
-	#Use /register to sign up or /login to sign in.
-	welcome = ""
-	#/login <email> <password> - Allows you to authenticate on the server
-	loginUsage = ""
+
+	[I18n.authmod]
+		#Wrong password. Please try again.
+		wrongPassword = ""
+		#The password confirmation doesn't match. Try again.
+		wrongPasswordConfirmation = ""
+		#Wake up, you have only %s seconds to log in.
+		wakeUp = ""
+		#You've been banned. Please contact the admins.
+		banned = ""
+		#Something was wrong. Please contact the admins.
+		error = ""
+		#Use /register to sign up or /login to sign in.
+		welcome = ""
+
+		[I18n.authmod.changepassword]
+			#Password changed!
+			success = ""
+			#/changepassword <old_password> <new_password> <new_password> - Change your password.
+			usage = ""
+			#New password should be different than the previous one.
+			samePassword = ""
+
+		[I18n.authmod.logged]
+			#no
+			no = ""
+			#yes
+			yes = ""
+			#/logged - tells you whether you are authenticated or not
+			usage = ""
+
+		[I18n.authmod.login]
+			#Have fun!
+			success = ""
+			#/login <email> <password> - Allows you to authenticate on the server
+			usage = ""
+			#Wrong UUID. Please be sure you use the same UUID when you registered your account.
+			wrongUUID = ""
+			#%s is not registered on this server.
+			notFound = ""
+			#Your username does not correspond to your credentials.
+			wrongUsername = ""
+
+		[I18n.authmod.register]
+			#Someone has already registered with the username %s.
+			exist = ""
+			#You are registered and authenticated, have fun!
+			success = ""
+			#/register <email> <password> <password>- Be careful when choosing it, you'll be asked to login each time you play.
+			usage = ""
 

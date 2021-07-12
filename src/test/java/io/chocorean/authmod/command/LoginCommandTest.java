@@ -1,15 +1,16 @@
 package io.chocorean.authmod.command;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import io.chocorean.authmod.core.DataSourceGuard;
 import io.chocorean.authmod.core.Payload;
 import io.chocorean.authmod.core.datasource.DataSourcePlayer;
 import io.chocorean.authmod.core.datasource.FileDataSourceStrategy;
+import io.chocorean.authmod.core.exception.AuthmodError;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 class LoginCommandTest extends CommandTest {
 
@@ -17,7 +18,7 @@ class LoginCommandTest extends CommandTest {
   void init() throws Exception {
     super.initProperties("login");
     this.command = new LoginCommand(this.handler, this.guard);
-    this.guard.register(new Payload(this.player, new String[]{this.password, this.password}));
+    this.guard.register(new Payload(this.player, new String[] { this.password, this.password }));
   }
 
   @Test
@@ -37,14 +38,14 @@ class LoginCommandTest extends CommandTest {
 
   @Test
   void testExecuteWrongNumberOfArgs() {
-    this.payload = new Payload(this.player, new String[]{"rootrootme", "please"});
+    this.payload = new Payload(this.player, new String[] { "rootrootme", "please" });
     int res = LoginCommand.execute(this.source, this.handler, this.guard, this.payload);
     assertNotEquals(0, res);
     assertFalse(this.handler.isLogged(this.playerEntity));
   }
 
   @Test
-  void testExecuteBanned() {
+  void testExecuteBanned() throws AuthmodError {
     FileDataSourceStrategy mock = mock(FileDataSourceStrategy.class);
     when(mock.find(player.getUsername())).thenReturn(new DataSourcePlayer(player).setBanned(true));
     int res = LoginCommand.execute(this.source, this.handler, new DataSourceGuard(mock), this.payload);
@@ -68,5 +69,4 @@ class LoginCommandTest extends CommandTest {
     assertEquals(0, res);
     assertTrue(this.handler.isLogged(this.playerEntity));
   }
-
 }

@@ -1,0 +1,32 @@
+---
+name: "tagged-release"
+
+on:
+  push:
+    tags:
+      - "v1.16.5*"
+
+jobs:
+  tagged-release:
+    name: "Tagged Release"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Get the version
+        uses: battila7/get-version-action@v2
+        id: get_version
+      - name: Build and test the project
+        run: ./gradlew -Pversion="${{ steps.get_version.outputs.version-without-v }}" build test
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
+          files: |
+            build/libs/*.jar
