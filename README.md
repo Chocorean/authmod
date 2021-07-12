@@ -38,9 +38,6 @@
 <a href="https://lgtm.com/projects/g/Chocorean/authmod/alerts/" target="_blank">
     <img src="https://img.shields.io/lgtm/alerts/g/Chocorean/authmod.svg?logo=lgtm&logoWidth=18" alt="vulnerabilities" />
 </a>
-<a href="https://lgtm.com/projects/g/Chocorean/authmod/alerts/" target="_blank">
-    <img src="https://img.shields.io/lgtm/alerts/g/Chocorean/authmod.svg?logo=lgtm&logoWidth=18" alt="vulnerabilities" />
-</a>
 </p>
 
 AuthMod is a server-side Minecraft mod that adds commands to register and authenticate players joining your server. The mod is an alternative to the Mojang authentication. Authmod may be a good solution if you want to authorize demo Minecraft accounts on your server. **When a player joins the server, all his actions are disabled**. He has to authenticate via the `/login <password>` command to play.
