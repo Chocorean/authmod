@@ -1,8 +1,11 @@
 package io.chocorean.authmod.command;
 
+import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.core.GuardInterface;
 import io.chocorean.authmod.core.PayloadInterface;
 import io.chocorean.authmod.core.exception.AuthmodError;
+import io.chocorean.authmod.core.exception.LoginError;
+import io.chocorean.authmod.core.exception.RegistrationError;
 import io.chocorean.authmod.core.i18n.ServerLanguageMap;
 import io.chocorean.authmod.event.Handler;
 import io.chocorean.authmod.util.text.ServerTranslationTextComponent;
@@ -51,8 +54,12 @@ public class RegisterCommand implements CommandInterface {
         handler.authorizePlayer(player);
         sender.sendMessage(new ServerTranslationTextComponent("authmod.register.success"));
       }
+
+    } catch (RegistrationError e) {
+      sender.sendMessage(new ServerTranslationTextComponent(e.getTranslationKey(), payload.getPlayer().getUsername()));
     } catch (AuthmodError e) {
       sender.sendMessage(new ServerTranslationTextComponent(e.getTranslationKey(), payload.getPlayer().getUsername()));
+      AuthMod.LOGGER.catching(e);
     }
   }
 

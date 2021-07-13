@@ -1,8 +1,10 @@
 package io.chocorean.authmod.command;
 
+import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.core.GuardInterface;
 import io.chocorean.authmod.core.PayloadInterface;
 import io.chocorean.authmod.core.exception.AuthmodError;
+import io.chocorean.authmod.core.exception.ChangePasswordError;
 import io.chocorean.authmod.core.i18n.ServerLanguageMap;
 import io.chocorean.authmod.event.Handler;
 import io.chocorean.authmod.util.text.ServerTranslationTextComponent;
@@ -55,8 +57,12 @@ public class ChangePasswordCommand implements CommandInterface {
       } else {
         player.sendMessage(new ServerTranslationTextComponent("authmod.welcome"));
       }
+
+    } catch (ChangePasswordError e) {
+      player.sendMessage(new ServerTranslationTextComponent(e.getTranslationKey()));
     } catch (AuthmodError e) {
       player.sendMessage(new ServerTranslationTextComponent(e.getTranslationKey()));
+      AuthMod.LOGGER.catching(e);
     }
   }
 

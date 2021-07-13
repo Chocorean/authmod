@@ -25,39 +25,39 @@ public class Config {
 
   @Comment("Email will be asked to the player for registration and authentication")
   @net.minecraftforge.common.config.Config.Name("identifierRequired")
-  public static final boolean identifierRequired = false;
+  public static boolean identifierRequired = false;
 
   @Comment("If the player doesn't log in after this delay (the unit is the second), he will be kicked from the server.")
   @net.minecraftforge.common.config.Config.Name("delay")
-  public static final int delay = 60;
+  public static int delay = 60;
 
   @Comment("Enable or disable the /login command. If disabled, the server will be opened to everyone).")
   @net.minecraftforge.common.config.Config.Name("enableLogin")
-  public static final boolean enableLogin = false;
+  public static boolean enableLogin = false;
 
   @Comment("Enable or disable the /register command")
   @net.minecraftforge.common.config.Config.Name("enableRegister")
-  public static final boolean enableRegister = false;
+  public static boolean enableRegister = false;
 
   @Comment("Enable or disable the /changepassword command")
   @net.minecraftforge.common.config.Config.Name("enableChangePassword")
-  public static final boolean enableChangePassword = false;
+  public static boolean enableChangePassword = false;
 
   @Comment("lang file to use")
   @net.minecraftforge.common.config.Config.Name("language")
-  public static final ServerLanguageMap.Language language = ServerLanguageMap.Language.EN_US;
+  public static ServerLanguageMap.Language language = ServerLanguageMap.Language.EN_US;
 
   @Comment("The way you want to store player's data.")
   @net.minecraftforge.common.config.Config.Name("dataSource")
-  public static final DataSourceStrategyInterface.Strategy dataSource = DataSourceStrategyInterface.Strategy.FILE;
+  public static DataSourceStrategyInterface.Strategy dataSource = DataSourceStrategyInterface.Strategy.FILE;
 
   @Comment("allowed commands (can be used without being logged)")
   @net.minecraftforge.common.config.Config.Name("allowlist")
-  public static final String[] allowlist = new String[] { "register", "login", "logged", "help" };
+  public static String[] allowlist = new String[] { "register", "login", "logged", "help" };
 
-  public static final DatabaseConfig database = new DatabaseConfig();
+  public static DatabaseConfig database = new DatabaseConfig();
 
-  public static final I18nConfig i18n = new I18nConfig();
+  public static I18nConfig i18n = new I18nConfig();
 
 
   public static Path getConfigurationFile() {
