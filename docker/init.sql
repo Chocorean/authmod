@@ -11,5 +11,6 @@ CREATE TABLE IF NOT EXISTS minecraft.players (
     banned tinyint(1) DEFAULT 0,
     PRIMARY KEY (id),
     UNIQUE KEY unique_uuid (uuid),
+    UNIQUE KEY unique_identifier (identifier),
     UNIQUE KEY unique_username (username)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

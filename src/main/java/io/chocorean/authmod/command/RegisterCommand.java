@@ -10,6 +10,7 @@ import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.core.GuardInterface;
 import io.chocorean.authmod.core.PayloadInterface;
 import io.chocorean.authmod.core.exception.AuthmodError;
+import io.chocorean.authmod.core.exception.RegistrationError;
 import io.chocorean.authmod.event.Handler;
 import io.chocorean.authmod.util.text.ServerTranslationTextComponent;
 import net.minecraft.command.CommandSource;
@@ -61,8 +62,11 @@ public class RegisterCommand implements CommandInterface, Command<CommandSource>
         source.sendSuccess(new ServerTranslationTextComponent("authmod.register.success"), true);
       }
       return 0;
+    } catch (RegistrationError e) {
+      source.sendFailure(new ServerTranslationTextComponent(e.getTranslationKey(), payload.getPlayer().getUsername()));
     } catch (AuthmodError e) {
       source.sendFailure(new ServerTranslationTextComponent(e.getTranslationKey(), payload.getPlayer().getUsername()));
+      AuthMod.LOGGER.catching(e);
     } catch (CommandSyntaxException e) {
       AuthMod.LOGGER.catching(e);
     }

@@ -9,6 +9,7 @@ import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.core.GuardInterface;
 import io.chocorean.authmod.core.PayloadInterface;
 import io.chocorean.authmod.core.exception.AuthmodError;
+import io.chocorean.authmod.core.exception.ChangePasswordError;
 import io.chocorean.authmod.event.Handler;
 import io.chocorean.authmod.util.text.ServerTranslationTextComponent;
 import net.minecraft.command.CommandSource;
@@ -69,8 +70,13 @@ public class ChangePasswordCommand implements CommandInterface {
       } else {
         source.sendSuccess(new ServerTranslationTextComponent("authmod.welcome"), true);
       }
-    } catch (AuthmodError e) {
+    }
+    catch (ChangePasswordError e) {
       source.sendFailure(new ServerTranslationTextComponent(e.getTranslationKey()));
+    }
+    catch (AuthmodError e) {
+      source.sendFailure(new ServerTranslationTextComponent(e.getTranslationKey()));
+      AuthMod.LOGGER.catching(e);
     } catch (CommandSyntaxException e) {
       AuthMod.LOGGER.catching(e);
     }
