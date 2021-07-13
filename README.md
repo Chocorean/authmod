@@ -1,116 +1,70 @@
 <div align="center">
 <br>
-<img
-    alt="AuthMod"
-    src="./src/main/resources/logo.png"
-    width=200px
-/>
+<img alt="AuthMod" src="./src/main/resources/logo.png" width="200px"/>
 <br/>
 <h1>Authmod</h1>
-<strong>Server side mod which allows to safely accept demo versions on your minecraft server.</strong>
+<strong>Server side mod which allows to register and authenticate players your Minecraft server.</strong>
 </div>
 <br/>
 <p align="center">
 <a href="https://www.curseforge.com/minecraft/mc-mods/authmod" target="_blank">
     <img src="https://cf.way2muchnoise.eu/full_authmod_downloads(555-FF4C05-FFF-00000000-FFF).svg" alt="curseforge page"/>
 </a>
-<a href="https://files.minecraftforge.net/net/minecraftforge/forge/index_1.12.2.html" target="_blank">
+<a href="https://img.shields.io/badge/forge%20version-1.12.2-blue.svg" target="_blank">
     <img src="https://img.shields.io/badge/forge%20version-1.12.2-blue.svg" alt="forge version"/>
 </a>
-<a href="https://www.java.com/en/download/help/java8.html" target="_blank">
+<a href="https://img.shields.io/badge/java-1.8-blue.svg" target="_blank">
     <img src="https://img.shields.io/badge/java-1.8-blue.svg" alt="java version" />
 </a>
 <a href="https://github.com/Chocorean/authmod/actions" target="_blank">
     <img src="https://github.com/Chocorean/authmod/workflows/build/badge.svg?branch=master" alt="build status"/>
 </a>
 <a href="https://sonarcloud.io/dashboard?id=Chocorean_authmod-core" target="_blank">
-    <img src="https://sonarcloud.io/api/project_badges/measure?project=Chocorean_authmod-core&metric=bugs" alt="bugs"/>
+    <img src="https://sonarcloud.io/api/project_badges/measure?project=Chocorean_authmod&metric=bugs" alt="bugs"/>
 </a>
-<a href="https://sonarcloud.io/dashboard?id=Chocorean_authmod-core" target="_blank">
-    <img src="https://sonarcloud.io/api/project_badges/measure?project=Chocorean_authmod-core&metric=code_smells" alt="code smells"/>
+<a href="https://sonarcloud.io/dashboard?id=Chocorean_authmod" target="_blank">
+    <img src="https://sonarcloud.io/api/project_badges/measure?project=Chocorean_authmod&metric=code_smells" alt="code smells"/>
 </a>
-<a href="https://sonarcloud.io/dashboard?id=Chocorean_authmod-core" target="_blank">
-    <img src="https://sonarcloud.io/api/project_badges/measure?project=Chocorean_authmod-core&metric=sqale_rating" alt="maintainability" />
+<a href="https://sonarcloud.io/dashboard?id=Chocorean_authmod" target="_blank">
+    <img src="https://sonarcloud.io/api/project_badges/measure?project=Chocorean_authmod&metric=sqale_rating" alt="maintainability" />
 </a>
-<a href="https://sonarcloud.io/dashboard?id=Chocorean_authmod-core" target="_blank">
-    <img src="https://sonarcloud.io/api/project_badges/measure?project=Chocorean_authmod-core&metric=vulnerabilities" alt="vulnerabilities" />
-</a>
-<a href="https://lgtm.com/projects/g/Chocorean/authmod-core/alerts/" target="_blank">
-    <img src="https://img.shields.io/lgtm/alerts/g/Chocorean/authmod-core.svg?logo=lgtm&logoWidth=18" alt="vulnerabilities" />
+<a href="https://sonarcloud.io/dashboard?id=Chocorean_authmod" target="_blank">
+    <img src="https://sonarcloud.io/api/project_badges/measure?project=Chocorean_authmod&metric=vulnerabilities" alt="vulnerabilities" />
 </a>
 <a href="https://lgtm.com/projects/g/Chocorean/authmod/alerts/" target="_blank">
     <img src="https://img.shields.io/lgtm/alerts/g/Chocorean/authmod.svg?logo=lgtm&logoWidth=18" alt="vulnerabilities" />
 </a>
 </p>
 
+AuthMod is a server-side Minecraft mod that adds commands to register and authenticate players joining your server. The mod is an alternative to the Mojang authentication. Authmod may be a good solution if you want to authorize demo Minecraft accounts on your server. **When a player joins the server, all his actions are disabled**. He has to authenticate via the `/login <password>` command to play.
 
-## Table of contents
-
-- [Authmod](#authmod)
-- [Installation](#installation)
-- [Disabling in-game registration](#disabling-in-game-registration)
-- [Getting started for developers](#getting-started-for-developers)
-- [Internationalization](#internationalization)
-- [Contributors](#contributors)
+**Authmod registers 4 commands to your server**. Each one can be turned [on/off](./src/main/resources/authmod.cfg):
+- `/register <password> <confirmation>` to register the player.
+- `/login <password>` to log into the server.
+- `/logged` to know whether you're logged in.
+- `/changepassword <old> <new> <comfirmation>` to change your password once logged.
 
 
-# Authmod
+Player data are stored in either a [SQL database](./docker/init.sql) or a CSV file.
 
-AuthMod is a server side Minecraft mod allowing you to accept either premium and demo minecraft accounts safely. What is important to remind with this mod is **the mojang authentication cannot be used**. So if you rely on this, this mod is maybe not a good solution for you. Authmod proposes a set of interesting features:
+You may require players to provide an identifier at registration/login time (`/login <email> <password>`). By default this option is disabled and Minecraft usernames are used instead.
 
-- Enable or disable the registration on the server.
-- Enable or disable the authentication on the server.
-- Register a list of allowed users.
-- Ban a registered player.
-- Registration/authentication can require an identifier (email for instance).
-- Exclude a player if he's not logged after a certain delay.
-- Change the password in-game.
-
-Data are stored in either a [SQL database](./docker/init.sql) or a CSV file.
-
-| Features       | File strategy | Database strategy |
-| -------------- | :-----------: | :---------------: |
-| Registration   |     **✔**     |       **✔**       |
-| Authentication |     **✔**     |       **✔**       |
-
-**Authmod** adds a set of commands on the minecraft server:
-```bash
-# Allow the user to authenticate on the server
-/login email@example.com password
-# Allow the user to register on the server
-/register email@example.com password password
-# Tell to the user whether authenticated
-/logged
-
-# Change password
-/changepassword old_password new_password new_password
-```
-
-You may require players to provide an identifier at registration/login time.
-By default this option is disabled (see [authmod.cfg](./src/main/resources/authmod.cfg)) and
-the mod use the in-game username.
 
 
 ## Installation
 
-1. Stop your server.
-2. Add `authmod-X.X.jar` in the `mods/` directory:
-
+1. Stop your Minecraft server.
+1. Go to releases and select the jar depend
+1. Add `authmod-<version>.jar` in the `mods/` directory:
 ```bash
-# This command downloads the latest version of authmod.
-cd mods/
-curl -s https://api.github.com/repos/chocorean/authmod/releases/latest \
-| grep "browser_download_url.*jar" \
-| cut -d : -f 2,3 \
-| tr -d \" \
-| wget -qi -
+curl -L "https://github.com/chocorean/authmod/releases/download/v1.12.2-1.0.0/authmod-1.12.2-1.0.0.jar" --output path/mods/authmod.jar
 ```
-3. Now, we need to configure authmod. Run the server once to generate config file `config/authmod.cfg`. This file looks like [this](src/main/resources/authmod.cfg).
-4. Edit the `authmod.cfg` file depending on your needs.
-5. Restart the server and you're all set!
+4. Now, we need to configure the mod. Run the server once to generate the configuration file at [`config/authmod.cfg`](./src/main/resources/authmod.cfg).
+5. Edit [`authmod.cfg`](./src/main/resources/authmod.cfg) depending on your needs.
+6. Restart the server and you're all set!
 
 
-## Getting started for developers
+## For developers
 
 Please refer to the [Forge documentation](https://mcforge.readthedocs.io/en/latest/gettingstarted/) for setting your development environment.
 ```bash
@@ -119,14 +73,19 @@ Please refer to the [Forge documentation](https://mcforge.readthedocs.io/en/late
 ls ./build/libs/authmod-*.jar
 ```
 
-## Internationalization
+### Internationalization
 
-Pull requests for adding i18n are more than welcomed. Please make sure to:
-- create a JSON file: `src/main/resources/assets/authmod/lang/XX_YY.json`
-- update the `Language` enum `src/main/java/io/chocorean/authmod/core/i18n/ServerLanguageMap.java`
-- update this `README.md` file with your pseudo (optional but strongly recommended!)
+Pull requests for adding i18n are more than welcomed. See [authmod-core](https://github.com/Chocorean/authmod-core), section [Internationalization](https://github.com/Chocorean/authmod-core#internationalization) for more details.
 
-Thank you!
+
+### Releasing a new version
+1. Apply the changes on the branch whose name corresponds to the forge version (*let's say you're on branch [`1.12.2`](https://github.com/Chocorean/authmod/tree/1.12.2)*).
+1. We're going to create a git tag. Its name must follow the pattern `v<version-of-forge>-<version-of-authmod>`.
+1. Create the git tag: `git tag -a v1.12.2-1.0.0 -m "Release a new version for forge 1.12.2"`
+1. Push the changes `git push`
+1. And then push the tag: `git push --tags`
+
+
 
 ## Contributors
 
