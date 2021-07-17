@@ -12,6 +12,7 @@ import io.chocorean.authmod.event.Handler;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.sql.SQLException;
 import java.util.UUID;
 import jdk.nashorn.internal.ir.annotations.Ignore;
 import net.minecraft.command.CommandException;
@@ -35,7 +36,7 @@ abstract class CommandTest {
   protected ICommand command;
   protected String name;
 
-  public void initProperties(String name) throws IOException {
+  public void initProperties(String name) throws Exception {
     File file = Files.createTempFile(CommandTest.class.getSimpleName(), "authmod.sqlite").toFile();
     Files.deleteIfExists(file.toPath());
     this.handler = new Handler();
