@@ -4,9 +4,6 @@ import net.minecraftforge.common.config.Config;
 
 public class DatabaseConfig {
 
-  @Config.Comment("Column name for the email address")
-  public String columnIdentifier = "identifier";
-
   @Config.Comment("Column name telling whether the player is banned or not")
   public String columnBanned = "banned";
 

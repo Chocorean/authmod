@@ -47,10 +47,6 @@ AuthMod is a server-side Minecraft mod that adds commands to register and authen
 
 Player data are stored in either a [SQL database](./docker/init.sql) or a sqlite file.
 
-You may require players to provide an identifier at registration/login time (`/login <email> <password>`). By default this option is disabled and Minecraft usernames are used instead.
-
-
-
 ## Installation
 
 1. Stop your Minecraft server.

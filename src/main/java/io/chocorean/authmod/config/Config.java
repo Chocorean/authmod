@@ -23,10 +23,6 @@ public class Config {
 
   private Config() {}
 
-  @Comment("Email will be asked to the player for registration and authentication")
-  @net.minecraftforge.common.config.Config.Name("identifierRequired")
-  public static boolean identifierRequired = false;
-
   @Comment("If the player doesn't log in after this delay (the unit is the second), he will be kicked from the server.")
   @net.minecraftforge.common.config.Config.Name("delay")
   public static int delay = 60;
@@ -73,7 +69,6 @@ public class Config {
     return new FactoryConfig()
       .setConfigDirectory(getConfigurationFile().resolve("..").normalize())
       .setStrategy(Config.dataSource)
-      .setIdentifierRequired(Config.identifierRequired)
       .setDialect(database.dialect)
       .setDatabase(database.database)
       .setTable(database.table)

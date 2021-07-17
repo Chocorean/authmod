@@ -4,7 +4,6 @@ CREATE OR REPLACE DATABASE minecraft;
 /* Create the table containing the players data */
 CREATE TABLE IF NOT EXISTS minecraft.players (
     id int(11) NOT NULL AUTO_INCREMENT,
-    identifier varchar(255) DEFAULT NULL,
     password varchar(255) DEFAULT NULL,
     uuid varchar(255) DEFAULT NULL,
     username varchar(255) NOT NULL,
