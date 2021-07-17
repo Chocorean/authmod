@@ -22,7 +22,7 @@ public class I18nConfig {
   public I18nConfig(ForgeConfigSpec.Builder builder) {
     builder.push("I18n");
     this.mappings = new HashMap<>();
-    String path = Paths.get("/", "assets", AuthMod.MODID, "lang", "en_us.json").toString();
+    String path = String.format("/assets/%s/lang/en_us.json", AuthMod.MODID);
     try (InputStream inputstream = ServerLanguageMap.class.getResourceAsStream(path)) {
       JsonObject jsonObject = new Gson().fromJson(new InputStreamReader(inputstream, StandardCharsets.UTF_8), JsonObject.class);
       for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
