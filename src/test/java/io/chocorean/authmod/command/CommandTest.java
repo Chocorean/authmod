@@ -38,7 +38,7 @@ abstract class CommandTest {
   protected String name;
 
   public void initProperties(String name) throws IOException, CommandSyntaxException {
-    File file = Paths.get(System.getProperty("java.io.tmpdir"), "authmod.csv").toFile();
+    File file = Paths.get(System.getProperty("java.io.tmpdir"), "authmod.db").toFile();
     Files.deleteIfExists(file.toPath());
     this.handler = new Handler();
     this.player = new Player("Batman", "7128022b-9195-490d-9bc8-9b42ebe2a8e3");

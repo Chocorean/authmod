@@ -29,7 +29,7 @@ class ChangePasswordCommandTest extends CommandTest {
 
   @Test
   void testExecuteIdentifierRequired() throws Exception {
-    File file = Paths.get(System.getProperty("java.io.tmpdir"), "authmod.csv").toFile();
+    File file = Paths.get(System.getProperty("java.io.tmpdir"), "authmod.db").toFile();
     Files.deleteIfExists(file.toPath());
     this.guard = new DataSourceGuard(this.dataSource, true);
     this.guard.register(new Payload(this.player, new String[] { "Bernard", this.password, this.password }));
