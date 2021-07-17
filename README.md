@@ -23,7 +23,7 @@
 <a href="https://github.com/Chocorean/authmod/actions" target="_blank">
     <img src="https://github.com/Chocorean/authmod/workflows/build/badge.svg?branch=master" alt="build status"/>
 </a>
-<a href="https://sonarcloud.io/dashboard?id=Chocorean_authmod-core" target="_blank">
+<a href="https://sonarcloud.io/dashboard?id=Chocorean_authmod" target="_blank">
     <img src="https://sonarcloud.io/api/project_badges/measure?project=Chocorean_authmod&metric=bugs" alt="bugs"/>
 </a>
 <a href="https://sonarcloud.io/dashboard?id=Chocorean_authmod" target="_blank">
