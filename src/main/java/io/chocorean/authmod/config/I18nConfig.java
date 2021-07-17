@@ -5,15 +5,15 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.chocorean.authmod.AuthMod;
 import io.chocorean.authmod.core.i18n.ServerLanguageMap;
+import net.minecraftforge.common.ForgeConfigSpec;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
-import net.minecraftforge.common.ForgeConfigSpec;
 
 public class I18nConfig {
 
