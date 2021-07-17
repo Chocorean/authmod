@@ -29,11 +29,10 @@ public class CommandsSetup {
   }
 
   private void registerCommands(RegisterCommandsEvent event) {
-    boolean identifierRequired = Config.identifierRequired.get();
     if (this.guard != null) {
       LOGGER.info(this.guard);
-      registerLoginCommands(Config.enableLogin.get(), identifierRequired, event.getDispatcher(), this.guard);
-      registerRegisterCommand(Config.enableRegister.get(), identifierRequired, event.getDispatcher(), this.guard);
+      registerLoginCommands(Config.enableLogin.get(), event.getDispatcher(), this.guard);
+      registerRegisterCommand(Config.enableRegister.get(), event.getDispatcher(), this.guard);
       registerChangePasswordCommand(Config.enableChangePassword.get(), event.getDispatcher(), this.guard);
     } else {
       LOGGER.warn("{} is disabled because guard is NULL", AuthMod.MODID);
@@ -52,32 +51,20 @@ public class CommandsSetup {
   }
 
   private void registerRegisterCommand(boolean enabled,
-    boolean identifierRequired,
-    CommandDispatcher<CommandSource> commandDispatcher,
-    GuardInterface guard
-  ) {
+    CommandDispatcher<CommandSource> commandDispatcher, GuardInterface guard) {
     if (enabled) {
       LOGGER.info("Registering /register command");
       RegisterCommand command = new RegisterCommand(handler, guard);
-      if (identifierRequired) {
-        command = new RegisterWithIdentifierCommand(handler, guard);
-      }
       commandDispatcher.register(command.getCommandBuilder());
     }
   }
 
-  private void registerLoginCommands(
-    boolean enabled,
-    boolean identifierRequired,
-    CommandDispatcher<CommandSource> commandDispatcher,
+  private void registerLoginCommands(boolean enabled, CommandDispatcher<CommandSource> commandDispatcher,
     GuardInterface guard
   ) {
     if (enabled) {
       LOGGER.info("Registering /login command");
       LoginCommand command = new LoginCommand(handler, guard);
-      if (identifierRequired) {
-        command = new LoginWithIdentifierCommand(handler, guard);
-      }
       commandDispatcher.register(command.getCommandBuilder());
       LOGGER.info("Registering /logged command");
       commandDispatcher.register(new LoggedCommand(handler).getCommandBuilder());

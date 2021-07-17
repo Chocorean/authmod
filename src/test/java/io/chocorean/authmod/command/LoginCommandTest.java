@@ -47,7 +47,7 @@ class LoginCommandTest extends CommandTest {
   @Test
   void testExecuteBanned() throws AuthmodError {
     FileDataSourceStrategy mock = mock(FileDataSourceStrategy.class);
-    when(mock.find(player.getUsername())).thenReturn(new DataSourcePlayer(player).setBanned(true));
+    when(mock.findByUsername(player.getUsername())).thenReturn(new DataSourcePlayer(player).setBanned(true));
     int res = LoginCommand.execute(this.source, this.handler, new DataSourceGuard(mock), this.payload);
     assertEquals(1, res);
     assertFalse(this.handler.isLogged(this.playerEntity));

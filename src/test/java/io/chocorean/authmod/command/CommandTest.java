@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.util.UUID;
 import jdk.nashorn.internal.ir.annotations.Ignore;
 import net.minecraft.command.CommandSource;
@@ -37,7 +38,7 @@ abstract class CommandTest {
   protected CommandInterface command;
   protected String name;
 
-  public void initProperties(String name) throws IOException, CommandSyntaxException {
+  public void initProperties(String name) throws Exception {
     File file = Paths.get(System.getProperty("java.io.tmpdir"), "authmod.db").toFile();
     Files.deleteIfExists(file.toPath());
     this.handler = new Handler();

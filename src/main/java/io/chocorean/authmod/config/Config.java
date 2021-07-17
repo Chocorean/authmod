@@ -26,7 +26,6 @@ public class Config {
   private static final ForgeConfigSpec SPEC;
   public static final DatabaseConfig database;
   public static final I18nConfig i18n;
-  public static final ForgeConfigSpec.BooleanValue identifierRequired;
   public static final ForgeConfigSpec.BooleanValue enableLogin;
   public static final ForgeConfigSpec.BooleanValue enableRegister;
   public static final ForgeConfigSpec.BooleanValue enableChangePassword;
@@ -39,10 +38,6 @@ public class Config {
 
   static {
     BUILDER.comment("Server configuration settings").push("server");
-
-    identifierRequired =
-      BUILDER.comment("Identifier must be provided for registration and authentication (an email address for instance).").define("identifierRequired", false);
-
     enableLogin =
       BUILDER
         .comment("Enable or disable the /login command. If disabled, the server will be opened to everyone).")
@@ -135,7 +130,6 @@ public class Config {
     return new FactoryConfig()
       .setConfigDirectory(getConfigurationFile().resolve("..").normalize())
       .setStrategy(Config.dataSource.get())
-      .setIdentifierRequired(Config.identifierRequired.get())
       .setDialect(database.dialect.get())
       .setDatabase(database.database.get())
       .setTable(database.table.get())

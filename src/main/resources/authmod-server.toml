@@ -3,102 +3,97 @@
 [server]
 	#Enable or disable the /login command. If disabled, the server will be opened to everyone).
 	enableLogin = false
+	#Enable or disable the /register command.
+	enableRegister = false
+	#Enable or disable the /changepassword command.
+	enableChangePassword = false
 	#delay in seconds a player can authenticate before being automatically kicked from the server.
 	#Range: 1 ~ 1024
 	delay = 60
 	#lang file to use
 	#Allowed Values: EN_US, FR_FR, ES_ES
 	language = "EN_US"
-	#Whitelisted commands (can be used without being logged)
-	whitelist = ["register", "login", "logged", "help"]
-	#Identifier must be provided for registration and authentication (an email address for instance).
-	identifierRequired = false
-	#Enable or disable the /register command.
-	enableRegister = false
-	#Enable or disable the /changepassword command.
-	enableChangePassword = false
 	#The way you want to store player's data, choose between 'database' or 'file'. If the strategy is unknown, the server will be open for everyone.
 	#Allowed Values: FILE, DATABASE
 	dataSource = "FILE"
+	#Whitelisted commands (can be used without being logged)
+	whitelist = ["register", "login", "logged", "help"]
 
 [Database]
-	#Column name of BANNED
-	columnBanned = "banned"
-	#SQL dialect
-	dialect = "mariadb"
-	#Column name of PASSWORD
-	columnPassword = "password"
-	#Column name of UUID
-	columnUuid = "uuid"
 	#Column name of USERNAME
 	columnUsername = "username"
+	#Column name of UUID
+	columnUuid = "uuid"
+	#Column name of PASSWORD
+	columnPassword = "password"
+	#Column name of BANNED
+	columnBanned = "banned"
 	#Name of the database
 	database = "minecraft"
-	#Database users's password
-	password = "password"
+	#SQL dialect
+	dialect = "mariadb"
+	#Server hosting the database
+	host = "localhost"
 	#JDBC driver to use
 	driver = "org.mariadb.jdbc.Driver"
+	#Database user
+	user = "user"
+	#Database users's password
+	password = "password"
 	#Port to be used
 	#Range: 1024 ~ 65535
 	port = 3306
-	#Server hosting the database
-	host = "localhost"
-	#Database user
-	user = "user"
 	#Table to be used
 	table = "players"
-	#Column name of IDENTIFIER
-	columnIdentifier = "identifier"
 
 [I18n]
 
 	[I18n.authmod]
-		#Wrong password. Please try again.
-		wrongPassword = ""
-		#The password confirmation doesn't match. Try again.
-		wrongPasswordConfirmation = ""
-		#Wake up, you have only %s seconds to log in.
-		wakeUp = ""
-		#You've been banned. Please contact the admins.
-		banned = ""
 		#Something was wrong. Please contact the admins.
 		error = ""
 		#Use /register to sign up or /login to sign in.
 		welcome = ""
-
-		[I18n.authmod.changepassword]
-			#Password changed!
-			success = ""
-			#/changepassword <old_password> <new_password> <new_password> - Change your password.
-			usage = ""
-			#New password should be different than the previous one.
-			samePassword = ""
+		#Wake up, you have only %s seconds to log in.
+		wakeUp = ""
+		#You've been banned. Please contact the admins.
+		banned = ""
+		#Wrong password. Please try again.
+		wrongPassword = ""
+		#The password confirmation doesn't match. Try again.
+		wrongPasswordConfirmation = ""
 
 		[I18n.authmod.logged]
-			#no
-			no = ""
 			#yes
 			yes = ""
+			#no
+			no = ""
 			#/logged - tells you whether you are authenticated or not
 			usage = ""
 
 		[I18n.authmod.login]
-			#Have fun!
-			success = ""
 			#/login <email> <password> - Allows you to authenticate on the server
 			usage = ""
-			#Wrong UUID. Please be sure you use the same UUID when you registered your account.
-			wrongUUID = ""
 			#%s is not registered on this server.
 			notFound = ""
+			#Have fun!
+			success = ""
+			#Wrong UUID. Please be sure you use the same UUID when you registered your account.
+			wrongUUID = ""
 			#Your username does not correspond to your credentials.
 			wrongUsername = ""
 
 		[I18n.authmod.register]
 			#Someone has already registered with the username %s.
 			exist = ""
-			#You are registered and authenticated, have fun!
-			success = ""
 			#/register <email> <password> <password>- Be careful when choosing it, you'll be asked to login each time you play.
 			usage = ""
+			#You are registered and authenticated, have fun!
+			success = ""
 
+		[I18n.authmod.changepassword]
+			#Password changed!
+			success = ""
+			#New password should be different than the previous one.
+			samePassword = ""
+			#/changepassword <old_password> <new_password> <new_password> - Change your password.
+			usage = ""
