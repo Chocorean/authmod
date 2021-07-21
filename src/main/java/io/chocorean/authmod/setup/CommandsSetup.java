@@ -30,7 +30,6 @@ public class CommandsSetup {
 
   private void registerCommands(RegisterCommandsEvent event) {
     if (this.guard != null) {
-      LOGGER.info(this.guard);
       registerLoginCommands(Config.enableLogin.get(), event.getDispatcher(), this.guard);
       registerRegisterCommand(Config.enableRegister.get(), event.getDispatcher(), this.guard);
       registerChangePasswordCommand(Config.enableChangePassword.get(), event.getDispatcher(), this.guard);
