@@ -24,7 +24,6 @@ public class CommandsSetup {
 
   public void registerCommands(FMLServerStartingEvent event) {
     if (this.guard != null) {
-      LOGGER.info(this.guard);
       registerLoginCommands(event);
       registerRegisterCommand(event);
       registerChangePasswordCommand(event);

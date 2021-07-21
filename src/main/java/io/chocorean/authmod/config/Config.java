@@ -67,7 +67,7 @@ public class Config {
     columns.put(DatabaseStrategy.Column.BANNED, Config.database.columnBanned);
     columns.put(DatabaseStrategy.Column.UUID, Config.database.columnUuid);
     return new FactoryConfig()
-      .setConfigDirectory(getConfigurationFile().resolve("..").normalize())
+      .setConfigDirectory(getConfigurationFile().normalize())
       .setStrategy(Config.dataSource)
       .setDialect(database.dialect)
       .setDatabase(database.database)
