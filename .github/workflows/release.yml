@@ -5,6 +5,7 @@ on:
   push:
     tags:
       - "v1.16.5*"
+      - "v1.12.2*"
 
 jobs:
   tagged-release:
