@@ -49,7 +49,9 @@ AuthMod is a server-side Minecraft mod that adds commands to register and authen
  - `/changepassword <old> <new> <comfirmation>` to change your password once logged.
 
 
-Player data are stored in either a [SQL database](./docker/init.sql) or a sqlite file.
+Player data are stored in either a [SQL database](./docker/init.sql) or a sqlite file. [MariaDB](https://mariadb.org/) and [MySQL](https://www.mysql.com/) are supported at this time.
+
+**Note:** If you are using *MySQL 8 or higher on a Windows device*, you might experience difficulties to connect to the database from the server. What fixed my issues was to run this command while logged in the database: `ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'your_database_password';`
 
 
 ## Installation
