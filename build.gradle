@@ -141,7 +141,7 @@ configurations {
 
 dependencies {
   minecraft 'net.minecraftforge:forge:1.16.5-36.1.32'
-  shadow 'com.github.chocorean:authmod-core:v0.4.0'
+  shadow 'com.github.chocorean:authmod-core:v0.5.0'
   shadow group: 'org.mindrot', name: 'jbcrypt', version: '0.4'
   shadow group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.7.3'
   shadow group: 'org.xerial', name: 'sqlite-jdbc', version: '3.36.0'

@@ -24,7 +24,7 @@ public class DatabaseConfig {
       String capitalized = c.name().substring(0, 1).toUpperCase() + c.name().substring(1).toLowerCase();
       this.columns.put(
           c,
-          builder.comment(String.format("Column name of %s", c.name())).define(String.format("column%s", capitalized), c.name().toLowerCase())
+          builder.comment(String.format("Column name of '%s'", c.name().toLowerCase())).define(String.format("column%s", capitalized), c.name().toLowerCase())
         );
     }
     this.database = builder.comment("Name of the database").define("database", "minecraft");
