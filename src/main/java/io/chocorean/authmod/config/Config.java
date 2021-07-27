@@ -14,7 +14,9 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 
 @net.minecraftforge.common.config.Config(modid = AuthMod.MODID)
@@ -90,6 +92,10 @@ public class Config {
       ConfigManager.sync(AuthMod.MODID, net.minecraftforge.common.config.Config.Type.INSTANCE);
       setup();
     }
+  }
+
+  public static boolean isCommandAllowed(String command) {
+    return Arrays.stream(Config.allowlist).anyMatch(command::equals);
   }
 
   private static void setup() {

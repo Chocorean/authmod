@@ -78,18 +78,13 @@ public class Handler {
 
   @SubscribeEvent(priority = EventPriority.HIGHEST)
   public void onCommand(CommandEvent event) {
-    try {
-      List<String> whitelist = Arrays.asList(Config.allowlist);
-      String name = event.getCommand().getName();
-      boolean isCommandAllowed = whitelist.contains(name);
+    if(event.getSender() instanceof EntityPlayer) {
+      boolean isCommandAllowed = Config.isCommandAllowed(event.getCommand().getName());
       EntityPlayer playerEntity = (EntityPlayer) event.getSender();
       if (descriptors.containsKey(playerEntity) && !isCommandAllowed && event.isCancelable()) {
         event.setCanceled(true);
         sayWelcome(playerEntity);
       }
-    } catch (Exception e) {
-      // fuck this jdk I cannot see what the exception is
-      return;
     }
   }
 
