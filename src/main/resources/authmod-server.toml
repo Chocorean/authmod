@@ -20,13 +20,13 @@
 	whitelist = ["register", "login", "logged", "help"]
 
 [Database]
-	#Column name of USERNAME
+	#Column name of 'username'
 	columnUsername = "username"
-	#Column name of UUID
+	#Column name of 'uuid'
 	columnUuid = "uuid"
-	#Column name of PASSWORD
+	#Column name of 'password'
 	columnPassword = "password"
-	#Column name of BANNED
+	#Column name of 'banned'
 	columnBanned = "banned"
 	#Name of the database
 	database = "minecraft"
@@ -71,7 +71,7 @@
 			usage = ""
 
 		[I18n.authmod.login]
-			#/login <email> <password> - Allows you to authenticate on the server
+			#/login <password> - Allows you to authenticate on the server
 			usage = ""
 			#%s is not registered on this server.
 			notFound = ""
@@ -85,7 +85,7 @@
 		[I18n.authmod.register]
 			#Someone has already registered with the username %s.
 			exist = ""
-			#/register <email> <password> <password>- Be careful when choosing it, you'll be asked to login each time you play.
+			#/register <password> <password>- Be careful when choosing it, you'll be asked to login each time you play.
 			usage = ""
 			#You are registered and authenticated, have fun!
 			success = ""
@@ -95,5 +95,6 @@
 			success = ""
 			#New password should be different than the previous one.
 			samePassword = ""
-			#/changepassword <old_password> <new_password> <new_password> - Change your password.
+			#/changepassword <old-password> <new-password> <confirmation> - Change your password.
 			usage = ""
+

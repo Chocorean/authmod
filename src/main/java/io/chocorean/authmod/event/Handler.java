@@ -79,17 +79,22 @@ public class Handler {
 
   @SubscribeEvent(priority = EventPriority.HIGHEST)
   public void onCommand(CommandEvent event) throws CommandSyntaxException {
-    List<? extends String> whitelist = Config.commandWhitelist.get();
-    String name = event.getParseResults().getContext().getNodes().get(0).getNode().getName();
-    boolean isCommandAllowed = whitelist.contains(name);
     CommandSource source = event.getParseResults().getContext().getSource();
-    PlayerEntity playerEntity = source.getPlayerOrException();
-    if (descriptors.containsKey(playerEntity) && !isCommandAllowed && event.isCancelable()) {
-      event.setCanceled(true);
-      event
-        .getParseResults()
-        .getContext().getSource()
-        .sendSuccess(new ServerTranslationTextComponent("authmod.welcome"), false);
+    try {
+      PlayerEntity playerEntity = source.getPlayerOrException();
+      List<? extends String> whitelist = Config.commandWhitelist.get();
+      String name = event.getParseResults().getContext().getNodes().get(0).getNode().getName();
+      boolean isCommandAllowed = whitelist.contains(name);
+      if (descriptors.containsKey(playerEntity) && !isCommandAllowed && event.isCancelable()) {
+        event.setCanceled(true);
+        event
+          .getParseResults()
+          .getContext().getSource()
+          .sendSuccess(new ServerTranslationTextComponent("authmod.welcome"), false);
+      }
+    } catch (CommandSyntaxException e) {
+      // raised when command comes from non-player entity
+      return;
     }
   }
 
