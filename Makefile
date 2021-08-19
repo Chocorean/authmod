@@ -1,6 +1,6 @@
 .DEFAULT_GOAL=help
 .PHONY: sonarqube build try clean prettier help
-FORGE_VERSION=1.16.5-36.1.32
+FORGE_VERSION=1.12.2-14.23.5.2855
 FORGE_JAR=forge-$(FORGE_VERSION).jar
 branch := $(shell git branch --show-current)
 
@@ -18,6 +18,7 @@ clean:
 
 build: ## Build the mod
 	./gradlew build
+	rm $@/libs/authmod*sources.jar
 
 tmp/$(FORGE_JAR):
 	mkdir -p tmp
@@ -25,9 +26,8 @@ tmp/$(FORGE_JAR):
 	java -jar tmp/forge.jar --installServer tmp
 	rm tmp/forge.jar
 
-tmp/mods/authmod.jar:
+tmp/mods/authmod.jar: build
 	mkdir -p $(dir $@)
-	./gradlew build
 	cp build/libs/* $@
 
 try: tmp/$(FORGE_JAR) tmp/mods/authmod.jar
