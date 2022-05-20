@@ -1,5 +1,6 @@
 package io.chocorean.authmod.event;
 
+import com.mojang.brigadier.context.ParsedCommandNode;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.chocorean.authmod.config.Config;
 import io.chocorean.authmod.core.PlayerDescriptor;
@@ -83,7 +84,9 @@ public class Handler {
     try {
       PlayerEntity playerEntity = source.getPlayerOrException();
       List<? extends String> whitelist = Config.commandWhitelist.get();
-      String name = event.getParseResults().getContext().getNodes().get(0).getNode().getName();
+      List<ParsedCommandNode<CommandSource>> nodes = event.getParseResults().getContext().getNodes();
+      if (nodes.isEmpty()) return; // Fix the bug where this stops any other commands from working
+      String name = nodes.get(0).getNode().getName();
       boolean isCommandAllowed = whitelist.contains(name);
       if (descriptors.containsKey(playerEntity) && !isCommandAllowed && event.isCancelable()) {
         event.setCanceled(true);
