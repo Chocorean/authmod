@@ -1,3 +1,7 @@
+# ATTENTION: AuthMod isn't and won't be maintained at all. Feel free to fork and do your own implementation.
+
+---
+
 <div align="center">
 <br>
 <img
